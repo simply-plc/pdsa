@@ -1,8 +1,9 @@
-$white: #ffffff;
+@import "../node_modules/bootstrap/scss/functions"; 
+@import "../node_modules/bootstrap/scss/variables"; 
 
-
-
+$theme-colors: map-merge($theme-colors, (
+  "primary": #f1c338
+));
 
 
 @import '../node_modules/bootstrap/scss/bootstrap';
-

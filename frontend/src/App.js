@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import "bootstrap-icons/font/bootstrap-icons.css";
+import './App.scss';
 
 import HomeNavbar from './components/home/HomeNavbar';
 
