@@ -1,9 +1,13 @@
-@import "../node_modules/bootstrap/scss/functions"; 
-@import "../node_modules/bootstrap/scss/variables"; 
-
-$theme-colors: map-merge($theme-colors, (
-  "primary": #f1c338
-));
+$theme-colors: (
+  'primary': #20c997,
+  'secondary': #6c757d,
+  'success': #198754,
+  'info': #0dcaf0,
+  'warning': #ffc107,
+  'danger': #dc3545,
+  'light': #f8f9fa,
+  'dark': #212529,
+);
 
 
 @import '../node_modules/bootstrap/scss/bootstrap';

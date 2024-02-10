@@ -7,15 +7,16 @@ import {Navbar, Container, Nav} from 'react-bootstrap';
 
 export default function HomeNavbar() {
     const location = useLocation();
+    const patharray = location.pathname.split('/').filter(Boolean);
 
-    return <HomeNavbarComponent location={location} />;
+    return <HomeNavbarComponent patharray={patharray} />;
 }
 
 ///////////////
 // Component //
 ///////////////
 
-export function HomeNavbarComponent({location}) {
+export function HomeNavbarComponent({patharray}) {
     document.body.className = 'bg-light';
 
     return (
@@ -23,20 +24,20 @@ export function HomeNavbarComponent({location}) {
             <Navbar sticky="top" bg='light' data-bs-theme="light" >
                 <Container fluid>
                     {/* Logo */}
-                    <Navbar.Brand to='/' as={Link} className='text-primary'><b>SA</b></Navbar.Brand>
+                    <Navbar.Brand to='/home' as={Link} className='text-primary'><b>SP</b></Navbar.Brand>
                     {/* Navbar Links */}
                     <Nav variant='underline'>
                         <Nav.Item>
-                            <Nav.Link active={location.pathname==='/home'} eventKey='/' to='/' as={Link} >Home</Nav.Link>
+                            <Nav.Link active={deepEqual(patharray, ['home'])} eventKey='home' to='/home' as={Link} >Home</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link active={location.pathname==='/about'} eventKey='/about' to='/about' as={Link} >About</Nav.Link>
+                            <Nav.Link active={deepEqual(patharray, ['about'])} eventKey='about' to='/about' as={Link} >About</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link active={location.pathname==='/blog'} eventKey='/blog' to='/blog' as={Link} >Blog</Nav.Link>
+                            <Nav.Link active={deepEqual(patharray, ['blog'])} eventKey='blog' to='/blog' as={Link} >Blog</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link active={['/login', '/createAccount'].includes(location.pathname)} eventKey='/login' to='/login' as={Link} >Login</Nav.Link>
+                            <Nav.Link active={deepEqual(patharray, ['login']) || deepEqual(patharray, ['create-account'])} eventKey='login' to='/login' as={Link} >Login</Nav.Link>
                         </Nav.Item>
                     </Nav>
                 </Container>
@@ -46,3 +47,12 @@ export function HomeNavbarComponent({location}) {
         </>
     );
 }
+
+
+
+function deepEqual(l1, l2) {
+    return JSON.stringify(l1) === JSON.stringify(l2);
+}
+
+
+
