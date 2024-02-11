@@ -10,6 +10,8 @@ import CreateAccount from './components/home/CreateAccount';
 
 // User imports
 import UserNavbar from './components/user/UserNavbar';
+import DriverPage from './components/user/DriverPage';
+import TeamsPage from './components/user/TeamsPage';
 
 
 const router = createBrowserRouter([
@@ -58,11 +60,16 @@ const router = createBrowserRouter([
             // /user default
             {
                 index: true,
-                element: <Navigate to='pdsa' />,
+                element: <Navigate to='overview' />,
+            },
+            // /user/overview
+            {
+                path: 'overview',
+                element: <div>overview</div>,
             },
             // /user/pdsa
             {
-                path: 'pdsa',
+                path: 'change-ideas',
                 element: (
                     <div>
                         <p className='vh-100 d-flex'>pdsa</p>
@@ -70,20 +77,20 @@ const router = createBrowserRouter([
                     </div>
                     ),
             },
-            // /user/pdsa
+            // /user/drivers
             {
-                path: 'driver',
-                element: <div>driver</div>,
+                path: 'drivers',
+                element: <DriverPage />,
             },
-            // /user/pdsa
+            // /user/teams
             {
-                path: 'team',
-                element: <div>team</div>,
+                path: 'teams',
+                element: <TeamsPage />,
             },
-            // /user/pdsa
+            // /user/settings
             {
-                path: 'logout',
-                element: <div>logout</div>,
+                path: 'settings',
+                element: <div>settings</div>,
             },
         ]
     },

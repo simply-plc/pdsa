@@ -21,31 +21,25 @@ export default function Login() {
     });
 
     // Checks if token expired. If not expired, then automatically redirect to user page
-    // useEffect(() => {
-    //     const accessToken = localStorage.getItem("access_token");
+    useEffect(() => {
+        const accessToken = localStorage.getItem("access_token");
 
-    //     if (accessToken) {
-    //         try {
-    //             const decodedToken = jwtDecode(accessToken);
-    //             const currentTime = Date.now() / 1000;
+        if (accessToken) {
+            try {
+                const decodedToken = jwtDecode(accessToken);
+                const currentTime = Date.now() / 1000;
 
-    //             // Check if token is expired. If not, redirect to user page
-    //             if (decodedToken.exp > currentTime) {
-    //                 if (decodedToken.is_teacher) {
-    //                     navigate('/teacher/');
-    //                 } else if (decodedToken.is_student) {
-    //                     navigate('/student/');
-    //                 } else {
-    //                     navigate('/teacher/gradebook/');
-    //                 }
-    //             } else { // if expired, then clear expired token
-    //                 localStorage.clear();
-    //             }
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-    //     }
-    // }, [navigate]);
+                // Check if token is expired. If not, redirect to user page
+                if (decodedToken.exp > currentTime) {
+                    navigate('/user');
+                } else { // if expired, then clear expired token
+                    localStorage.clear();
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }, [navigate]);
 
     // Handles the user input 
     function handleChange({target}) {
@@ -65,37 +59,30 @@ export default function Login() {
         // Start validation because submit is pressed
         setValidated(true);
 
-        // // Tries to login and get the tokens. Async/Await forces process to be done before moving on.
-        // const promise = await axios.post('http://127.0.0.1:8000/api/token/', formData, {
-        //                                 headers: {'Content-Type': 'application/json'},
-        //                                 // withCredentials: true
-        //                             }
-        //                         )
-        //                         .catch(error => console.log(error.message));
+        // Tries to login and get the tokens. Async/Await forces process to be done before moving on.
+        const promise = await axios.post('http://127.0.0.1:8000/user/token/', formData, {
+                                        headers: {'Content-Type': 'application/json'},
+                                        // withCredentials: true
+                                    }
+                                )
+                                .catch(error => console.log(error.message));
 
-        // // Clear local storage
-        // localStorage.clear();
+        // Clear local storage
+        localStorage.clear();
 
-        // // Check if user exists
-        // if (promise?.data?.access) {
-        //     // Store tokens in local storage
-        //     localStorage.setItem('access_token', promise.data.access);
-        //     localStorage.setItem('refresh_token', promise.data.refresh);
-        //     // Store access token in the header to be sent for authorization
-        //     axios.defaults.headers.common['Authorization'] = `Bearer ${promise.data.access}`;
-        //     // Decode to get some of the user info
-        //     const decodedToken = jwtDecode(promise.data.access);
-        //     // Figure out where user needs to be redirected based on user role
-        //     if (decodedToken.is_teacher) {
-        //         navigate('/teacher/');
-        //     } else if (decodedToken.is_student) {
-        //         navigate('/student/');
-        //     } else {
-        //         navigate('/teacher/gradebook/');
-        //     }
-        // } else { // User doesn't exist so tell user that
-        //     setIncorrect(true);
-        // }
+        // Check if user exists
+        if (promise?.data?.access) {
+            // Store tokens in local storage
+            localStorage.setItem('access_token', promise.data.access);
+            localStorage.setItem('refresh_token', promise.data.refresh);
+            localStorage.setItem('email', formData.email)
+            // Store access token in the header to be sent for authorization
+            axios.defaults.headers.common['Authorization'] = `Bearer ${promise.data.access}`;
+            // redirect
+            navigate('/user');
+        } else { // User doesn't exist so tell user that
+            setIncorrect(true);
+        }
     }
 
     // This function simply checks if the email is a valid email format
@@ -129,8 +116,9 @@ export function LoginComponent({handleSubmit, validated, isValidEmail, incorrect
     return (
         <Container className='d-flex justify-content-center align-items-center' style={{minHeight: '80vh'}}>
             <Container>
+                {/* Title */}
                 <Row className='text-center'>
-                    <h1 className='text-primary fw-bold'>Simply Assess</h1>
+                    <h1 className='text-primary fw-bold'>Simply PLC</h1>
                 </Row>
                 <Row className='justify-content-center'>
                     {/* Card */}

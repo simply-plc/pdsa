@@ -24,7 +24,9 @@ export function HomeNavbarComponent({patharray}) {
             <Navbar sticky="top" bg='light' data-bs-theme="light" >
                 <Container fluid>
                     {/* Logo */}
-                    <Navbar.Brand to='/home' as={Link} className='text-primary'><b>SP</b></Navbar.Brand>
+                    <Navbar.Brand to='/home' as={Link} className='text-primary'>
+                        <i className='bi-bar-chart-fill pe-1' />
+                    </Navbar.Brand>
                     {/* Navbar Links */}
                     <Nav variant='underline'>
                         <Nav.Item>

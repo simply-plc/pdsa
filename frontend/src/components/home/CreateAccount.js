@@ -54,17 +54,15 @@ export default function CreateAccount() {
         event.stopPropagation();
         setValidated(true); // Set to show that forms can start validation
 
-        // // Checks to see if all requirements are satisfied to create user
-        // if (isValidEmail(true) && isMatching(true) && isValidPassword(true) && isValidRadio(true)) {
-        //     axios.post('http://127.0.0.1:8000/api/users/create/', { // Create the user and redirect to login
-        //             email: target.email.value,
-        //             password: target.password.value,
-        //             is_teacher: formData.isTeacher,
-        //             is_student: formData.isStudent,
-        //         })
-        //         .then(response => navigate('/login/')) // Direct to login after creation
-        //         .catch(error => setUsedEmail(true)); // Email is already used
-        // }
+        // Checks to see if all requirements are satisfied to create user
+        if (isValidEmail(true) && isMatching(true) && isValidPassword(true)) {
+            axios.post('http://127.0.0.1:8000/user/create/', { // Create the user and redirect to login
+                    email: target.email.value,
+                    password: target.password.value,
+                })
+                .then(response => navigate('/login')) // Direct to login after creation
+                .catch(error => setUsedEmail(true)); // Email is already used
+        }
     }
 
     // This function simply checks if the email is a valid email format
@@ -128,8 +126,9 @@ export function CreateAccountComponent({
     return (
         <Container className='d-flex justify-content-center align-items-center' style={{minHeight: '80vh'}}>
             <Container> 
+                {/* Title */}
                 <Row className='text-center'>
-                    <h1 className='text-primary'><b>Simply Assess</b></h1>
+                    <h1 className='text-primary'><b>Simply PLC</b></h1>
                 </Row>
                 <Row className='justify-content-center'>
                     {/* Card */}
