@@ -49,6 +49,9 @@ export default function TeamsPage() {
 
     return <TeamsPageComponent 
         handleBackButton={handleBackButton} 
+        handleCreateTeam={handleCreateTeam}
+        handleSelectTeam={handleSelectTeam}
+        handleTeamMenu={handleTeamMenu}
         teams={teams} 
         />
 }
