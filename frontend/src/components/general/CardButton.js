@@ -9,12 +9,14 @@ import {useState} from 'react';
 ///////////////
 
 export default function CardButton({children, ...props}) {
-    const [hover, setHover] = useState(false);
+    const [hover, setHover] = useState(false); // This is for determining if mouse is hovering
 
+    // Mouse is hovering
     function handleMouseOver({currentTarget}) {
         setHover(true);
     }
 
+    // Mouse is no longer hovering
     function handleMouseLeave({currentTarget}) {
         setHover(false);
     }
