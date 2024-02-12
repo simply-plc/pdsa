@@ -1,7 +1,8 @@
 import {useState} from 'react';
 
 
-export default function Hover({c, cStyle={}, style={}, cClassName='', className='', children, ...props}) {
+export default function Hover({comp:Comp, cStyle={}, style={}, cClassName='', className='', children, ...props}) {
+    // const Comp = comp;
     const [hover, setHover] = useState(false); // This is for determining if mouse is hovering
     const hoverStyle = {
         ...style,
@@ -13,6 +14,7 @@ export default function Hover({c, cStyle={}, style={}, cClassName='', className=
     // Mouse is hovering
     function handleMouseOver({currentTarget}) {
         // alert(JSON.stringify(hoverStyle))
+        // alert(hoverClassName);
         setHover(true);
     }
 
@@ -21,12 +23,12 @@ export default function Hover({c, cStyle={}, style={}, cClassName='', className=
         setHover(false);
     }
 
-    return <c 
+    return <Comp
         style={hover ? hoverStyle : style} 
         className={hover ? hoverClassName : className}
         onMouseOver={handleMouseOver} 
         onMouseLeave={handleMouseLeave}
         {...props}>
             {children}
-        </c>
+        </Comp>
 }

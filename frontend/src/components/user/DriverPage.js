@@ -27,10 +27,12 @@ export function DriverPageComponent({handleBackButton}) {
     return (
         <div className='m-3'>
             <Card body bg='light' className='border-0'>
-                <Button className='me-5' variant='light' onClick={handleBackButton}>
-                    <i className='bi-chevron-left text-dark' style={{webkitTextStroke: '.1rem'}} />
-                </Button>
-                <div className='h1 fw-bold d-inline-block align-middle'>Drivers</div>
+                <div className='d-flex'>
+                    <Button className='me-5 mb-auto mt-auto' variant='light' onClick={handleBackButton}>
+                        <span className='bi-chevron-left text-dark text-center' style={{fontSize: '1.5rem'}} />
+                    </Button>
+                    <div className='h1 fw-bold d-inline-block mb-auto mt-auto'>Drivers</div>
+                </div>
             </Card>
         </div>
     );
