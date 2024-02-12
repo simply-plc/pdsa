@@ -1,15 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import Group
 
 
-from .models import User
+from .models import *
 
 # Register your models here.
 class UserAdmin(UserAdmin):
     model = User
-    list_display = ["email",]
-    list_display = ("email", "is_staff", "is_active", "is_admin", )
+    list_display = ("email", "is_staff", "is_active", "is_admin", "get_teams")
     list_filter = ("email", "is_staff", "is_active", "is_admin", )
     fieldsets = (
         (None, {"fields": ("email", "password")}),
@@ -29,4 +27,3 @@ class UserAdmin(UserAdmin):
 
 admin.site.register(User, UserAdmin)
 
-# admin.site.unregister(Group)
