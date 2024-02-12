@@ -49,7 +49,7 @@ export function TeamsPageComponent({
                 <Row>
                     {teams.map((v, i) => (
                         <Col md='3' className='mb-4'>
-                            <CardButton>
+                            <CardButton onClick={()=>alert('hi')}>
                                 <div className='d-flex'>
                                     <div className='text-right mt-auto mb-auto'>
                                         <i className='bi-bar-chart-fill pe-1 h2 text-primary' />

@@ -4,5 +4,10 @@ from .models import *
 
 class TeamSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Account
+        model = Team
+        fields = ['name']
+
+class TeamMembershipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TeamMembership
         fields = '__all__'
