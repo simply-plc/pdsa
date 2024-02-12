@@ -3,5 +3,6 @@ from django.urls import path, include
 from .views import *
 
 urlpatterns = [
-    path('team/create/', TeamCreateAPIView.as_view(), name='team_create')
+    path('team/create/', TeamCreateAPIView.as_view(), name='team_create'),
+    path('team/<int:pk>/', TeamRetrieveUpdateDestroyAPIView.as_view(), name='team_pk'),
 ]

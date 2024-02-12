@@ -75,7 +75,6 @@ export default function Login() {
             // Store tokens in local storage
             localStorage.setItem('access_token', promise.data.access);
             localStorage.setItem('refresh_token', promise.data.refresh);
-            localStorage.setItem('email', formData.email)
             // Store access token in the header to be sent for authorization
             axios.defaults.headers.common['Authorization'] = `Bearer ${promise.data.access}`;
             // redirect

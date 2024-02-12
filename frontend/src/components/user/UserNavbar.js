@@ -2,6 +2,7 @@ import {Outlet, NavLink, useNavigate} from 'react-router-dom';
 import {Navbar, Nav, Button} from 'react-bootstrap';
 import {useState} from 'react';
 import axios from 'axios';
+import {jwtDecode} from 'jwt-decode';
 
 // user imports
 
@@ -12,11 +13,15 @@ import axios from 'axios';
 export default function UserNavbar() {
     const navigate = useNavigate(); // Navigate things
     const [expanded, setExpanded] = useState(false); // Determines if navbar is expanded or not
-    const email = localStorage.getItem('email'); // Get user email
+    const accessToken = localStorage.getItem("access_token");
+
     // If user is not logged in, redirected to login
-    if (!email) { 
+    if (!accessToken) {
         navigate('/login');
     }
+
+    const decodedToken = jwtDecode(accessToken); // Decode token
+    const email = decodedToken.email; // Get user email
 
     // Handles expanding when mouse is over the navbar
     function handleExpand() {

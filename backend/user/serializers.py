@@ -2,9 +2,11 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import *
+from api.serializers import TeamMembershipSerializer
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+    team_memberships = TeamMembershipSerializer(many=True, read_only=True)
 
     def create(self, data):
         user = User.objects.create_user(
@@ -16,7 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta: 
         model = User 
-        fields = ('id', 'email', 'password') 
+        fields = ('id', 'email', 'password', 'team_memberships') 
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -25,8 +27,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
 
         # Add custom claims to the token payload
-        # token['is_teacher'] = user.is_teacher
-        # token['is_student'] = user.is_student
+        token['user'] = user.pk
+        token['email'] = user.email
         # Add other user information as needed
 
         return token

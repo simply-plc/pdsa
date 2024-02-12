@@ -11,6 +11,6 @@ admin.site.register(Team, TeamAdmin)
 
 class TeamMembershipAdmin(admin.ModelAdmin):
     model = TeamMembership
-    list_display = ["user", "team", "is_admin"]
+    list_display = ["user", "team", "is_admin", "joined_date"]
 
 admin.site.register(TeamMembership, TeamMembershipAdmin)

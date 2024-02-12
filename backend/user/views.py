@@ -11,10 +11,13 @@ from .serializers import *
 from .models import *
 
 # Create your views here.
-class UserCreateView(generics.CreateAPIView):
+class UserCreateAPIView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+class UserRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 class LogoutView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
