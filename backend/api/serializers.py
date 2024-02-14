@@ -26,7 +26,7 @@ class TeamSerializer(serializers.ModelSerializer):
         model = Team
         fields = ['name', 'team_memberships']
 
-    def create(self, validated_data):
+    def create(self, validated_data): # TODO: MAKE SURE THAT THE USER WHO IS CREATING IS INCLUDED
         team_memberships = validated_data.pop('team_memberships') # Get the team memberships
         team = Team.objects.create(**validated_data) # Create the team and assign object to team
         for member in team_memberships: # Iterate through the memberships 

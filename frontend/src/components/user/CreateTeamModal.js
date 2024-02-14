@@ -1,4 +1,4 @@
-import {Modal, Button, Form, FloatingLabel} from 'react-bootstrap';
+import {Modal, Button, Form, FloatingLabel, InputGroup, Row, Col, CloseButton} from 'react-bootstrap';
 import {useId, useState} from 'react';
 
 ///////////////
@@ -9,16 +9,33 @@ export default function CreateTeamModal({
     show, setShow,
     }) {
     const formId = useId(); // Sets form id so button can access without being in the form
+    const shareButtonId = useId();
     // This is to control the form input
     const [formData, setFormData] = useState({
         name: '',
+        share: '',
     });
+    // This is a list of members
+    const [members, setMembers] = useState([]);
 
+    function handleAddMember(event) {
+        setMembers([formData.share, ...members]);
+        setFormData({
+            ...formData,
+            share: '',
+        });
+    }
+
+    function handleRemoveMember({target}) {
+        members.splice(target.id, 1);
+        setMembers([...members])
+    }
 
     // This handles closing create modal
     function handleCloseModal(event) {
         setFormData({ // Resets form data
             name: '',
+            share: '',
         });
 
         setShow(false); // Close modal
@@ -34,6 +51,7 @@ export default function CreateTeamModal({
         alert('saved!');
         setFormData({ // Resets form data (possibly temp)
             name: '',
+            share: '',
         });
     }
 
@@ -52,6 +70,10 @@ export default function CreateTeamModal({
         show={show}
         formData={formData}
         formId={formId}
+        shareButtonId={shareButtonId}
+        handleAddMember={handleAddMember}
+        handleRemoveMember={handleRemoveMember}
+        members={members}
         />
 }
 
@@ -61,8 +83,8 @@ export default function CreateTeamModal({
 ///////////////
 
 export function TeamsPageComponent({
-    handleCloseModal, handleSaveModal, handleChange,
-    show, formData, formId,
+    handleCloseModal, handleSaveModal, handleChange, handleAddMember, handleRemoveMember,
+    show, formData, formId, shareButtonId, members,
     }) {
     return (
         <>
@@ -88,21 +110,47 @@ export function TeamsPageComponent({
                                     />
                             </FloatingLabel>
                         </Form.Group>
-                        {/* Confirm Password */}
-                        {/*<Form.Group className="mb-3" controlId={useId()}>
-                            <FloatingLabel controlId={useId()} label="Confirm Password">
-                                <Form.Control 
-                                    required 
-                                    type="password" 
-                                    placeholder="Confirm Password" 
-                                    name='confirm' 
-                                    value={formData.confirm}
+                        {/* Sharing with people */}
+                        <InputGroup className="mb-3">
+                            <FloatingLabel controlId={useId()} label="Add Members" >
+                                <Form.Control  
+                                    placeholder="Add Members" 
+                                    name='share' 
+                                    value={formData.share}
                                     onChange={handleChange}
-                                    isInvalid={!isMatching()}
+                                    aria-label="Add Members" 
+                                    aria-describedby={shareButtonId}
                                     />
-                                <Form.Control.Feedback type='invalid'>Passwords do not match</Form.Control.Feedback>
                             </FloatingLabel>
-                        </Form.Group>*/}
+                            {/* Add person */}
+                            <Button variant="outline-info" id={shareButtonId} onClick={handleAddMember}>
+                                <span className='bi-plus-lg fs-3' />
+                            </Button>
+                        </InputGroup>
+                        {/* List of people who have access */}
+                        <Form.Text >
+                            <div className='h6 me-1 ms-1'>Members:</div>
+                            <div className='ms-1 me-1 overflow-auto' style={{maxHeight:'14rem', minHeight: '3rem'}}>
+                                {/* This is for the first line */}
+                                <Row className='border-bottom' />
+                                {/* This is the rest of the list of people who will be on the team */}
+                                {members.map((v, i) => (
+                                    <Row className='border-bottom p-3'>
+                                        <Col md='10'>{v}</Col>
+                                        <Col className='d-flex'>
+                                            <CloseButton id={i} className='ms-auto' onClick={handleRemoveMember} />
+                                        </Col>
+                                    </Row>
+                                ))}
+                                {/* This is for the user who is creating the team */}
+                                <Row className='border-bottom p-3'>
+                                    <Col md='9'>derekhuang7@gmail.com</Col>
+                                    <Col className='d-flex'>
+                                        <div className='ms-auto'>(Owner)</div>
+                                    </Col>
+                                </Row>
+                            </div>
+                        </Form.Text>
                     </Form>
                 </Modal.Body>
                 {/* Footer */}
