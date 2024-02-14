@@ -1,7 +1,6 @@
 import {Card, Button, Row} from 'react-bootstrap';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useOutletContext} from 'react-router-dom';
 import {useEffect, useState} from 'react';
-import {jwtDecode} from 'jwt-decode';
 import axios from 'axios';
 
 import Hover from '../general/Hover';
@@ -17,7 +16,7 @@ export default function TeamsPage() {
     const navigate = useNavigate(); // This is for navigation
     const [teams, setTeams] = useState([]); // This is the state for teams
     const [show, setShow] = useState(false); // this is the state for showing the modal
-    const decodedToken = jwtDecode(localStorage.getItem("access_token")); // Get decoded access token
+    const [decodedToken] = useOutletContext();
 
     // Get the teams info
     useEffect(() => {
@@ -55,6 +54,7 @@ export default function TeamsPage() {
         teams={teams} 
         show={show}
         setShow={setShow}
+        decodedToken={decodedToken}
         />
 }
 
@@ -65,7 +65,7 @@ export default function TeamsPage() {
 
 export function TeamsPageComponent({
     handleBackButton, handleOpenModal, 
-    teams, show, setShow,
+    teams, show, setShow, decodedToken,
     }) {
     return (
         <>
@@ -106,10 +106,10 @@ export function TeamsPageComponent({
             </div>
 
             {/* Modal for Creating Team */}
-            <CreateTeamModal 
-                handleOpenModal={handleOpenModal}
+            <CreateTeamModal
                 show={show}
                 setShow={setShow}
+                decodedToken={decodedToken}
                 />
         </>
     );

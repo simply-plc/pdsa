@@ -1,34 +1,54 @@
 import {Modal, Button, Form, FloatingLabel, InputGroup, Row, Col, CloseButton} from 'react-bootstrap';
 import {useId, useState} from 'react';
 
+
 ///////////////
 // Container //
 ///////////////
 
 export default function CreateTeamModal({
-    show, setShow,
+    show, setShow, decodedToken,
     }) {
     const formId = useId(); // Sets form id so button can access without being in the form
-    const shareButtonId = useId();
-    // This is to control the form input
-    const [formData, setFormData] = useState({
+    const shareButtonId = useId(); // Sets share button id
+    const [validated, setValidated] = useState(false); // Checks when to show error message for email validation
+    const [members, setMembers] = useState([]); // This is a list of members
+    const [formData, setFormData] = useState({ // This is to control the form input
         name: '',
         share: '',
     });
-    // This is a list of members
-    const [members, setMembers] = useState([]);
 
-    function handleAddMember(event) {
-        setMembers([formData.share, ...members]);
-        setFormData({
-            ...formData,
-            share: '',
-        });
+    
+    //// Handlers ////
+
+    // This adds members
+    function handleAddMember() {
+        if (isValidEmail(true)) {
+            setMembers([formData.share, ...members]); // adds new member to beginnig of list
+            setFormData({ // Resets the input 
+                ...formData,
+                share: '',
+            });
+        } else {
+            setValidated(true);
+        }
     }
 
+    // This removes members when x is clicked
     function handleRemoveMember({target}) {
-        members.splice(target.id, 1);
+        members.splice(target.id, 1); // removes the member at entry
         setMembers([...members])
+    }
+
+    // Adds member on hitting enter
+    function handleAddMemberEnter(event) {
+        if (event.key === "Enter") {
+            // Stops default and propagation
+            event.preventDefault();
+            event.stopPropagation();
+            // Adds member
+            handleAddMember();
+        }
     }
 
     // This handles closing create modal
@@ -42,7 +62,7 @@ export default function CreateTeamModal({
     }
 
     // This handles closing create modal
-    function handleSaveModal(event) {
+    async function handleSaveModal(event) {
         // This stops the typical default form submit rerendering stuff
         event.preventDefault();
         event.stopPropagation();
@@ -55,12 +75,26 @@ export default function CreateTeamModal({
         });
     }
 
+    // handles controlling the input
     function handleChange({target}) {
         // This controls the form input
         setFormData({
             ...formData,
             [target.name]: target.value,
         });
+
+        setValidated(false);
+    }
+
+    // Checks the validity of email
+    function isValidEmail(bypass=false) { 
+        // eslint-disable-next-line
+        const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+        if (validated || bypass) {
+            return emailRegex.test(formData.share);
+        }
+
+        return true;
     }
 
     return <TeamsPageComponent 
@@ -73,7 +107,10 @@ export default function CreateTeamModal({
         shareButtonId={shareButtonId}
         handleAddMember={handleAddMember}
         handleRemoveMember={handleRemoveMember}
+        handleAddMemberEnter={handleAddMemberEnter}
+        isValidEmail={isValidEmail}
         members={members}
+        decodedToken={decodedToken}
         />
 }
 
@@ -83,8 +120,9 @@ export default function CreateTeamModal({
 ///////////////
 
 export function TeamsPageComponent({
-    handleCloseModal, handleSaveModal, handleChange, handleAddMember, handleRemoveMember,
-    show, formData, formId, shareButtonId, members,
+    handleCloseModal, handleSaveModal, handleChange, handleAddMember, handleRemoveMember, handleAddMemberEnter,
+    isValidEmail,
+    show, formData, formId, shareButtonId, members, decodedToken,
     }) {
     return (
         <>
@@ -118,9 +156,13 @@ export function TeamsPageComponent({
                                     name='share' 
                                     value={formData.share}
                                     onChange={handleChange}
+                                    onKeyDown={handleAddMemberEnter}
+                                    isInvalid={!isValidEmail()}
                                     aria-label="Add Members" 
                                     aria-describedby={shareButtonId}
                                     />
+                                    {/* Check validity */}
+                                    <Form.Control.Feedback type='invalid'>Invalid email</Form.Control.Feedback>
                             </FloatingLabel>
                             {/* Add person */}
                             <Button variant="outline-info" id={shareButtonId} onClick={handleAddMember}>
@@ -142,9 +184,9 @@ export function TeamsPageComponent({
                                         </Col>
                                     </Row>
                                 ))}
-                                {/* This is for the user who is creating the team */}
+                                {/* This is for the user who is creating the team */} 
                                 <Row className='border-bottom p-3'>
-                                    <Col md='9'>derekhuang7@gmail.com</Col>
+                                    <Col md='9'>{decodedToken.email}</Col> {/* ##### THIS IS HARDCODED. get user email */}
                                     <Col className='d-flex'>
                                         <div className='ms-auto'>(Owner)</div>
                                     </Col>

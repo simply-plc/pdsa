@@ -1,6 +1,6 @@
 import {Outlet, NavLink, useNavigate} from 'react-router-dom';
 import {Navbar, Nav, Button} from 'react-bootstrap';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import axios from 'axios';
 import {jwtDecode} from 'jwt-decode';
 
@@ -13,15 +13,26 @@ import {jwtDecode} from 'jwt-decode';
 export default function UserNavbar() {
     const navigate = useNavigate(); // Navigate things
     const [expanded, setExpanded] = useState(false); // Determines if navbar is expanded or not
-    const accessToken = localStorage.getItem("access_token");
+    const [decodedToken, setDecodedToken] = useState({}); // Sets decoded token
 
-    // If user is not logged in, redirected to login
-    if (!accessToken) {
-        navigate('/login');
-    }
+    // Checks if the user is logged in
+    useEffect(() => {
+        const accessToken = localStorage.getItem("access_token"); // See if there is an access token
+        const currentTime = Date.now() / 1000;
 
-    const decodedToken = jwtDecode(accessToken); // Decode token
-    const email = decodedToken.email; // Get user email
+        if (!accessToken) { // if not, redirect
+            localStorage.clear();
+            navigate('/login');
+        } else { // if so, then decode the token
+            const decodedToken = jwtDecode(accessToken);
+            setDecodedToken(decodedToken);
+
+            if (decodedToken.exp <= currentTime) { // If token is expired, then clear and redirect
+                localStorage.clear();
+                navigate('/login');
+            }
+        }
+    }, [navigate]);
 
     // Handles expanding when mouse is over the navbar
     function handleExpand() {
@@ -58,7 +69,7 @@ export default function UserNavbar() {
         handleExpand={handleExpand}
         handleCollapse={handleCollapse}
         handleLogout={handleLogout}
-        email={email}
+        decodedToken={decodedToken}
         />;
 }
 
@@ -67,7 +78,7 @@ export default function UserNavbar() {
 ///////////////
 
 export function UserNavbarComponent({
-    expanded, email,
+    expanded, decodedToken,
     handleExpand, handleCollapse, handleLogout
     }) {
     document.body.className = 'bg-light';
@@ -93,7 +104,7 @@ export function UserNavbarComponent({
                                 {/* Title */}
                                 <div>Simply PLC</div>
                                 {/* User Email */}
-                                <div className='text-secondary fw-light' style={{fontSize:'.8rem'}}>{email}</div>
+                                <div className='text-secondary fw-light' style={{fontSize:'.8rem'}}>{decodedToken.email}</div>
                             </div>
                         </Navbar.Brand>
                     </div>
@@ -155,7 +166,7 @@ export function UserNavbarComponent({
             {/* Children Pages (Navbar Link Pages) */}
             <div className='flex-column' style={{width:'3.5rem'}}></div> 
             <div className='flex-column w-100'>
-                <Outlet />
+                <Outlet context={[decodedToken]} />
             </div>
         </div>
     );

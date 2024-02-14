@@ -7,10 +7,14 @@ from .models import *
 class TeamMembershipSerializer(serializers.ModelSerializer):
     team_name = serializers.ReadOnlyField(source='team.name') # Get the read only value of id from team
     team_get_members = serializers.ReadOnlyField(source='team.get_members')
+    # user = serializers.SlugRelatedField(slug_field='user.email', queryset='User.user') 
+
+    #################### FIGRE OUT HOW TO CREATE: teammembership entry using user as the email rather than the primary key
+    ########################## maybe call the serializer in the teamserializer create method
 
     class Meta:
         model = TeamMembership
-        fields = '__all__'
+        fields = ['user', 'team_name', 'team_get_members', 'is_admin', 'joined_date']
 
 
 class TeamSerializer(serializers.ModelSerializer):
