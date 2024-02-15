@@ -1,12 +1,13 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth import get_user_model
 
 from .models import *
 from api.serializers import TeamMembershipSerializer
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-    team_memberships = TeamMembershipSerializer(many=True, read_only=True)
+    password = serializers.CharField(write_only=True) # Hides it from getting read
+    team_memberships = TeamMembershipSerializer(many=True, read_only=True) # serialilzes the team_memberships field so that we can see the actual values of team_memberships
 
     def create(self, data):
         user = User.objects.create_user(
@@ -17,7 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
     class Meta: 
-        model = User 
+        model = get_user_model() 
         fields = ('id', 'email', 'password', 'team_memberships') 
 
 

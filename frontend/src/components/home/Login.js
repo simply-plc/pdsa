@@ -62,7 +62,6 @@ export default function Login() {
         // Tries to login and get the tokens. Async/Await forces process to be done before moving on.
         const promise = await axios.post('http://127.0.0.1:8000/user/token/', formData, {
                                         headers: {'Content-Type': 'application/json'},
-                                        // withCredentials: true
                                     }
                                 )
                                 .catch(error => console.log(error.message));

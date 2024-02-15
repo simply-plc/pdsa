@@ -1,20 +1,19 @@
 from rest_framework import serializers
 
 from .models import *
+from user.models import User
 
 
 
 class TeamMembershipSerializer(serializers.ModelSerializer):
     team_name = serializers.ReadOnlyField(source='team.name') # Get the read only value of id from team
-    team_get_members = serializers.ReadOnlyField(source='team.get_members')
-    # user = serializers.SlugRelatedField(slug_field='user.email', queryset='User.user') 
-
-    #################### FIGRE OUT HOW TO CREATE: teammembership entry using user as the email rather than the primary key
-    ########################## maybe call the serializer in the teamserializer create method
+    team_get_members = serializers.ReadOnlyField(source='team.get_members') # Get the read only value from the function to see whose on the team
+    team = serializers.ReadOnlyField(source='team.pk'); # Get just the pk value of team
+    user = serializers.SlugRelatedField(slug_field='email', queryset=User.objects.all()) # This is for allowing email to be inputted into the serializer instead of the pk
 
     class Meta:
         model = TeamMembership
-        fields = ['user', 'team_name', 'team_get_members', 'is_admin', 'joined_date']
+        fields = ['user', 'team_name', 'team_get_members', 'is_admin', 'joined_date', 'team']
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -23,8 +22,12 @@ class TeamSerializer(serializers.ModelSerializer):
             "name": "truly final testing stuffy",
             "team_memberships": [{"user":1,"is_admin":true},{"user":3,"is_admin":false}]
         }
+        {
+            "name": "truly final testing stuffy",
+            "team_memberships": [{"user":"derekhuang7@gmail.com","is_admin":true},{"user":"aleher1126@gmail.com","is_admin":false}]
+        }
     """
-    team_memberships = TeamMembershipSerializer(many=True)
+    team_memberships = TeamMembershipSerializer(many=True) # serialilzes the team_memberships field so that we can see the actual values of team_memberships
 
     class Meta:
         model = Team
@@ -42,3 +45,12 @@ class TeamSerializer(serializers.ModelSerializer):
         instance.save()
         
         return instance
+
+
+
+
+
+
+
+
+

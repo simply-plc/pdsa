@@ -1,5 +1,6 @@
 import {Modal, Button, Form, FloatingLabel, InputGroup, Row, Col, CloseButton} from 'react-bootstrap';
 import {useId, useState} from 'react';
+import axios from 'axios';
 
 
 ///////////////
@@ -37,7 +38,7 @@ export default function CreateTeamModal({
     // This removes members when x is clicked
     function handleRemoveMember({target}) {
         members.splice(target.id, 1); // removes the member at entry
-        setMembers([...members])
+        setMembers([...members]);
     }
 
     // Adds member on hitting enter
@@ -52,12 +53,13 @@ export default function CreateTeamModal({
     }
 
     // This handles closing create modal
-    function handleCloseModal(event) {
+    function handleCloseModal() {
         setFormData({ // Resets form data
             name: '',
             share: '',
         });
 
+        setMembers([]); // Resets memebers
         setShow(false); // Close modal
     }
 
@@ -67,12 +69,35 @@ export default function CreateTeamModal({
         event.preventDefault();
         event.stopPropagation();
 
-        setShow(false); // Close modall
-        alert('saved!');
-        setFormData({ // Resets form data (possibly temp)
-            name: '',
-            share: '',
+        const name = formData.name; // Team name
+        const team_memberships = members.map((v, i) => ( // Set up the team_membership lisst
+            {
+                user: v,
+            }
+        ));
+        team_memberships.push({ // Including the user as admin
+            user: decodedToken.email,
+            is_admin: true,
         });
+
+        const data = { // Setup the data
+            name: name,
+            team_memberships: team_memberships,
+        }
+
+        // Post the data
+        const promise = await axios.post('http://127.0.0.1:8000/api/team/create/', data, {
+                                            headers: {'Content-Type': 'application/json'},
+                                        }
+                                    )
+                                    .catch(error => console.log(error.message));
+
+        // TAKE THE TEAM DATA AND CHANGE setTeams to include the new team
+        // ALSO change the serialization. does front end need all that info that is provided below? check TeamsPage when you
+                                    // get the data from backend
+        alert(JSON.stringify(promise.data));                      
+
+        handleCloseModal();
     }
 
     // handles controlling the input

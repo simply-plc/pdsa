@@ -29,3 +29,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_teams(self):
         return ", ".join([t.name for t in self.teams.all()])
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['email']),
+        ]
+
