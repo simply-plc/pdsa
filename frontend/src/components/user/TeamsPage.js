@@ -25,7 +25,11 @@ export default function TeamsPage() {
                     // withCredentials: true
                 }
             )
-            .then(response => setTeams(response.data.team_memberships)) // Sets the teams info after getting it from backend
+            .then(response => { // Sets the teams info after getting it from backend
+                const team_memberships = response.data.team_memberships;
+                team_memberships.sort((a, b) => new Date(b.joined_date) - new Date(a.joined_date));
+                setTeams(team_memberships);
+            }) 
             .catch(error => {
                 if (error.response.status === 401) { // Use is no longer logged in
                     localStorage.clear(); // Clear local storage
@@ -52,6 +56,7 @@ export default function TeamsPage() {
         handleBackButton={handleBackButton} 
         handleOpenModal={handleOpenModal}
         teams={teams} 
+        setTeams={setTeams}
         show={show}
         setShow={setShow}
         decodedToken={decodedToken}
@@ -65,7 +70,7 @@ export default function TeamsPage() {
 
 export function TeamsPageComponent({
     handleBackButton, handleOpenModal, 
-    teams, show, setShow, decodedToken,
+    teams, setTeams, show, setShow, decodedToken,
     }) {
     return (
         <>
@@ -110,6 +115,8 @@ export function TeamsPageComponent({
                 show={show}
                 setShow={setShow}
                 decodedToken={decodedToken}
+                teams={teams}
+                setTeams={setTeams}
                 />
         </>
     );

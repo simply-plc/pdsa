@@ -8,11 +8,13 @@ import axios from 'axios';
 ///////////////
 
 export default function CreateTeamModal({
-    show, setShow, decodedToken,
+    show, setShow, decodedToken, teams, setTeams,
     }) {
     const formId = useId(); // Sets form id so button can access without being in the form
     const shareButtonId = useId(); // Sets share button id
     const [validated, setValidated] = useState(false); // Checks when to show error message for email validation
+    const [required, setRequired] = useState(false); // Checks that team name is entered
+    const [dne, setDne] = useState([]);
     const [members, setMembers] = useState([]); // This is a list of members
     const [formData, setFormData] = useState({ // This is to control the form input
         name: '',
@@ -59,6 +61,7 @@ export default function CreateTeamModal({
             share: '',
         });
 
+        setDne([]); // resets users that don't exist
         setMembers([]); // Resets memebers
         setShow(false); // Close modal
     }
@@ -69,35 +72,60 @@ export default function CreateTeamModal({
         event.preventDefault();
         event.stopPropagation();
 
+        // check if name is inputted
+        if (!isValidName(true)) {
+            setRequired(true);
+            return;
+        }
+
         const name = formData.name; // Team name
-        const team_memberships = members.map((v, i) => ( // Set up the team_membership lisst
+        // Set up the team_membership list
+        const uniqueMembers = [...new Set(members)]; // makes users unique
+        const team_memberships = uniqueMembers.filter((v,i) => v != decodedToken.email).map((v, i) => ( // filter out owner and sets up
             {
                 user: v,
             }
         ));
-        team_memberships.push({ // Including the user as admin
+
+
+        // Including the user as admin
+        team_memberships.push({ 
             user: decodedToken.email,
             is_admin: true,
         });
 
-        const data = { // Setup the data
+        // Setup the data
+        const data = { 
             name: name,
             team_memberships: team_memberships,
         }
 
         // Post the data
-        const promise = await axios.post('http://127.0.0.1:8000/api/team/create/', data, {
-                                            headers: {'Content-Type': 'application/json'},
-                                        }
-                                    )
-                                    .catch(error => console.log(error.message));
+        axios.post('http://127.0.0.1:8000/api/team/create/', data, {
+                    headers: {'Content-Type': 'application/json'},
+                }
+            )
+            .then(response => {
+                const teamsData = response.data.team_memberships;
+                setTeams([teamsData[teamsData.length-1], ...teams]); // Add the new teams to teams page (new team is hardcoded to be always last)
+                handleCloseModal();
+            })
+            .catch(error => {
+                    if (error.response.status === 400) { // User doesn't exist
+                        let failedEmails = error.response.data.team_memberships.filter((v, i) => 'user' in v); // Get and filter users that got the error
+                        // get the actual emails that failed
+                        failedEmails = failedEmails.map((v, i) => {
+                            return v.user[0].match(/Object with email=([^\s]+) does not exist./)[1];
+                        });
 
-        // TAKE THE TEAM DATA AND CHANGE setTeams to include the new team
-        // ALSO change the serialization. does front end need all that info that is provided below? check TeamsPage when you
-                                    // get the data from backend
-        alert(JSON.stringify(promise.data));                      
+                        // set them up so validation can be displayed
+                        setDne(failedEmails);
+                    } else {
+                        alert(error.message); // Any other errors, alert
+                    }
+                }
+            );
 
-        handleCloseModal();
     }
 
     // handles controlling the input
@@ -108,6 +136,7 @@ export default function CreateTeamModal({
             [target.name]: target.value,
         });
 
+        setRequired(false);
         setValidated(false);
     }
 
@@ -117,6 +146,16 @@ export default function CreateTeamModal({
         const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
         if (validated || bypass) {
             return emailRegex.test(formData.share);
+        }
+
+        return true;
+    }
+
+    // Checks the validity of team name
+    function isValidName(bypass=false) { 
+        // eslint-disable-next-line
+        if (required || bypass) {
+            return formData.name != '';
         }
 
         return true;
@@ -134,8 +173,10 @@ export default function CreateTeamModal({
         handleRemoveMember={handleRemoveMember}
         handleAddMemberEnter={handleAddMemberEnter}
         isValidEmail={isValidEmail}
+        isValidName={isValidName}
         members={members}
         decodedToken={decodedToken}
+        dne={dne}
         />
 }
 
@@ -146,8 +187,8 @@ export default function CreateTeamModal({
 
 export function TeamsPageComponent({
     handleCloseModal, handleSaveModal, handleChange, handleAddMember, handleRemoveMember, handleAddMemberEnter,
-    isValidEmail,
-    show, formData, formId, shareButtonId, members, decodedToken,
+    isValidEmail, isValidName,
+    show, formData, formId, shareButtonId, members, decodedToken, dne,
     }) {
     return (
         <>
@@ -165,12 +206,14 @@ export function TeamsPageComponent({
                         <Form.Group className="mb-3" controlId={useId()}>
                             <FloatingLabel controlId={useId()} label="Team Name">
                                 <Form.Control 
-                                    required 
                                     placeholder="Enter Team Name" 
                                     name='name' 
                                     value={formData.name}
                                     onChange={handleChange}
+                                    isInvalid={!isValidName()}
                                     />
+                                    {/* Check validity */}
+                                    <Form.Control.Feedback type='invalid'>Name Required</Form.Control.Feedback>
                             </FloatingLabel>
                         </Form.Group>
                         {/* Sharing with people */}
@@ -197,13 +240,18 @@ export function TeamsPageComponent({
                         {/* List of people who have access */}
                         <Form.Text >
                             <div className='h6 me-1 ms-1'>Members:</div>
-                            <div className='ms-1 me-1 overflow-auto' style={{maxHeight:'14rem', minHeight: '3rem'}}>
+                            <div className='ms-1 me-1 overflow-y-auto' style={{maxHeight:'14rem', minHeight: '3rem'}}>
                                 {/* This is for the first line */}
                                 <Row className='border-bottom' />
                                 {/* This is the rest of the list of people who will be on the team */}
                                 {members.map((v, i) => (
                                     <Row className='border-bottom p-3'>
-                                        <Col md='10'>{v}</Col>
+                                        {/* Email */}
+                                        <Col className='d-flex' md='10'>
+                                            <span className='overflow-hidden me-2'>{v}</span>
+                                            {(dne.includes(v)) ? <span className='text-danger ms-auto text-nowrap'>User doesn't exist</span> : ''}
+                                        </Col>
+                                        {/* Remove button */}
                                         <Col className='d-flex'>
                                             <CloseButton id={i} className='ms-auto' onClick={handleRemoveMember} />
                                         </Col>
@@ -211,7 +259,7 @@ export function TeamsPageComponent({
                                 ))}
                                 {/* This is for the user who is creating the team */} 
                                 <Row className='border-bottom p-3'>
-                                    <Col md='9'>{decodedToken.email}</Col> {/* ##### THIS IS HARDCODED. get user email */}
+                                    <Col md='9'>{decodedToken.email}</Col>
                                     <Col className='d-flex'>
                                         <div className='ms-auto'>(Owner)</div>
                                     </Col>

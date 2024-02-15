@@ -73,6 +73,10 @@ export function TeamsPageCardComponent({
                     <span className='m-auto ms-0 mt-0 me-2 h3 fw-bold overflow-auto h-100 w-100'>{team.team_name}</span>
                     {/* This is the additional info */}
                     <span className='m-auto me-0 mt-0'>
+                        {/* Aims */}
+                        <div className='text-nowrap text-right'>
+                            Aims: 0
+                        </div>
                         {/* Drivers */}
                         <div className='text-nowrap text-right'>
                             Drivers: 0
