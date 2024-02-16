@@ -81,7 +81,7 @@ export default function CreateTeamModal({
         const name = formData.name; // Team name
         // Set up the team_membership list
         const uniqueMembers = [...new Set(members)]; // makes users unique
-        const team_memberships = uniqueMembers.filter((v,i) => v != decodedToken.email).map((v, i) => ( // filter out owner and sets up
+        const team_memberships = uniqueMembers.filter((v,i) => v !== decodedToken.email).map((v, i) => ( // filter out owner and sets up
             {
                 user: v,
             }
@@ -155,7 +155,7 @@ export default function CreateTeamModal({
     function isValidName(bypass=false) { 
         // eslint-disable-next-line
         if (required || bypass) {
-            return formData.name != '';
+            return formData.name !== '';
         }
 
         return true;

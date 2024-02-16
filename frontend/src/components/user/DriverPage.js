@@ -25,7 +25,7 @@ export default function DriverPage() {
 
 export function DriverPageComponent({handleBackButton}) {
     return (
-        <div className='m-3'>
+        <div className=''>
             <Card body bg='light' className='border-0'>
                 <div className='d-flex'>
                     <Button className='me-5 mb-auto mt-auto' variant='light' onClick={handleBackButton}>

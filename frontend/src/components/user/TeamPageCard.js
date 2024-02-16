@@ -1,5 +1,6 @@
 import {Card, Col, Dropdown} from 'react-bootstrap';
-import {useState} from 'react';
+import axios from 'axios';
+import {useNavigate} from 'react-router-dom';
 
 import Hover from '../general/Hover';
 import './TeamPageCard.css';
@@ -9,29 +10,31 @@ import './TeamPageCard.css';
 // Container //
 ///////////////
 
-export default function TeamsPageCard({team}) {
-    const [show, setShow] = useState(false);
+export default function TeamsPageCard({team, teams, setTeams, index}) {
+    const navigate = useNavigate(); // Get navigation
 
     // This handles selecting team
     function handleSelectTeam(event) {
-        // event.stopPropagation();
-        // event.preventDefault();
-
-        alert('Select Team');
+        navigate(`${team.team_pk}`); // Navigate to team page
     }
 
-    function handleTeamMenu(event) {
-        event.stopPropagation();
-        event.preventDefault();
-
-        // alert('Team Menu');
+    // handles deleting the teams
+    function handleDelete(event) {
+        axios.delete(`http://127.0.0.1:8000/api/team/${team.team_pk}/`, {
+                    headers: {'Content-Type': 'application/json'},
+                }
+            )
+            .then(response => {
+                teams.splice(index, 1);
+                setTeams([...teams]);
+            })
+            .catch(error => alert(error.message));
     }
 
     return <TeamsPageCardComponent 
         handleSelectTeam={handleSelectTeam}
-        handleTeamMenu={handleTeamMenu}
+        handleDelete={handleDelete}
         team={team}
-        show={show}
         />
 }
 
@@ -41,8 +44,8 @@ export default function TeamsPageCard({team}) {
 ///////////////
 
 export function TeamsPageCardComponent({
-    handleSelectTeam, handleTeamMenu,
-    team, show,
+    handleSelectTeam, handleDelete,
+    team,
     }) {
     return (
         <Col md='3' className='mb-4' style={{height:'11rem'}}>
@@ -63,19 +66,23 @@ export function TeamsPageCardComponent({
                     </div>
                     {/* This is the menu button */}
                     <div className='ms-auto mt-auto mb-auto text-center' style={{width:'3rem'}}>
+                        {/* Menu dropdown */}
                         <Dropdown onClick={(e)=>e.stopPropagation()}>
+                            {/* Toggle Button */}
                             <Dropdown.Toggle className='bg-white border-white p-0'>
                                 <Hover 
                                     comp={(props)=><span {...props} />} 
                                     style={{fontSize:'1.3rem', cursor:'pointer'}}
                                     cStyle={{fontSize:'1.5rem'}}
                                     className='bi-three-dots-vertical text-dark' 
-                                    // onClick={handleTeamMenu}
                                     />
                             </Dropdown.Toggle>
+                            {/* Menu */}
                             <Dropdown.Menu variant="dark">
+                                {/* Archive */}
                                 <Dropdown.Item>Archive</Dropdown.Item>
-                                <Dropdown.Item className='text-danger'>Delete</Dropdown.Item>
+                                {/* Delete */}
+                                <Dropdown.Item className='text-danger' onClick={handleDelete}>Delete</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
                     </div>

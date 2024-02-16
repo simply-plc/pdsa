@@ -31,7 +31,7 @@ export default function TeamsPage() {
                 setTeams(team_memberships);
             }) 
             .catch(error => {
-                if (error.response.status === 401) { // Use is no longer logged in
+                if (error.response.status === 401) { // User is no longer logged in
                     localStorage.clear(); // Clear local storage
                     navigate('/login'); // redirectss
                 } else {
@@ -74,7 +74,7 @@ export function TeamsPageComponent({
     }) {
     return (
         <>
-            <div className='m-3'>
+            <div className=''>
                 {/* This is the header section with title and back button and add button */}
                 <Card body bg='light' className='border-0'>
                     <div className='d-flex'>
@@ -104,7 +104,7 @@ export function TeamsPageComponent({
                     <Row>
                         {/* This creates all the individual cards for the teams */}
                         {teams.map((v, i) => (
-                            <TeamPageCard team={v} />
+                            <TeamPageCard team={v} teams={teams} setTeams={setTeams} index={i} />
                         ))}
                     </Row>
                 </Card>

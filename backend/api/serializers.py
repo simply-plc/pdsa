@@ -8,12 +8,12 @@ from user.models import User
 class TeamMembershipSerializer(serializers.ModelSerializer):
     team_name = serializers.ReadOnlyField(source='team.name') # Get the read only value of id from team
     team_get_members = serializers.ReadOnlyField(source='team.get_members') # Get the read only value from the function to see whose on the team
-    # team = serializers.ReadOnlyField(source='team.pk'); # Get just the pk value of team
+    team_pk = serializers.ReadOnlyField(source='team.pk'); # Get just the pk value of team
     user = serializers.SlugRelatedField(slug_field='email', queryset=User.objects.all()) # This is for allowing email to be inputted into the serializer instead of the pk
 
     class Meta:
         model = TeamMembership
-        fields = ['user', 'team_name', 'team_get_members', 'is_admin', 'joined_date']
+        fields = ['user', 'team_pk', 'team_name', 'team_get_members', 'is_admin', 'joined_date']
 
 
 class TeamSerializer(serializers.ModelSerializer):

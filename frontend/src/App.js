@@ -13,6 +13,9 @@ import UserNavbar from './components/user/UserNavbar';
 import DriverPage from './components/user/DriverPage';
 import TeamsPage from './components/user/TeamsPage';
 
+// Team imports
+import UserTeam from './components/team/UserTeam';
+
 
 const router = createBrowserRouter([
     // /
@@ -86,6 +89,11 @@ const router = createBrowserRouter([
             {
                 path: 'teams',
                 element: <TeamsPage />,
+            },
+            // /user/teams/<int:pk>
+            {
+                path: 'teams/:teamId',
+                element: <UserTeam />,
             },
             // /user/settings
             {
