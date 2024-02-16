@@ -1,6 +1,8 @@
-import {Card, Col} from 'react-bootstrap';
+import {Card, Col, Dropdown} from 'react-bootstrap';
+import {useState} from 'react';
 
 import Hover from '../general/Hover';
+import './TeamPageCard.css';
 
 
 ///////////////
@@ -8,10 +10,12 @@ import Hover from '../general/Hover';
 ///////////////
 
 export default function TeamsPageCard({team}) {
+    const [show, setShow] = useState(false);
+
     // This handles selecting team
     function handleSelectTeam(event) {
-        event.stopPropagation();
-        event.preventDefault();
+        // event.stopPropagation();
+        // event.preventDefault();
 
         alert('Select Team');
     }
@@ -20,13 +24,14 @@ export default function TeamsPageCard({team}) {
         event.stopPropagation();
         event.preventDefault();
 
-        alert('Team Menu');
+        // alert('Team Menu');
     }
 
     return <TeamsPageCardComponent 
         handleSelectTeam={handleSelectTeam}
         handleTeamMenu={handleTeamMenu}
         team={team}
+        show={show}
         />
 }
 
@@ -37,7 +42,7 @@ export default function TeamsPageCard({team}) {
 
 export function TeamsPageCardComponent({
     handleSelectTeam, handleTeamMenu,
-    team,
+    team, show,
     }) {
     return (
         <Col md='3' className='mb-4' style={{height:'11rem'}}>
@@ -58,13 +63,21 @@ export function TeamsPageCardComponent({
                     </div>
                     {/* This is the menu button */}
                     <div className='ms-auto mt-auto mb-auto text-center' style={{width:'3rem'}}>
-                        <Hover 
-                            comp={(props)=><span {...props} />} 
-                            style={{fontSize:'1.3rem', cursor:'pointer'}}
-                            cStyle={{fontSize:'1.5rem'}}
-                            className='bi-three-dots-vertical text-dark' 
-                            onClick={handleTeamMenu}
-                            />
+                        <Dropdown onClick={(e)=>e.stopPropagation()}>
+                            <Dropdown.Toggle className='bg-white border-white p-0'>
+                                <Hover 
+                                    comp={(props)=><span {...props} />} 
+                                    style={{fontSize:'1.3rem', cursor:'pointer'}}
+                                    cStyle={{fontSize:'1.5rem'}}
+                                    className='bi-three-dots-vertical text-dark' 
+                                    // onClick={handleTeamMenu}
+                                    />
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu variant="dark">
+                                <Dropdown.Item>Archive</Dropdown.Item>
+                                <Dropdown.Item className='text-danger'>Delete</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
                     </div>
                 </div>
                 {/* This is the body */}
