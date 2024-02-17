@@ -32,10 +32,11 @@ export default function TeamsPage() {
             }) 
             .catch(error => {
                 if (error.response.status === 401) { // User is no longer logged in
+                    // alert(error.message + "TeamsPage");
                     localStorage.clear(); // Clear local storage
                     navigate('/login'); // redirectss
                 } else {
-                    console.log(error.message);
+                    // alert(error.message + "TeamsPage");
                 }
             });
 

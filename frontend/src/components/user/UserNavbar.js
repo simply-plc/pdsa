@@ -28,6 +28,7 @@ export default function UserNavbar() {
             setDecodedToken(decodedToken);
 
             if (decodedToken.exp <= currentTime) { // If token is expired, then clear and redirect
+                // alert('expired token useNavbar')
                 localStorage.clear();
                 navigate('/login');
             }

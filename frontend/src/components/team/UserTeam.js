@@ -24,7 +24,9 @@ export default function UserTeam() {
             .then(response => {
                 setTeam(response.data);
             })
-            .catch(error => alert(error.message));
+            .catch(error => {
+                // alert(error.message + ' UserTeam');
+            });
     } ,[]);
 
     // Back button
