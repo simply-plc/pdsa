@@ -29,18 +29,40 @@ class Aim(models.Model):
     by_num = models.TextField() # By how much do we want to accomplish?
     by_date = models.DateField() # By when will we have accomplished this aim?
 
+    def __str__(self):
+        return self.goal
+
 class Driver(models.Model):
     aim = models.ForeignKey(Aim, on_delete=models.CASCADE, related_name='drivers')
     goal = models.TextField() # What is the goal?
     description = models.TextField() # How does it relate with the aim?
     measure = models.TextField() # What data do we measure?
 
+    def __str__(self):
+        return self.goal
+
 class ChangeIdea(models.Model):
+    STAGE_CHOICES = [
+        ('Testing', 'Testing'), 
+        ('Implementing', 'Implementing'), 
+        ('Spreading', 'Spreading')
+    ]
+
+    aim = models.ForeignKey(Aim, on_delete=models.CASCADE, related_name='change_idea')
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE, related_name='change_idea')
     idea = models.TextField() # What is the action idea you want to implement?
-    stage = models.CharField(max_length=255) # Are we testing, implementing, or spreading?
+    stage = models.CharField(max_length=255, choices=STAGE_CHOICES) # Are we testing, implementing, or spreading?
+
+    def __str__(self):
+        return self.idea
 
 class PDSA(models.Model):
+    NEXT_STEP_CHOICES = [
+        ('Implement', 'Implement'), 
+        ('Expand', 'Expand'), 
+        ('Abandon', 'Abandon')
+    ]
+
     change_idea = models.ForeignKey(ChangeIdea, on_delete=models.CASCADE, related_name='pdsa')
     learning_goal = models.TextField() # What do you want to learn about change idea?
     steps = models.TextField() # What steps are you going to take to test the change idea?
@@ -48,10 +70,10 @@ class PDSA(models.Model):
     predictions = models.TextField() # What predictions do you have about the data for the change idea?
     by_date = models.DateField() # When are you going to test the change idea?
     learning = models.TextField() # What did you learn from the data you collected from testing the change idea?
-    next_step = models.CharField(max_length=255) # Are you going to implement, expand, or abandon the change idea?
+    next_step = models.CharField(max_length=255, choices=NEXT_STEP_CHOICES) # Are you going to implement, expand, or abandon the change idea?
 
-
-
+    def __str__(self):
+        return self.learning_goal
 
 
 
