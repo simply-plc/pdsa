@@ -27,7 +27,7 @@ export default function UserTeam() {
             .catch(error => {
                 // alert(error.message + ' UserTeam');
             });
-    } ,[]);
+    } ,[teamId]);
 
     // Back button
     function handleBackButton() {

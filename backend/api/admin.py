@@ -29,7 +29,7 @@ admin.site.register(Driver, DriverAdmin)
 
 class ChangeIdeaAdmin(admin.ModelAdmin):
     model = ChangeIdea
-    list_display = ['aim', 'driver', 'idea', 'stage']
+    list_display = ['driver', 'idea', 'stage']
 
 admin.site.register(ChangeIdea, ChangeIdeaAdmin)
 

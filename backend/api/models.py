@@ -48,8 +48,7 @@ class ChangeIdea(models.Model):
         ('Spreading', 'Spreading')
     ]
 
-    aim = models.ForeignKey(Aim, on_delete=models.CASCADE, related_name='change_idea')
-    driver = models.ForeignKey(Driver, on_delete=models.CASCADE, related_name='change_idea')
+    driver = models.ForeignKey(Driver, on_delete=models.CASCADE, related_name='change_ideas')
     idea = models.TextField() # What is the action idea you want to implement?
     stage = models.CharField(max_length=255, choices=STAGE_CHOICES) # Are we testing, implementing, or spreading?
 

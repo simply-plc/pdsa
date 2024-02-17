@@ -64,6 +64,7 @@ export default function CreateTeamModal({
         setDne([]); // resets users that don't exist
         setMembers([]); // Resets memebers
         setShow(false); // Close modal
+        setRequired(false);
     }
 
     // This handles closing create modal
