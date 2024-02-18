@@ -154,31 +154,58 @@ export function TeamAimComponent({
                     <Form id={formId} onSubmit={handleSaveModal} validated={false} noValidate>
                         {/* Goal */}
                         <Form.Group className="mb-3" controlId={useId()}>
-                            <FloatingLabel controlId={useId()} label="What do you want to accomplish?">
-                                <Form.Control 
-                                    placeholder="Goal" 
-                                    name='goal' 
-                                    value={formData.goal}
-                                    onChange={handleChange}
-                                    isInvalid={!isValid('goal')}
-                                    />
-                                    {/* Check validity */}
-                                    <Form.Control.Feedback type='invalid'>Required</Form.Control.Feedback>
-                            </FloatingLabel>
+                            <Form.Label>What do we want to accomplish?</Form.Label>
+                            <Form.Control 
+                                as='textarea'
+                                rows={3}
+                                name='goal' 
+                                value={formData.goal}
+                                onChange={handleChange}
+                                isInvalid={!isValid('goal')}
+                                />
+                                {/* Check validity */}
+                                <Form.Control.Feedback type='invalid'>Required</Form.Control.Feedback>
                         </Form.Group>
                         {/* Population */}
                         <Form.Group className="mb-3" controlId={useId()}>
-                            <FloatingLabel controlId={useId()} label="Who is this aim for?">
-                                <Form.Control 
-                                    placeholder="Population" 
-                                    name='population' 
-                                    value={formData.population}
-                                    onChange={handleChange}
-                                    isInvalid={!isValid('population')}
-                                    />
-                                    {/* Check validity */}
-                                    <Form.Control.Feedback type='invalid'>Required</Form.Control.Feedback>
-                            </FloatingLabel>
+                            <Form.Label>Who is this aim for?</Form.Label>
+                            <Form.Control 
+                                as='textarea'
+                                rows={3} // CREATE A NEXT PAGE ON THE MODAL. Create a porogrees type of thing
+                                name='population' 
+                                value={formData.population}
+                                onChange={handleChange}
+                                isInvalid={!isValid('population')}
+                                />
+                                {/* Check validity */}
+                            <Form.Control.Feedback type='invalid'>Required</Form.Control.Feedback>
+                        </Form.Group>
+                        {/* By number */}
+                        <Form.Group className="mb-3" controlId={useId()}>
+                            <Form.Label>By how much do we want to accomplish?</Form.Label>
+                            <Form.Control 
+                                as='textarea'
+                                rows={3}
+                                name='byNum' 
+                                value={formData.byNum}
+                                onChange={handleChange}
+                                isInvalid={!isValid('byNum')}
+                                />
+                            {/* Check validity */}
+                            <Form.Control.Feedback type='invalid'>Required</Form.Control.Feedback>
+                        </Form.Group>
+                        {/* By Date */}
+                        <Form.Group className="mb-3" controlId={useId()}>
+                            <Form.Label>By when will we have accomplished this aim?</Form.Label>
+                            <Form.Control 
+                                type='date'
+                                name='byDate' 
+                                value={formData.byDate}
+                                onChange={handleChange}
+                                isInvalid={!isValid('byDate')}
+                                />
+                            {/* Check validity */}
+                            <Form.Control.Feedback type='invalid'>Required</Form.Control.Feedback>
                         </Form.Group>
                     </Form>
                 </Modal.Body>
