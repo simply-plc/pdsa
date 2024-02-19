@@ -11,13 +11,12 @@ import TeamChangeIdeas from './TeamChangeIdeas';
 export default function UserTeam() {
     const navigate = useNavigate();
     const params = useParams(); // Get params
-    const teamId = params.teamId; // Get team id from params
     const [team, setTeam] = useState(); // Current team info
 
 
     // Get team info on load
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/team/${teamId}/`, {
+        axios.get(`http://127.0.0.1:8000/api/team/${params.teamId}/`, {
                     headers: {'Content-Type': 'application/json'},
                 }
             )
@@ -27,7 +26,7 @@ export default function UserTeam() {
             .catch(error => {
                 // alert(error.message + ' UserTeam');
             });
-    } ,[teamId]);
+    } ,[params.teamId]);
 
     // Back button
     function handleBackButton() {
@@ -74,7 +73,7 @@ export function UserTeamComponent({team, handleBackButton}) {
                 <Col className='h-100 mb-3' md={6}>
                     {/* Aims */}
                     <Row style={{height:'49%'}}>
-                        <TeamAims />
+                        <TeamAims team={team} />
                     </Row>
                     <Row style={{height:'2%'}} /> 
                     {/* Drivers */}
