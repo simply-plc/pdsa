@@ -110,7 +110,7 @@ export function TeamDriversComponent({
     return (
         <>
             {/* Card */}
-            <Card body className='border-0 shadow-sm h-100'>
+            <Card body className='border-0 shadow-sm h-100 rounded-4'>
                 {/* Header */}
                 <div className="d-flex">
                     {/* Title */}
@@ -130,7 +130,7 @@ export function TeamDriversComponent({
                     </Hover>
                 </div>
                 {/* body */}
-                <Card body className='border-0 bg-light mt-2' style={{height:"82%"}}>
+                <Card body className='border-0 bg-light mt-2 rounded-4' style={{height:"82%"}}>
                     hi
                 </Card>
             </Card>

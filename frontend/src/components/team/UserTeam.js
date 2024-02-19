@@ -16,7 +16,7 @@ export default function UserTeam() {
 
     // Get team info on load
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/team/${params.teamId}/`, {
+        axios.get(`http://127.0.0.1:8000/api/user-team/${params.teamId}/`, {
                     headers: {'Content-Type': 'application/json'},
                 }
             )
@@ -68,7 +68,7 @@ export function UserTeamComponent({team, handleBackButton}) {
                     </div>
                 </Card>
             </Row>
-            <Row className='ms-3 me-1' style={{height:'87%'}}>
+            <Row className='ms-3 me-1' style={{height:'40rem'}}>
                 {/* First Col */}
                 <Col className='h-100 mb-3' md={6}>
                     {/* Aims */}

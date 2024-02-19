@@ -5,6 +5,7 @@ from .views import *
 urlpatterns = [
     path('team/create/', TeamCreateAPIView.as_view(), name='team_create'),
     path('team/<int:pk>/', TeamRetrieveUpdateDestroyAPIView.as_view(), name='team_pk'),
+    path('user-team/<int:pk>/', UserTeamRetrieveUpdateDestroyAPIView.as_view(), name='user_team_pk'),
     path('aim/create/', AimCreateAPIView.as_view(), name='aim_create'),
     path('aim/<int:pk>/', AimRetrieveUpdateDestroyAPIView.as_view(), name='aim_pk'),
     path('driver/create/', DriverCreateAPIView.as_view(), name='Driver_create'),

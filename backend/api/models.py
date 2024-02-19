@@ -28,6 +28,7 @@ class Aim(models.Model):
     population = models.TextField() # Who is this aim for?
     by_num = models.TextField() # By how much do we want to accomplish?
     by_date = models.DateField() # By when will we have accomplished this aim?
+    modified_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.goal
@@ -37,6 +38,7 @@ class Driver(models.Model):
     goal = models.TextField() # What is the goal?
     description = models.TextField() # How does it relate with the aim?
     measure = models.TextField() # What data do we measure?
+    modified_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.goal
@@ -51,6 +53,7 @@ class ChangeIdea(models.Model):
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE, related_name='change_ideas')
     idea = models.TextField() # What is the action idea you want to implement?
     stage = models.CharField(max_length=255, choices=STAGE_CHOICES) # Are we testing, implementing, or spreading?
+    modified_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.idea
@@ -70,6 +73,7 @@ class PDSA(models.Model):
     by_date = models.DateField() # When are you going to test the change idea?
     learning = models.TextField() # What did you learn from the data you collected from testing the change idea?
     next_step = models.CharField(max_length=255, choices=NEXT_STEP_CHOICES) # Are you going to implement, expand, or abandon the change idea?
+    modified_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.learning_goal

@@ -1,12 +1,14 @@
-import {Card, Modal, Form, Button, FloatingLabel, ProgressBar} from 'react-bootstrap';
-import {useState, useId} from 'react';
+import {Card, Modal, Form, Button, ProgressBar, Dropdown} from 'react-bootstrap';
+import {useState, useId, useEffect} from 'react';
 import axios from 'axios';
 
 import Hover from '../general/Hover';
+import AimCard from './AimCard';
 
 
 
 export default function TeamAim({team}) {
+    const [aims, setAims] = useState(); // Sets the aim
     const [show, setShow] = useState(); // show or close modal
     const formId = useId(); // Sets form id so button can access without being in the form
     const [page, setPage] = useState(1);
@@ -22,6 +24,13 @@ export default function TeamAim({team}) {
         by_num: '',
         by_date: '',
     });
+
+    // set the aims for the team
+    useEffect(() => {
+        const newAims = team?.aims;
+        newAims?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
+        setAims(newAims)
+    }, [team]);
 
     // handles controlling the input
     function handleChange({target}) {
@@ -77,6 +86,7 @@ export default function TeamAim({team}) {
         event.preventDefault();
         event.stopPropagation();
 
+        // Checks if all the inputs are filled
         const validList = [];
         for (let key in formData) {
             validList.push(isValid(key, true));
@@ -86,8 +96,13 @@ export default function TeamAim({team}) {
             return;
         }
 
+        // Post the new aim
         axios.post('http://127.0.0.1:8000/api/aim/create/', {...formData, team: team.id})
-            .then(response => alert('success'))
+            .then(response => {
+                // Adds the aim
+                aims.unshift(response.data);
+                setAims([...aims]);
+            })
             .catch(error => alert(error.message));
 
         handleCloseModal();
@@ -124,6 +139,8 @@ export default function TeamAim({team}) {
         handleSaveModal={handleSaveModal}
         isValid={isValid}
         page={page}
+        aims={aims}
+        setAims={setAims}
         />
 }
 
@@ -131,12 +148,12 @@ export default function TeamAim({team}) {
 export function TeamAimComponent({
     handleCloseModal, handleChange, handleSaveModal, handleOpenModal, handleNext, handlePrev,
     show, formId, formData,
-    isValid, page,
+    isValid, page, aims, setAims,
     }) {
     return (
         <>
             {/* Card */}
-            <Card body className='border-0 shadow-sm h-100'>
+            <Card body className='border-0 shadow-sm h-100 rounded-4'>
                 {/* Header */}
                 <div className="d-flex">
                     {/* Title */}
@@ -155,12 +172,18 @@ export function TeamAimComponent({
                         <span className='bi-plus-lg fs-5 ms-auto' />
                     </Hover>
                 </div>
-                {/* body */}
-                <Card body className='border-0 bg-light mt-2' style={{height:"82%"}}>
-                    hi
+                {/* Body */}
+                <Card body className='border-0 bg-light mt-2 rounded-4' style={{height:"14rem"}}>
+                    {/* Scrollable Container */}
+                    <div className='overflow-y-scroll' style={{height:"12rem"}}>
+                        {aims?.map((v, i) => (
+                            <AimCard aim={v} aims={aims} index={i} setAims={setAims} />                
+                        ))}
+                    </div>
                 </Card>
             </Card>
-            {/* Modal */}
+            {/* GENERALIZE THE MODAL/FORM PROCESSS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */}
+            {/* Modal */} 
             <Modal show={show} onHide={handleCloseModal}>
                 {/* Header */}
                 <Modal.Header closeButton>

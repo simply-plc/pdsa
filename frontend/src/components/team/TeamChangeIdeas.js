@@ -110,7 +110,7 @@ export function TeamChangeIdeasComponent({
     return (
         <>
             {/* Card */}
-            <Card body className='border-0 shadow-sm h-100'>
+            <Card body className='border-0 shadow-sm h-100 rounded-4'>
                 {/* Header */}
                 <div className="d-flex">
                     {/* Title */}
@@ -130,7 +130,7 @@ export function TeamChangeIdeasComponent({
                     </Hover>
                 </div>
                 {/* body */}
-                <Card body className='border-0 bg-light mt-2' style={{height:"92%"}}>
+                <Card body className='border-0 bg-light mt-2 rounded-4' style={{height:"92%"}}>
                     hi
                 </Card>
             </Card>

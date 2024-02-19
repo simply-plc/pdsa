@@ -46,28 +46,38 @@ class TeamSerializer(serializers.ModelSerializer):
         
         return instance
 
-class AimSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Aim
-        fields = '__all__'
-
-class DriverSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Driver
-        fields = '__all__'
-
-class ChangeIdeaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ChangeIdea
-        fields = '__all__'
-
 class PDSASerializer(serializers.ModelSerializer):
     class Meta:
         model = PDSA
         fields = '__all__'
 
+class ChangeIdeaSerializer(serializers.ModelSerializer):
+    pdsas = PDSASerializer(read_only=True, many=True)
 
+    class Meta:
+        model = ChangeIdea
+        fields = '__all__'
 
+class DriverSerializer(serializers.ModelSerializer):
+    change_ideas = ChangeIdeaSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Driver
+        fields = '__all__'
+
+class AimSerializer(serializers.ModelSerializer):
+    drivers = DriverSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Aim
+        fields = '__all__'
+
+class UserTeamSerializer(serializers.ModelSerializer):
+    aims = AimSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Team
+        fields = '__all__'
 
 
 
