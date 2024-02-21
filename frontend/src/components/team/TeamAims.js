@@ -1,4 +1,4 @@
-import {Card} from 'react-bootstrap';
+import {Card, Form} from 'react-bootstrap';
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 
@@ -17,11 +17,13 @@ export default function TeamAim({team}) {
                 label: 'What do we want to accomplish?',
                 name: 'goal',
                 as: 'textarea',
+                comp: Form.Control,
             },
             {
                 label: 'Who is this aim for?',
                 name: 'population',
                 as: 'textarea',
+                comp: Form.Control,
             },
         ],
         [// Page 2
@@ -29,12 +31,14 @@ export default function TeamAim({team}) {
                 label: 'By how much do we want to accomplish?',
                 name: 'by_num',
                 as: 'textarea',
+                comp: Form.Control,
             },
             {
                 label: 'By when will we have accomplished this aim?',
                 name: 'by_date',
                 as: 'input',
                 type: 'date',
+                comp: Form.Control,
             },
         ],
     ];

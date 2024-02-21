@@ -74,18 +74,20 @@ export function UserTeamComponent({team, handleBackButton}) {
                 {/* First Col */}
                 <Col className='mb-3' lg={6}>
                     {/* Aims */}
-                    <Row className='pb-2' style={{height:'50%'}}>
+                    <Row className='pb-2 w-100' style={{height:'50%'}}>
                         <TeamAims team={team} />
                     </Row>
                     {/* Drivers */}
-                    <Row className='pt-2' style={{height:'50%'}}>
+                    <Row className='pt-2 w-100' style={{height:'50%'}}>
                         <TeamDrivers team={team} />
                     </Row>
                 </Col>
                 {/* Second Col */}
                 <Col className='flex-grow-1 mb-3' lg={6}>
                     {/* Change Ideas */}
-                    <TeamChangeIdeas />
+                    <Row className='w-100' style={{height:'100%'}}>
+                        <TeamChangeIdeas team={team} />
+                    </Row>
                 </Col>
             </Row>
         </div>

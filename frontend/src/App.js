@@ -10,8 +10,10 @@ import CreateAccount from './components/home/CreateAccount';
 
 // User imports
 import UserNavbar from './components/user/UserNavbar';
-import DriverPage from './components/user/DriverPage';
 import TeamsPage from './components/user/TeamsPage';
+import OverviewPage from './components/user/OverviewPage';
+import ChangeIdeasPage from './components/user/ChangeIdeasPage';
+import SettingsPage from './components/user/SettingsPage';
 
 // Team imports
 import UserTeam from './components/team/UserTeam';
@@ -68,22 +70,12 @@ const router = createBrowserRouter([
             // /user/overview
             {
                 path: 'overview',
-                element: <div>overview</div>,
+                element: <OverviewPage />,
             },
             // /user/pdsa
             {
                 path: 'change-ideas',
-                element: (
-                    <div>
-                        <p className='vh-100 d-flex'>pdsa</p>
-                        <p className='vh-100 d-flex'>pdsa</p>
-                    </div>
-                    ),
-            },
-            // /user/drivers
-            {
-                path: 'drivers',
-                element: <DriverPage />,
+                element: <ChangeIdeasPage />,
             },
             // /user/teams
             {
@@ -98,7 +90,7 @@ const router = createBrowserRouter([
             // /user/settings
             {
                 path: 'settings',
-                element: <div>settings</div>,
+                element: <SettingsPage />,
             },
         ]
     },

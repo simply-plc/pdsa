@@ -1,4 +1,4 @@
-import {Card} from 'react-bootstrap';
+import {Card, Form} from 'react-bootstrap';
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 
@@ -9,7 +9,7 @@ import SelectCard from './SelectCard';
 
 
 export default function TeamDrivers({team}) {
-    const [drivers, setDrivers] = useState(); // Sets the aim
+    const [drivers, setDrivers] = useState([]); // Sets the drivers
     const [show, setShow] = useState(); // show or close modal
     const pages = [
         [// Page 1
@@ -17,16 +17,23 @@ export default function TeamDrivers({team}) {
                 label: 'What aim does the driver affect?',
                 name: 'aim',
                 as: 'textarea',
+                comp: Form.Select,
+                children: [
+                    <option value=''></option>,
+                    ...(team?.aims.map((v, i) => <option value={v.id}>{v.goal}</option>) || []),
+                ],
             },
             {
                 label: 'What needs to be improved?',
                 name: 'goal',
                 as: 'textarea',
+                comp: Form.Control,
             },
             {
                 label: 'How does it relate with the aim?',
                 name: 'description',
                 as: 'textarea',
+                comp: Form.Control,
             },
         ],
         [// Page 2
@@ -34,6 +41,7 @@ export default function TeamDrivers({team}) {
                 label: 'What data do we measure?',
                 name: 'measure',
                 as: 'textarea',
+                comp: Form.Control,
             },
         ],
     ];
@@ -53,7 +61,6 @@ export default function TeamDrivers({team}) {
 
         // alert(JSON.stringify(team?.aims))
         newDrivers?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
-        alert(JSON.stringify(newDrivers))
         setDrivers(newDrivers)
     }, [team]);
 
@@ -62,9 +69,9 @@ export default function TeamDrivers({team}) {
         setShow(true);
     }
 
-    async function handleSave(formData) {
+    function handleSave(formData) {
         // Post the new aim
-        axios.post('http://127.0.0.1:8000/api/drivers/create/', {...formData})
+        axios.post('http://127.0.0.1:8000/api/driver/create/', {...formData})
             .then(response => {
                 // Adds the aim
                 drivers.unshift(response.data);

@@ -167,11 +167,12 @@ export function TeamAimComponent({
 
     for (let j = 0; j < currPage.length; j++) { // Iterate through the form groups
         let currGroup = currPage[j]; // Current group on page
+        let CurrInput = currGroup.comp;
         // Adds a form group to the form page
         currFormPage.push( 
             <Form.Group className="mb-3">
                 <Form.Label>{currGroup.label}</Form.Label>
-                <Form.Control 
+                <CurrInput
                     as={currGroup.as}
                     rows={4}
                     type={currGroup.type}
@@ -180,7 +181,9 @@ export function TeamAimComponent({
                     value={formData[currGroup.name]}
                     onChange={handleChange}
                     isInvalid={!isValid(currGroup.name)}
-                    />
+                    >
+                    {currGroup.children}
+                </CurrInput>
                     {/* Check validity */}
                 <Form.Control.Feedback type='invalid'>Required</Form.Control.Feedback>
             </Form.Group>

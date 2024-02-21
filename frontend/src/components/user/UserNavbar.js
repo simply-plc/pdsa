@@ -128,13 +128,6 @@ export function UserNavbarComponent({
                                 <span className='ms-3'>Teams</span>
                             </Button>
                         </Nav.Item>
-                        {/* drivers */}
-                        <Nav.Item className='mb-2'>
-                            <Button variant='dark' to='drivers' as={NavLink} className='overflow-x-hidden text-nowrap w-100 rounded-end-5 rounded-start-3 text-start' >
-                                <i className='bi-bullseye p-1' />
-                                <span className='ms-3'>Drivers</span>
-                            </Button>
-                        </Nav.Item>
                         {/* Change Ideas */}
                         <Nav.Item className='mb-2'>
                             <Button variant='dark' to='change-ideas' as={NavLink} className='overflow-x-hidden text-nowrap w-100 rounded-end-5 rounded-start-3 text-start' >
