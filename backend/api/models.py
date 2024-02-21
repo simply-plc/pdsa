@@ -35,7 +35,7 @@ class Aim(models.Model):
 
 class Driver(models.Model):
     aim = models.ForeignKey(Aim, on_delete=models.CASCADE, related_name='drivers')
-    goal = models.TextField() # What is the goal?
+    goal = models.TextField() # What needs to be improved?
     description = models.TextField() # How does it relate with the aim?
     measure = models.TextField() # What data do we measure?
     modified_date = models.DateTimeField(default=timezone.now)

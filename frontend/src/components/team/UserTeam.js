@@ -41,7 +41,8 @@ export default function UserTeam() {
 
 export function UserTeamComponent({team, handleBackButton}) {
     return (
-        <div className='vh-100'>
+        <div className='vh-100 d-flex flex-column' style={{minHeight:'45rem'}}>
+            {/* Top header nav */}
             <Row>
                 {/* Header */}
                 <Card body bg='light' className='border-0'>
@@ -68,21 +69,21 @@ export function UserTeamComponent({team, handleBackButton}) {
                     </div>
                 </Card>
             </Row>
-            <Row className='ms-3 me-1' style={{height:'40rem'}}>
+            {/* the rest */}
+            <Row className='ms-3 me-1 flex-grow-1'>
                 {/* First Col */}
-                <Col className='h-100 mb-3' md={6}>
+                <Col className='mb-3' lg={6}>
                     {/* Aims */}
-                    <Row style={{height:'49%'}}>
+                    <Row className='pb-2' style={{height:'50%'}}>
                         <TeamAims team={team} />
                     </Row>
-                    <Row style={{height:'2%'}} /> 
                     {/* Drivers */}
-                    <Row style={{height:'49%'}}>
-                        <TeamDrivers />
+                    <Row className='pt-2' style={{height:'50%'}}>
+                        <TeamDrivers team={team} />
                     </Row>
                 </Col>
                 {/* Second Col */}
-                <Col className='h-100' md={6}>
+                <Col className='flex-grow-1 mb-3' lg={6}>
                     {/* Change Ideas */}
                     <TeamChangeIdeas />
                 </Col>

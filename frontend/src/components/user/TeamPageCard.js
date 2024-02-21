@@ -53,7 +53,7 @@ export function TeamsPageCardComponent({
                 comp={Card}
                 body
                 onClick={handleSelectTeam} 
-                style={{height:'11rem', transition: 'height .1s ease'}} 
+                style={{height:'11rem', transition: 'height .2s ease'}} 
                 cStyle={{cursor: 'pointer', height: `${team.team_get_members.split('\n').length*1.5+13.5}rem`, zIndex:2}}
                 className='w-100 border-light rounded-4 shadow-sm overflow-y-hidden'
                 cClassName='shadow-lg border-dark'

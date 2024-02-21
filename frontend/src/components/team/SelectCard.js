@@ -4,22 +4,22 @@ import axios from 'axios';
 import Hover from '../general/Hover';
 
 // GENERALIZE THIS FOR THE DRIVERS TOO!!!!!!
-export default function AimCard({aim, aims, index, setAims}) {
+export default function SelectCard({optionName, option, options, index, setOptions}) {
 
-    function handleDeleteAim() {
-        axios.delete(`http://127.0.0.1:8000/api/aim/${aim.id}/`)
+    function handleDelete() {
+        axios.delete(`http://127.0.0.1:8000/api/${optionName}/${option.id}/`)
             .then(response => {
                 // Adds the aim
-                aims.splice(index, 1);
-                setAims([...aims]);
+                options.splice(index, 1);
+                setOptions([...options]);
             })
             .catch(error => alert(error.message));
     }
 
-    return <AimCardComponent aim={aim} handleDeleteAim={handleDeleteAim} />;
+    return <SelectCardComponent option={option} handleDelete={handleDelete} />;
 }
 
-export function AimCardComponent({aim, handleDeleteAim}) {
+export function SelectCardComponent({option, handleDelete}) {
     return (
         <>
             <Hover
@@ -34,7 +34,7 @@ export function AimCardComponent({aim, handleDeleteAim}) {
                         className='overflow-hidden mt-auto mb-auto w-100' 
                         style={{height:'1.5rem'}}
                         >
-                        {aim.goal}
+                        {option.goal}
                     </div>
                     {/* Menu */}
                     <div className='ms-auto mt-auto mb-auto text-center d-inline-block' style={{width:'3rem'}}>
@@ -54,7 +54,7 @@ export function AimCardComponent({aim, handleDeleteAim}) {
                                 {/* Edit */}
                                 <Dropdown.Item>Edit</Dropdown.Item>
                                 {/* Delete */}
-                                <Dropdown.Item className='text-danger' onClick={handleDeleteAim}>Delete</Dropdown.Item>
+                                <Dropdown.Item className='text-danger' onClick={handleDelete}>Delete</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
                     </div>

@@ -1,178 +1,133 @@
-import {Card, Modal, Form, Button, FloatingLabel} from 'react-bootstrap';
-import {useState, useId} from 'react';
+import {Card} from 'react-bootstrap';
+import {useState, useEffect} from 'react';
+import axios from 'axios';
 
 import Hover from '../general/Hover';
+import ModalForm from '../general/ModalForm';
+import SelectCard from './SelectCard';
 
 
 
-export default function TeamDrivers() {
+export default function TeamDrivers({team}) {
+    const [drivers, setDrivers] = useState(); // Sets the aim
     const [show, setShow] = useState(); // show or close modal
-    const formId = useId(); // Sets form id so button can access without being in the form
-    const [required, setRequired] = useState({
-        goal: false,
-        population: false,
-        byNum: false,
-        byDate: false,
-    }); // Checks that goal is entered
-    const [formData, setFormData] = useState({ // This is to control the form input
+    const pages = [
+        [// Page 1
+            {
+                label: 'What aim does the driver affect?',
+                name: 'aim',
+                as: 'textarea',
+            },
+            {
+                label: 'What needs to be improved?',
+                name: 'goal',
+                as: 'textarea',
+            },
+            {
+                label: 'How does it relate with the aim?',
+                name: 'description',
+                as: 'textarea',
+            },
+        ],
+        [// Page 2
+            {
+                label: 'What data do we measure?',
+                name: 'measure',
+                as: 'textarea',
+            },
+        ],
+    ];
+    const initialFormData = { // This is to control the form input
+        aim: '',
         goal: '',
-        population: '',
-        byNum: '',
-        byDate: '',
-    });
+        description: '',
+        measure: '',
+    };
 
-    // handles controlling the input
-    function handleChange({target}) {
-        // This controls the form input
-        setFormData({
-            ...formData,
-            [target.name]: target.value,
-        });
+    // set the drivers for the team
+    useEffect(() => {
+        const newDrivers = team?.aims.reduce((acc, curr) => {
+            acc = [...acc, ...curr.drivers];
+            return acc;
+        }, []);
 
-        setRequired({
-            ...required,
-            [target.name]: false,
-        });
-    }
+        // alert(JSON.stringify(team?.aims))
+        newDrivers?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
+        alert(JSON.stringify(newDrivers))
+        setDrivers(newDrivers)
+    }, [team]);
 
     // This handles opening create modal
     function handleOpenModal(event) {
         setShow(true);
     }
 
-    // This handles closing create modal
-    function handleCloseModal() {
-        setFormData({ // Resets form data
-            goal: '',
-            population: '',
-            byNum: '',
-            byDate: '',
-        });
-
-        setShow(false); // Close modal
-    }
-
-    async function handleSaveModal(event) {
-        // This stops the typical default form submit rerendering stuff
-        event.preventDefault();
-        event.stopPropagation();
-
-        const validList = [];
-        for (let key in formData) {
-            validList.push(isValid(key, true));
-        }
-
-        if (!validList.every(Boolean)) {
-            return;
-        }
-
-        alert('aim saved!');
-        handleCloseModal();
-    }
-
-    // Checks the validity of team name
-    function isValid(name, bypass=false) { 
-        // eslint-disable-next-line
-        if (required[name] || bypass) {
-            if (formData[name] !== '') {
-                return true;
-            } else {
-                if (bypass) {
-                    required[name] = true;
-                    setRequired({...required})
-                }
-                
-                return false;
-            }
-        }
-
-        return true;
+    async function handleSave(formData) {
+        // Post the new aim
+        axios.post('http://127.0.0.1:8000/api/drivers/create/', {...formData})
+            .then(response => {
+                // Adds the aim
+                drivers.unshift(response.data);
+                setDrivers([...drivers]);
+            })
+            .catch(error => alert(error.message));
     }
 
     return <TeamDriversComponent
         show={show}
-        formId={formId}
-        formData={formData}
+        setShow={setShow}
+        pages={pages}
         handleOpenModal={handleOpenModal}
-        handleCloseModal={handleCloseModal}
-        handleChange={handleChange}
-        handleSaveModal={handleSaveModal}
-        isValid={isValid}
+        handleSave={handleSave}
+        initialFormData={initialFormData}
+        setDrivers={setDrivers}
+        drivers={drivers}
         />
 }
 
 
 export function TeamDriversComponent({
-    handleCloseModal, handleChange, handleSaveModal, handleOpenModal,
-    show, formId, formData,
-    isValid,
+    handleSave, handleOpenModal,
+    show, setShow, initialFormData, pages, setDrivers, drivers
     }) {
     return (
         <>
             {/* Card */}
-            <Card body className='border-0 shadow-sm h-100 rounded-4'>
-                {/* Header */}
-                <div className="d-flex">
-                    {/* Title */}
-                    <div className='h2'>Drivers</div>
-                    {/* Add button */}
-                    <Hover 
-                        comp={(props)=><span {...props}></span>}
-                        style={{width:'3rem', transition: 'width .2s ease'}}
-                        cStyle={{width:'8.5rem'}}
-                        className='ms-auto mb-auto mt-auto btn btn-outline-primary border-2 rounded-5 d-flex'
-                        onClick={(handleOpenModal)}
-                        >
-                        {/* Hidden text; show on hover */}
-                        <span className='text-nowrap overflow-x-hidden mb-auto mt-auto fw-bold'>Add Driver</span>
-                        {/* Plus sign */}
-                        <span className='bi-plus-lg fs-5 ms-auto' />
-                    </Hover>
-                </div>
-                {/* body */}
-                <Card body className='border-0 bg-light mt-2 rounded-4' style={{height:"82%"}}>
-                    hi
-                </Card>
+            <Card className='border-0 shadow-sm rounded-4'>
+                <Card.Body className='d-flex flex-column' style={{height: '0'}}>
+                    {/* Header */}
+                    <div className="d-flex">
+                        {/* Title */}
+                        <div className='h2'>Drivers</div>
+                        {/* Add button */}
+                        <Hover 
+                            comp={(props)=><span {...props}></span>}
+                            style={{width:'3rem', transition: 'width .2s ease'}}
+                            cStyle={{width:'7.5rem'}}
+                            className='ms-auto mb-auto mt-auto btn btn-outline-primary border-2 rounded-5 d-flex'
+                            onClick={(handleOpenModal)}
+                            >
+                            {/* Hidden text; show on hover */}
+                            <span className='text-nowrap overflow-x-hidden mb-auto mt-auto fw-bold'>Add Driver</span>
+                            {/* Plus sign */}
+                            <span className='bi-plus-lg fs-5 ms-auto' />
+                        </Hover>
+                    </div>
+                    {/* Body */}
+                    <Card className='border-0 bg-light mt-2 rounded-4 flex-grow-1' style={{minHeight:'0'}}>
+                        <Card.Body className='h-100'>
+                            {/* Scrollable Container */}
+                            <div className='overflow-y-auto h-100'>
+                                {drivers?.map((v, i) => (
+                                    <SelectCard optionName='driver' option={v} options={drivers} index={i} setOptions={setDrivers} />                
+                                ))}
+                            </div>
+                        </Card.Body>
+                    </Card>
+                </Card.Body>
             </Card>
             {/* Modal */}
-            <Modal show={show} onHide={handleCloseModal}>
-                {/* Header */}
-                <Modal.Header closeButton>
-                    {/* Title */}
-                    <Modal.Title>Add Aim</Modal.Title>
-                </Modal.Header>
-                {/* Body */}
-                <Modal.Body>
-                    {/* Form */}
-                    <Form id={formId} onSubmit={handleSaveModal} validated={false} noValidate>
-                        {/* Team Name */}
-                        <Form.Group className="mb-3" controlId={useId()}>
-                            <FloatingLabel controlId={useId()} label="What do you want to accomplish?">
-                                <Form.Control 
-                                    placeholder="Goal" 
-                                    name='goal' 
-                                    value={formData.goal}
-                                    onChange={handleChange}
-                                    isInvalid={!isValid('goal')}
-                                    />
-                                    {/* Check validity */}
-                                    <Form.Control.Feedback type='invalid'>Required</Form.Control.Feedback>
-                            </FloatingLabel>
-                        </Form.Group>
-                    </Form>
-                </Modal.Body>
-                {/* Footer */}
-                <Modal.Footer>
-                    {/* Close */}
-                    <Button variant="secondary" onClick={handleCloseModal}>
-                        Close
-                    </Button>
-                    {/* Create */}
-                    <Button form={formId} type='submit' variant="primary">
-                        Create
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            <ModalForm title={'Add Driver'} show={show} setShow={setShow} onSave={handleSave} pages={pages} initialFormData={initialFormData} />
         </>
     );
 }
