@@ -8,27 +8,27 @@ import SelectCard from './SelectCard';
 
 
 
-export default function TeamDrivers({selectedAim, selectedDriver, setSelectedDriver}) {
+export default function TeamDrivers({team, selectedAim, selectedDriver, setSelectedDriver}) {
     const [drivers, setDrivers] = useState([]); // Sets the drivers
     const [show, setShow] = useState(); // show or close modal
     const pages = [
         [// Page 1
-            // {
-            //     label: 'What aim does the driver affect?',
-            //     name: 'aim',
-            //     as: 'textarea',
-            //     comp: Form.Select,
-            //     children: [
-            //         <option value=''></option>,
-            //         ...(team?.aims.map((v, i) => <option value={v.id}>{v.goal}</option>) || []),
-            //     ],
-            // },
             {
-                comp: (({children}) => ( // THIS IS REALLY JANKY. Please fix /////////////////////////
-                    // ALSO FIX YOUR SELECTED DRIVER
-                    <div className='h1'>{selectedAim?.goal || alert('Please select an aim first') || setShow(null)}</div>
-                )),
+                label: 'What aim does the driver affect?',
+                name: 'aim',
+                as: 'textarea',
+                comp: Form.Select,
+                children: [ // This isn't working fully
+                    <option value={selectedAim.id}>{selectedAim.goal}</option>,
+                    ...(team?.aims.map((v, i) => (v.id !== selectedAim.id) ? <option value={v.id}>{v.goal}</option> : '') || []),
+                ],
             },
+            // {
+            //     comp: (({children}) => ( // THIS IS REALLY JANKY. Please fix /////////////////////////
+            //         // ALSO FIX YOUR SELECTED DRIVER
+            //         <div className='h1'>{selectedAim?.goal || alert('Please select an aim first') || setShow(null)}</div>
+            //     )),
+            // },
             {
                 label: 'What needs to be improved?',
                 name: 'goal',
@@ -52,7 +52,7 @@ export default function TeamDrivers({selectedAim, selectedDriver, setSelectedDri
         ],
     ];
     const initialFormData = { // This is to control the form input
-        // aim: '',
+        aim: selectedAim.id,
         goal: '',
         description: '',
         measure: '',

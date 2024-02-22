@@ -67,6 +67,7 @@ export default function TeamAim({team, selectedAim, setSelectedAim}) {
             .then(response => {
                 // Adds the aim
                 aims.unshift(response.data);
+                team.aims = aims;
                 setAims([...aims]);
             })
             .catch(error => alert(error.message));

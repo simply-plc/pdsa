@@ -88,7 +88,7 @@ export function UserTeamComponent({
                     </Row>
                     {/* Drivers */}
                     <Row className='pt-2 w-100' style={{height:'50%'}}>
-                        <TeamDrivers selectedAim={selectedAim} selectedDriver={selectedDriver} setSelectedDriver={setSelectedDriver} />
+                        <TeamDrivers team={team} selectedAim={selectedAim} selectedDriver={selectedDriver} setSelectedDriver={setSelectedDriver} />
                     </Row>
                 </Col>
                 {/* Second Col */}
