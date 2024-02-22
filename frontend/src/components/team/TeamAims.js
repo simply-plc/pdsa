@@ -8,7 +8,7 @@ import ModalForm from '../general/ModalForm';
 
 
 
-export default function TeamAim({team}) {
+export default function TeamAim({team, selectedAim, setSelectedAim}) {
     const [aims, setAims] = useState(); // Sets the aim
     const [show, setShow] = useState(); // show or close modal
     const pages = [
@@ -71,6 +71,8 @@ export default function TeamAim({team}) {
             })
             .catch(error => alert(error.message));
     }
+    
+
 
     return <TeamAimComponent 
         show={show}
@@ -81,6 +83,8 @@ export default function TeamAim({team}) {
         pages={pages}
         aims={aims}
         setAims={setAims}
+        selectedAim={selectedAim} 
+        setSelectedAim={setSelectedAim} 
         />
 }
 
@@ -88,7 +92,7 @@ export default function TeamAim({team}) {
 export function TeamAimComponent({
     handleSave, handleOpenModal,
     show, setShow, initialFormData,
-    pages, aims, setAims,
+    pages, aims, setAims, selectedAim, setSelectedAim,
     }) {
     return (
         <>
@@ -119,7 +123,15 @@ export function TeamAimComponent({
                             {/* Scrollable Container */}
                             <div className='overflow-y-auto h-100'>
                                 {aims?.map((v, i) => (
-                                    <SelectCard optionName='aim' option={v} options={aims} index={i} setOptions={setAims} />                
+                                    <SelectCard 
+                                        optionName='aim' 
+                                        option={v} 
+                                        options={aims} 
+                                        index={i} 
+                                        setOptions={setAims} 
+                                        selected={selectedAim} 
+                                        setSelected={setSelectedAim} 
+                                        />                
                                 ))}
                             </div>
                         </Card.Body>

@@ -12,7 +12,9 @@ export default function UserTeam() {
     const navigate = useNavigate();
     const params = useParams(); // Get params
     const [team, setTeam] = useState(); // Current team info
+    const [selectedAim, setSelectedAim] = useState(); // This determines which aim is selected
 
+    /////////////////////////////// TODO: Add the selectedAim to filter which drivers to use.
 
     // Get team info on load
     useEffect(() => {
@@ -36,10 +38,12 @@ export default function UserTeam() {
     return <UserTeamComponent 
         team={team} 
         handleBackButton={handleBackButton}
+        selectedAim={selectedAim}
+        setSelectedAim={setSelectedAim}
         />;
 }
 
-export function UserTeamComponent({team, handleBackButton}) {
+export function UserTeamComponent({team, handleBackButton, selectedAim, setSelectedAim}) {
     return (
         <div className='vh-100 d-flex flex-column' style={{minHeight:'45rem'}}>
             {/* Top header nav */}
@@ -70,12 +74,12 @@ export function UserTeamComponent({team, handleBackButton}) {
                 </Card>
             </Row>
             {/* the rest */}
-            <Row className='ms-3 me-1 flex-grow-1'>
+            <Row className='ms-3  flex-grow-1'>
                 {/* First Col */}
                 <Col className='mb-3' lg={6}>
                     {/* Aims */}
                     <Row className='pb-2 w-100' style={{height:'50%'}}>
-                        <TeamAims team={team} />
+                        <TeamAims team={team} selectedAim={selectedAim} setSelectedAim={setSelectedAim} />
                     </Row>
                     {/* Drivers */}
                     <Row className='pt-2 w-100' style={{height:'50%'}}>
