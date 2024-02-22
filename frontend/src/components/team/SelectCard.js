@@ -10,6 +10,9 @@ export default function SelectCard({optionName, option, options, index, setOptio
         axios.delete(`http://127.0.0.1:8000/api/${optionName}/${option.id}/`)
             .then(response => {
                 // Adds the aim
+                if (selected.id === option.id) {
+                    setSelected(null);
+                }
                 options.splice(index, 1);
                 setOptions([...options]);
             })

@@ -8,20 +8,26 @@ import SelectCard from './SelectCard';
 
 
 
-export default function TeamDrivers({team}) {
+export default function TeamDrivers({selectedAim, selectedDriver, setSelectedDriver}) {
     const [drivers, setDrivers] = useState([]); // Sets the drivers
     const [show, setShow] = useState(); // show or close modal
     const pages = [
         [// Page 1
+            // {
+            //     label: 'What aim does the driver affect?',
+            //     name: 'aim',
+            //     as: 'textarea',
+            //     comp: Form.Select,
+            //     children: [
+            //         <option value=''></option>,
+            //         ...(team?.aims.map((v, i) => <option value={v.id}>{v.goal}</option>) || []),
+            //     ],
+            // },
             {
-                label: 'What aim does the driver affect?',
-                name: 'aim',
-                as: 'textarea',
-                comp: Form.Select,
-                children: [
-                    <option value=''></option>,
-                    ...(team?.aims.map((v, i) => <option value={v.id}>{v.goal}</option>) || []),
-                ],
+                comp: (({children}) => ( // THIS IS REALLY JANKY. Please fix /////////////////////////
+                    // ALSO FIX YOUR SELECTED DRIVER
+                    <div className='h1'>{selectedAim?.goal || alert('Please select an aim first') || setShow(null)}</div>
+                )),
             },
             {
                 label: 'What needs to be improved?',
@@ -46,7 +52,7 @@ export default function TeamDrivers({team}) {
         ],
     ];
     const initialFormData = { // This is to control the form input
-        aim: '',
+        // aim: '',
         goal: '',
         description: '',
         measure: '',
@@ -54,15 +60,20 @@ export default function TeamDrivers({team}) {
 
     // set the drivers for the team
     useEffect(() => {
-        const newDrivers = team?.aims.reduce((acc, curr) => {
-            acc = [...acc, ...curr.drivers];
-            return acc;
-        }, []);
-
-        // alert(JSON.stringify(team?.aims))
+        const newDrivers = selectedAim?.drivers;
         newDrivers?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
         setDrivers(newDrivers)
-    }, [team]);
+    }, [selectedAim]);
+    // useEffect(() => {
+    //     const newDrivers = team?.aims.reduce((acc, curr) => {
+    //         acc = [...acc, ...curr.drivers];
+    //         return acc;
+    //     }, []);
+
+    //     // alert(JSON.stringify(team?.aims))
+    //     newDrivers?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
+    //     setDrivers(newDrivers)
+    // }, [team]);
 
     // This handles opening create modal
     function handleOpenModal(event) {
@@ -71,10 +82,11 @@ export default function TeamDrivers({team}) {
 
     function handleSave(formData) {
         // Post the new aim
-        axios.post('http://127.0.0.1:8000/api/driver/create/', {...formData})
+        axios.post('http://127.0.0.1:8000/api/driver/create/', {...formData, aim: selectedAim.id})
             .then(response => {
                 // Adds the aim
                 drivers.unshift(response.data);
+                selectedAim.drivers = drivers;
                 setDrivers([...drivers]);
             })
             .catch(error => alert(error.message));
