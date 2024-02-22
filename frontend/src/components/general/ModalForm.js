@@ -1,52 +1,19 @@
 import {Modal, Form, Button, ProgressBar} from 'react-bootstrap';
-import {useState, useId} from 'react';
+import {useState, useEffect, useId} from 'react';
 
 export default function ModalForm({title, show, setShow, onSave, pages, initialFormData}) {
-    /* 
-        pages = [
-            [ GENERALIZE FOR ANY Component like Form.Control or Form.Select
-                {
-                    label: '1',
-                    name: '1',
-                    comp: ObjectComponent // new
-                    children: list of html // new
-                    as: 'textarea'
-                },
-                {
-                    label: '2',
-                    name: '2',
-                    comp: ObjectComponent // new
-                    children: list of html // new
-                    as: 'input'
-                },
-            ],
-            [
-                {
-                    label: '3',
-                    name: '3',
-                    comp: ObjectComponent // new
-                    children: list of html // new
-                    as: 'textarea'
-                },
-                {
-                    label: '4',
-                    name: '4',
-                    comp: ObjectComponent // new
-                    children: list of html // new
-                    as: 'input',
-                    type: 'date'
-                },
-            ],
-        ];
-     */
     const formId = useId(); // Sets form id so button can access without being in the form
-    const [page, setPage] = useState(1); // Sets the current page
+    const [page, setPage] = useState(1); // Sets the current page; Required for each object in a page name and comp
     const initialRequired = Object.keys(initialFormData).reduce((acc, curr) => { // Set the reset initial value for required
         acc[curr] = false;
         return acc;
     }, {});
     const [required, setRequired] = useState({...initialRequired}); // Checks that all required inputs are entered
     const [formData, setFormData] = useState({...initialFormData}); // Sets the form data
+
+    useEffect(() => { // This is to make sure that formData is always up to date
+        setFormData({...initialFormData});
+    }, [initialFormData])
 
     // handles controlling the input
     function handleChange({target}) {
@@ -173,18 +140,12 @@ export function TeamAimComponent({
             <Form.Group className="mb-3">
                 <Form.Label>{currGroup.label}</Form.Label>
                 <CurrInput
-                    as={currGroup.as}
-                    rows={4}
-                    type={currGroup.type}
-                    style={{resize:'none'}}
-                    name={currGroup.name} 
-                    value={formData[currGroup.name]}
-                    onChange={handleChange}
-                    isInvalid={!isValid(currGroup.name)}
-                    >
-                    {currGroup.children}
-                </CurrInput>
-                    {/* Check validity */}
+                    value={formData[currGroup.name]} // Default controlled value
+                    onChange={handleChange} // Event listener
+                    isInvalid={!isValid(currGroup.name)} // Invalid
+                    {...currGroup} // Any other necessary stuff
+                    />
+                {/* Check validity */}
                 <Form.Control.Feedback type='invalid'>Required</Form.Control.Feedback>
             </Form.Group>
         ); 

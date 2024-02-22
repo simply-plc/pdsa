@@ -8,61 +8,71 @@ import SelectCard from './SelectCard';
 
 
 
-export default function TeamChangeIdeas({team}) {
-    const [drivers, setDrivers] = useState([]); // Sets the drivers
+export default function TeamChangeIdeas({selectedAim, selectedDriver, selectedChangeIdea, setSelectedChangeIdea}) {
+    /*
+        TeamChangeIdeas is just the Change Ideas card on the UserTeam page
+    */
+    const [changeIdeas, setChangeIdeas] = useState([]); // Sets the drivers
     const [show, setShow] = useState(); // show or close modal
     const pages = [
         [// Page 1
             {
-                label: 'What aim does the driver affect?',
-                name: 'aim',
-                as: 'textarea',
+                label: 'What driver does the change idea for?',
+                name: 'driver',
                 comp: Form.Select,
-                children: [
-                    <option value=''></option>,
-                    ...(team?.aims.map((v, i) => <option value={v.id}>{v.goal}</option>) || []),
-                ],
+                children: (
+                    <>
+                        <option value={selectedDriver?.id}>{selectedDriver?.goal}</option>
+                        {selectedAim?.drivers.map((v, i) => (v.id !== selectedDriver?.id) ? <option value={v.id}>{v.goal}</option> : '')}
+                    </>
+                ),
             },
             {
-                label: 'What needs to be improved?',
-                name: 'goal',
+                label: 'What is the action idea you want to implement?',
+                name: 'idea',
                 as: 'textarea',
+                rows: 4,
+                style: {resize: 'none'},
                 comp: Form.Control,
             },
             {
-                label: 'How does it relate with the aim?',
-                name: 'description',
-                as: 'textarea',
-                comp: Form.Control,
-            },
-        ],
-        [// Page 2
-            {
-                label: 'What data do we measure?',
-                name: 'measure',
-                as: 'textarea',
-                comp: Form.Control,
+                label: 'Are we testing, implementing, or spreading?',
+                name: 'stage',
+                comp: Form.Select,
+                children: (
+                    <>
+                        <option value=''></option>
+                        <option value='Testing'>Testing</option>
+                        <option value='Implementing'>Implementing</option>
+                        <option value='Spreading'>Spreading</option>
+                    </>
+                ),
             },
         ],
     ];
+
     const initialFormData = { // This is to control the form input
-        aim: '',
-        goal: '',
-        description: '',
-        measure: '',
+        driver: selectedDriver?.id,
+        idea: '',
+        stage: '',
     };
 
     // set the drivers for the team
     useEffect(() => {
-        const newDrivers = team?.aims.reduce((acc, curr) => {
-            acc = [...acc, ...curr.drivers];
-            return acc;
-        }, []);
+        const newChangeIdeas = selectedDriver?.change_ideas;
+        newChangeIdeas?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
+        setChangeIdeas(newChangeIdeas) // Set the new drivers
+    }, [selectedDriver]);
+    // useEffect(() => {
+    //     const newDrivers = team?.aims.reduce((acc, curr) => {
+    //         acc = [...acc, ...curr.drivers];
+    //         return acc;
+    //     }, []);
 
-        // alert(JSON.stringify(team?.aims))
-        newDrivers?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
-        setDrivers(newDrivers)
-    }, [team]);
+    //     // alert(JSON.stringify(team?.aims))
+    //     newDrivers?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
+    //     setDrivers(newDrivers)
+    // }, [team]);
 
     // This handles opening create modal
     function handleOpenModal(event) {
@@ -71,11 +81,12 @@ export default function TeamChangeIdeas({team}) {
 
     function handleSave(formData) {
         // Post the new aim
-        axios.post('http://127.0.0.1:8000/api/driver/create/', {...formData})
+        axios.post('http://127.0.0.1:8000/api/change-idea/create/', {...formData, driver: selectedDriver?.id})
             .then(response => {
                 // Adds the aim
-                drivers.unshift(response.data);
-                setDrivers([...drivers]);
+                changeIdeas.unshift(response.data); // Adds it to the front since it is most recently modified
+                selectedDriver.change_ideas = changeIdeas; // Makes sure the aim is up to date without hitting backend
+                setChangeIdeas([...changeIdeas]);
             })
             .catch(error => alert(error.message));
     }
@@ -87,15 +98,18 @@ export default function TeamChangeIdeas({team}) {
         handleOpenModal={handleOpenModal}
         handleSave={handleSave}
         initialFormData={initialFormData}
-        setDrivers={setDrivers}
-        drivers={drivers}
+        setChangeIdeas={setChangeIdeas}
+        changeIdeas={changeIdeas}
+        selectedChangeIdea={selectedChangeIdea}
+        setSelectedChangeIdea={setSelectedChangeIdea}
         />
 }
 
 
 export function TeamChangeIdeasComponent({
     handleSave, handleOpenModal,
-    show, setShow, initialFormData, pages, setDrivers, drivers
+    show, setShow, initialFormData, pages, setChangeIdeas, changeIdeas,
+    selectedChangeIdea, setSelectedChangeIdea,
     }) {
     return (
         <>
@@ -115,7 +129,7 @@ export function TeamChangeIdeasComponent({
                             onClick={(handleOpenModal)}
                             >
                             {/* Hidden text; show on hover */}
-                            <span className='text-nowrap overflow-x-hidden mb-auto mt-auto fw-bold'>Add Driver</span>
+                            <span className='text-nowrap overflow-x-hidden mb-auto mt-auto fw-bold'>Add Change Ideas</span>
                             {/* Plus sign */}
                             <span className='bi-plus-lg fs-5 ms-auto' />
                         </Hover>
@@ -125,16 +139,29 @@ export function TeamChangeIdeasComponent({
                         <Card.Body className='h-100'>
                             {/* Scrollable Container */}
                             <div className='overflow-y-auto h-100'>
-                                {drivers?.map((v, i) => (
-                                    <SelectCard optionName='driver' option={v} options={drivers} index={i} setOptions={setDrivers} />                
-                                ))}
+                                {
+                                    (changeIdeas?.length === 0) ? <div className='text-muted text-center'>Add a change idea first</div> :
+                                    (!changeIdeas) ? <div className='text-muted text-center'>Select a driver first</div> :
+                                    changeIdeas?.map((v, i) => (
+                                        <SelectCard 
+                                            optionName='change-idea' 
+                                            option={v} 
+                                            optionShow={v.idea}
+                                            options={changeIdeas} 
+                                            index={i} 
+                                            setOptions={setChangeIdeas} 
+                                            selected={selectedChangeIdea} 
+                                            setSelected={setSelectedChangeIdea} 
+                                            />
+                                        ))
+                                }
                             </div>
                         </Card.Body>
                     </Card>
                 </Card.Body>
             </Card>
             {/* Modal */}
-            <ModalForm title={'Add Driver'} show={show} setShow={setShow} onSave={handleSave} pages={pages} initialFormData={initialFormData} />
+            <ModalForm title={'Add Change Idea'} show={show} setShow={setShow} onSave={handleSave} pages={pages} initialFormData={initialFormData} />
         </>
     );
 }

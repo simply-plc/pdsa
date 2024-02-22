@@ -3,8 +3,10 @@ import axios from 'axios';
 
 import Hover from '../general/Hover';
 
-// GENERALIZE THIS FOR THE DRIVERS TOO!!!!!!
-export default function SelectCard({optionName, option, options, index, setOptions, selected, setSelected}) {
+export default function SelectCard({optionName, option, optionShow, options, index, setOptions, selected, setSelected}) {
+    /* 
+        This is just a generalization of the selectable aim, driver, or change ideas
+    */
 
     function handleDelete() {
         axios.delete(`http://127.0.0.1:8000/api/${optionName}/${option.id}/`)
@@ -23,14 +25,14 @@ export default function SelectCard({optionName, option, options, index, setOptio
         if (selected?.id === option.id) {
             setSelected(null);
         } else {
-            setSelected(() => option);
+            setSelected(option);
         }
     }
 
-    return <SelectCardComponent option={option} handleDelete={handleDelete} handleSelected={handleSelected} selected={selected} />;
+    return <SelectCardComponent option={option} optionShow={optionShow} handleDelete={handleDelete} handleSelected={handleSelected} selected={selected} />;
 }
 
-export function SelectCardComponent({option, selected, handleDelete, handleSelected}) {
+export function SelectCardComponent({option, optionShow, selected, handleDelete, handleSelected}) {
     return (
         <>
             <Hover
@@ -47,7 +49,7 @@ export function SelectCardComponent({option, selected, handleDelete, handleSelec
                         className='overflow-hidden mt-auto mb-auto w-100' 
                         style={{height:'1.5rem'}}
                         >
-                        {option.goal}
+                        {optionShow}
                     </div>
                     {/* Menu */}
                     <div className='ms-auto mt-auto mb-auto text-center d-inline-block' style={{width:'3rem'}}>
@@ -58,6 +60,7 @@ export function SelectCardComponent({option, selected, handleDelete, handleSelec
                                 className='p-0'
                                 style={{backgroundColor:'transparent', borderColor:'transparent'}}
                                 >
+                                {/* Three dots */}
                                 <Hover 
                                     comp={(props)=><span {...props} />} 
                                     style={{fontSize:'1.1rem', cursor:'pointer'}}

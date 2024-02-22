@@ -9,6 +9,9 @@ import SelectCard from './SelectCard';
 
 
 export default function TeamDrivers({team, selectedAim, selectedDriver, setSelectedDriver}) {
+    /*
+        TeamDrivers is just the Drivers card on the UserTeam page
+    */
     const [drivers, setDrivers] = useState([]); // Sets the drivers
     const [show, setShow] = useState(); // show or close modal
     const pages = [
@@ -16,29 +19,28 @@ export default function TeamDrivers({team, selectedAim, selectedDriver, setSelec
             {
                 label: 'What aim does the driver affect?',
                 name: 'aim',
-                as: 'textarea',
                 comp: Form.Select,
-                children: [ // This isn't working fully
-                    <option value={selectedAim.id}>{selectedAim.goal}</option>,
-                    ...(team?.aims.map((v, i) => (v.id !== selectedAim.id) ? <option value={v.id}>{v.goal}</option> : '') || []),
-                ],
+                children: (
+                    <>
+                        <option value={selectedAim?.id}>{selectedAim?.goal}</option>
+                        {team?.aims.map((v, i) => (v.id !== selectedAim?.id) ? <option value={v.id}>{v.goal}</option> : '')}
+                    </>
+                ),
             },
-            // {
-            //     comp: (({children}) => ( // THIS IS REALLY JANKY. Please fix /////////////////////////
-            //         // ALSO FIX YOUR SELECTED DRIVER
-            //         <div className='h1'>{selectedAim?.goal || alert('Please select an aim first') || setShow(null)}</div>
-            //     )),
-            // },
             {
                 label: 'What needs to be improved?',
                 name: 'goal',
                 as: 'textarea',
+                rows: 4,
+                style: {resize: 'none'},
                 comp: Form.Control,
             },
             {
                 label: 'How does it relate with the aim?',
                 name: 'description',
                 as: 'textarea',
+                rows: 4,
+                style: {resize: 'none'},
                 comp: Form.Control,
             },
         ],
@@ -47,12 +49,15 @@ export default function TeamDrivers({team, selectedAim, selectedDriver, setSelec
                 label: 'What data do we measure?',
                 name: 'measure',
                 as: 'textarea',
+                rows: 4,
+                style: {resize: 'none'},
                 comp: Form.Control,
             },
         ],
     ];
+
     const initialFormData = { // This is to control the form input
-        aim: selectedAim.id,
+        aim: selectedAim?.id,
         goal: '',
         description: '',
         measure: '',
@@ -62,7 +67,7 @@ export default function TeamDrivers({team, selectedAim, selectedDriver, setSelec
     useEffect(() => {
         const newDrivers = selectedAim?.drivers;
         newDrivers?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
-        setDrivers(newDrivers)
+        setDrivers(newDrivers) // Set the new drivers
     }, [selectedAim]);
     // useEffect(() => {
     //     const newDrivers = team?.aims.reduce((acc, curr) => {
@@ -82,11 +87,11 @@ export default function TeamDrivers({team, selectedAim, selectedDriver, setSelec
 
     function handleSave(formData) {
         // Post the new aim
-        axios.post('http://127.0.0.1:8000/api/driver/create/', {...formData, aim: selectedAim.id})
+        axios.post('http://127.0.0.1:8000/api/driver/create/', {...formData, aim: selectedAim?.id})
             .then(response => {
                 // Adds the aim
-                drivers.unshift(response.data);
-                selectedAim.drivers = drivers;
+                drivers.unshift(response.data); // Adds it to the front since it is most recently modified
+                selectedAim.drivers = drivers; // Makes sure the aim is up to date without hitting backend
                 setDrivers([...drivers]);
             })
             .catch(error => alert(error.message));
@@ -101,13 +106,16 @@ export default function TeamDrivers({team, selectedAim, selectedDriver, setSelec
         initialFormData={initialFormData}
         setDrivers={setDrivers}
         drivers={drivers}
+        selectedDriver={selectedDriver}
+        setSelectedDriver={setSelectedDriver}
         />
 }
 
 
 export function TeamDriversComponent({
     handleSave, handleOpenModal,
-    show, setShow, initialFormData, pages, setDrivers, drivers
+    show, setShow, initialFormData, pages, setDrivers, drivers,
+    selectedDriver, setSelectedDriver,
     }) {
     return (
         <>
@@ -137,9 +145,22 @@ export function TeamDriversComponent({
                         <Card.Body className='h-100'>
                             {/* Scrollable Container */}
                             <div className='overflow-y-auto h-100'>
-                                {drivers?.map((v, i) => (
-                                    <SelectCard optionName='driver' option={v} options={drivers} index={i} setOptions={setDrivers} />                
-                                ))}
+                                {
+                                    (drivers?.length === 0) ? <div className='text-muted text-center'>Add a driver first</div> :
+                                    (!drivers) ? <div className='text-muted text-center'>Select an aim first</div> :
+                                    drivers?.map((v, i) => (
+                                        <SelectCard 
+                                            optionName='driver' 
+                                            option={v} 
+                                            optionShow={v.goal}
+                                            options={drivers} 
+                                            index={i} 
+                                            setOptions={setDrivers} 
+                                            selected={selectedDriver} 
+                                            setSelected={setSelectedDriver} 
+                                            />
+                                        ))
+                                }
                             </div>
                         </Card.Body>
                     </Card>

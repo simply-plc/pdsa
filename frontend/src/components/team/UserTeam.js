@@ -9,11 +9,15 @@ import TeamDrivers from './TeamDrivers';
 import TeamChangeIdeas from './TeamChangeIdeas';
 
 export default function UserTeam() {
+    /*
+        User team is the team page that shows the aims, drivers, and change idea lists
+    */
     const navigate = useNavigate();
     const params = useParams(); // Get params
     const [team, setTeam] = useState(); // Current team info
     const [selectedAim, setSelectedAim] = useState(); // This determines which aim is selected
     const [selectedDriver, setSelectedDriver] = useState();
+    const [selectedChangeIdea, setSelectedChangeIdea] = useState();
 
 
     // Get team info on load
@@ -30,6 +34,14 @@ export default function UserTeam() {
             });
     } ,[params.teamId]);
 
+    useEffect(() => {
+        setSelectedDriver(null);
+    }, [selectedAim]);
+
+    useEffect(() => {
+        setSelectedChangeIdea(null);
+    }, [selectedDriver]);
+
     // Back button
     function handleBackButton() {
         navigate(-1);
@@ -40,6 +52,10 @@ export default function UserTeam() {
         handleBackButton={handleBackButton}
         selectedAim={selectedAim}
         setSelectedAim={setSelectedAim}
+        selectedDriver={selectedDriver}
+        setSelectedDriver={setSelectedDriver}
+        selectedChangeIdea={selectedChangeIdea}
+        setSelectedChangeIdea={setSelectedChangeIdea}
         />;
 }
 
@@ -48,6 +64,7 @@ export function UserTeamComponent({
     handleBackButton, 
     selectedAim, setSelectedAim,
     selectedDriver, setSelectedDriver,
+    selectedChangeIdea, setSelectedChangeIdea,
     }) {
     return (
         <div className='vh-100 d-flex flex-column' style={{minHeight:'45rem'}}>
@@ -95,7 +112,7 @@ export function UserTeamComponent({
                 <Col className='flex-grow-1 mb-3' lg={6}>
                     {/* Change Ideas */}
                     <Row className='w-100' style={{height:'100%'}}>
-                        <TeamChangeIdeas team={team} />
+                        <TeamChangeIdeas selectedAim={selectedAim} selectedDriver={selectedDriver} selectedChangeIdea={selectedChangeIdea} setSelectedChangeIdea={setSelectedChangeIdea} />
                     </Row>
                 </Col>
             </Row>

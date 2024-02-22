@@ -9,6 +9,9 @@ import ModalForm from '../general/ModalForm';
 
 
 export default function TeamAim({team, selectedAim, setSelectedAim}) {
+    /*
+        TeamAim is just the Aim card on the UserTeam page
+    */
     const [aims, setAims] = useState(); // Sets the aim
     const [show, setShow] = useState(); // show or close modal
     const pages = [
@@ -17,12 +20,16 @@ export default function TeamAim({team, selectedAim, setSelectedAim}) {
                 label: 'What do we want to accomplish?',
                 name: 'goal',
                 as: 'textarea',
+                rows: 4,
+                style: {resize: 'none'},
                 comp: Form.Control,
             },
             {
                 label: 'Who is this aim for?',
                 name: 'population',
                 as: 'textarea',
+                rows: 4,
+                style: {resize: 'none'},
                 comp: Form.Control,
             },
         ],
@@ -31,6 +38,8 @@ export default function TeamAim({team, selectedAim, setSelectedAim}) {
                 label: 'By how much do we want to accomplish?',
                 name: 'by_num',
                 as: 'textarea',
+                rows: 4,
+                style: {resize: 'none'},
                 comp: Form.Control,
             },
             {
@@ -123,17 +132,21 @@ export function TeamAimComponent({
                         <Card.Body className='h-100'>
                             {/* Scrollable Container */}
                             <div className='overflow-y-auto h-100'>
-                                {aims?.map((v, i) => (
-                                    <SelectCard 
-                                        optionName='aim' 
-                                        option={v} 
-                                        options={aims} 
-                                        index={i} 
-                                        setOptions={setAims} 
-                                        selected={selectedAim} 
-                                        setSelected={setSelectedAim} 
-                                        />                
-                                ))}
+                                {
+                                    (aims?.length === 0) ? <div className='text-muted text-center'>Add an aim first</div> :
+                                    aims?.map((v, i) => (
+                                        <SelectCard 
+                                            optionName='aim' 
+                                            option={v} 
+                                            optionShow={v.goal}
+                                            options={aims} 
+                                            index={i} 
+                                            setOptions={setAims} 
+                                            selected={selectedAim} 
+                                            setSelected={setSelectedAim} 
+                                            />
+                                        ))
+                                }
                             </div>
                         </Card.Body>
                     </Card>
