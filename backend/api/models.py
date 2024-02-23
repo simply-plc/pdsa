@@ -23,6 +23,7 @@ class TeamMembership(models.Model):
         unique_together = ('user', 'team')
 
 class Aim(models.Model):
+    name = models.CharField(max_length=50)
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='aims')
     goal = models.TextField() # What do you want to accomplish?
     population = models.TextField() # Who is this aim for?
@@ -31,9 +32,10 @@ class Aim(models.Model):
     modified_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return self.goal
+        return self.name
 
 class Driver(models.Model):
+    name = models.CharField(max_length=50)
     aim = models.ForeignKey(Aim, on_delete=models.CASCADE, related_name='drivers')
     goal = models.TextField() # What needs to be improved?
     description = models.TextField() # How does it relate with the aim?
@@ -41,7 +43,7 @@ class Driver(models.Model):
     modified_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return self.goal
+        return self.name
 
 class ChangeIdea(models.Model):
     STAGE_CHOICES = [
@@ -50,13 +52,14 @@ class ChangeIdea(models.Model):
         ('Spreading', 'Spreading')
     ]
 
+    name = models.CharField(max_length=50)
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE, related_name='change_ideas')
     idea = models.TextField() # What is the action idea you want to implement?
     stage = models.CharField(max_length=255, choices=STAGE_CHOICES) # Are we testing, implementing, or spreading?
     modified_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return self.idea
+        return self.name
 
 class PDSA(models.Model):
     NEXT_STEP_CHOICES = [
@@ -65,6 +68,7 @@ class PDSA(models.Model):
         ('Abandon', 'Abandon')
     ]
 
+    name = models.CharField(max_length=50)
     change_idea = models.ForeignKey(ChangeIdea, on_delete=models.CASCADE, related_name='pdsa')
     learning_goal = models.TextField() # What do you want to learn about change idea?
     steps = models.TextField() # What steps are you going to take to test the change idea?
@@ -76,7 +80,7 @@ class PDSA(models.Model):
     modified_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return self.learning_goal
+        return self.name
 
 
 

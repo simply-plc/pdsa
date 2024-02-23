@@ -8,22 +8,28 @@ import SelectCard from './SelectCard';
 
 
 
-export default function TeamDrivers({team, selectedAim, selectedDriver, setSelectedDriver}) {
+export default function TeamDrivers({team, selectedAim, setSelectedAim, selectedDriver, setSelectedDriver}) {
     /*
         TeamDrivers is just the Drivers card on the UserTeam page
     */
+    const [update, setUpdate] = useState(true);
     const [drivers, setDrivers] = useState([]); // Sets the drivers
     const [show, setShow] = useState(); // show or close modal
     const pages = [
         [// Page 1
+            {
+                label: 'Give your driver a name.',
+                name: 'name',
+                comp: Form.Control,
+            },
             {
                 label: 'What aim does the driver affect?',
                 name: 'aim',
                 comp: Form.Select,
                 children: (
                     <>
-                        <option value={selectedAim?.id}>{selectedAim?.goal}</option>
-                        {team?.aims.map((v, i) => (v.id !== selectedAim?.id) ? <option value={v.id}>{v.goal}</option> : '')}
+                        <option value={selectedAim?.id}>{selectedAim?.name}</option>
+                        {team?.aims.map((v, i) => (v.id !== selectedAim?.id) ? <option value={v.id}>{v.name}</option> : '')}
                     </>
                 ),
             },
@@ -35,16 +41,16 @@ export default function TeamDrivers({team, selectedAim, selectedDriver, setSelec
                 style: {resize: 'none'},
                 comp: Form.Control,
             },
+        ],
+        [// Page 2
             {
-                label: 'How does it relate with the aim?',
+                label: 'How does the driver relate with the aim?',
                 name: 'description',
                 as: 'textarea',
                 rows: 4,
                 style: {resize: 'none'},
                 comp: Form.Control,
             },
-        ],
-        [// Page 2
             {
                 label: 'What data do we measure?',
                 name: 'measure',
@@ -57,6 +63,7 @@ export default function TeamDrivers({team, selectedAim, selectedDriver, setSelec
     ];
 
     const initialFormData = { // This is to control the form input
+        name: '',
         aim: selectedAim?.id,
         goal: '',
         description: '',
@@ -68,17 +75,7 @@ export default function TeamDrivers({team, selectedAim, selectedDriver, setSelec
         const newDrivers = selectedAim?.drivers;
         newDrivers?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
         setDrivers(newDrivers) // Set the new drivers
-    }, [selectedAim]);
-    // useEffect(() => {
-    //     const newDrivers = team?.aims.reduce((acc, curr) => {
-    //         acc = [...acc, ...curr.drivers];
-    //         return acc;
-    //     }, []);
-
-    //     // alert(JSON.stringify(team?.aims))
-    //     newDrivers?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
-    //     setDrivers(newDrivers)
-    // }, [team]);
+    }, [selectedAim, update]);
 
     // This handles opening create modal
     function handleOpenModal(event) {
@@ -87,14 +84,15 @@ export default function TeamDrivers({team, selectedAim, selectedDriver, setSelec
 
     function handleSave(formData) {
         // Post the new aim
-        axios.post('http://127.0.0.1:8000/api/driver/create/', {...formData, aim: selectedAim?.id})
+        axios.post('http://127.0.0.1:8000/api/driver/create/', {...formData})
             .then(response => {
                 // Adds the aim
-                drivers.unshift(response.data); // Adds it to the front since it is most recently modified
-                selectedAim.drivers = drivers; // Makes sure the aim is up to date without hitting backend
-                setDrivers([...drivers]);
+                let aim = team.aims.filter((aim) => aim.id === response.data.aim)[0]; // Set the selected aim to have the driver
+                aim.drivers.unshift(response.data); // update driver's change ideas
+                setSelectedAim(aim); // select the driver
+                setUpdate(u => !u); // update
             })
-            .catch(error => alert(error.message));
+            .catch(error => alert(error.message)); ////////////// NExt step is to create tool tip with preview button
     }
 
     return <TeamDriversComponent
@@ -130,7 +128,7 @@ export function TeamDriversComponent({
                         <Hover 
                             comp={(props)=><span {...props}></span>}
                             style={{width:'3rem', transition: 'width .2s ease'}}
-                            cStyle={{width:'7.5rem'}}
+                            cStyle={{width:'8.5rem'}}
                             className='ms-auto mb-auto mt-auto btn btn-outline-primary border-2 rounded-5 d-flex'
                             onClick={(handleOpenModal)}
                             >
@@ -146,13 +144,13 @@ export function TeamDriversComponent({
                             {/* Scrollable Container */}
                             <div className='overflow-y-auto h-100'>
                                 {
-                                    (drivers?.length === 0) ? <div className='text-muted text-center'>Add a driver first</div> :
                                     (!drivers) ? <div className='text-muted text-center'>Select an aim first</div> :
+                                    (drivers?.length === 0) ? <div className='text-muted text-center'>Add a driver first</div> :
                                     drivers?.map((v, i) => (
                                         <SelectCard 
                                             optionName='driver' 
                                             option={v} 
-                                            optionShow={v.goal}
+                                            optionShow={v.name}
                                             options={drivers} 
                                             index={i} 
                                             setOptions={setDrivers} 

@@ -1,7 +1,7 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, forwardRef} from 'react';
 
 
-export default function Hover({comp:Comp, cStyle={}, style={}, cClassName='', className='', onClick, children, ...props}) {
+export default forwardRef(function Hover({comp:Comp, cStyle={}, style={}, cClassName='', className='', onClick, children, ...props}, ref) {
     // const Comp = comp;
     const [hover, setHover] = useState(false); // This is for determining if mouse is hovering
     const hoverStyle = { // sets new Styles
@@ -29,6 +29,7 @@ export default function Hover({comp:Comp, cStyle={}, style={}, cClassName='', cl
     }
 
     return <Comp
+        ref={ref}
         style={hover ? hoverStyle : style} 
         className={hover ? hoverClassName : className}
         onMouseOver={handleMouseOver} 
@@ -37,4 +38,4 @@ export default function Hover({comp:Comp, cStyle={}, style={}, cClassName='', cl
         {...props}>
             {children}
         </Comp>
-}
+});

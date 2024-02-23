@@ -8,22 +8,28 @@ import SelectCard from './SelectCard';
 
 
 
-export default function TeamChangeIdeas({selectedAim, selectedDriver, selectedChangeIdea, setSelectedChangeIdea}) {
+export default function TeamChangeIdeas({selectedAim, selectedDriver, setSelectedDriver, selectedChangeIdea, setSelectedChangeIdea}) {
     /*
         TeamChangeIdeas is just the Change Ideas card on the UserTeam page
     */
+    const [update, setUpdate] = useState(true);
     const [changeIdeas, setChangeIdeas] = useState([]); // Sets the drivers
     const [show, setShow] = useState(); // show or close modal
     const pages = [
         [// Page 1
+            {
+                label: 'Give your change idea a name.',
+                name: 'name',
+                comp: Form.Control,
+            },
             {
                 label: 'What driver does the change idea for?',
                 name: 'driver',
                 comp: Form.Select,
                 children: (
                     <>
-                        <option value={selectedDriver?.id}>{selectedDriver?.goal}</option>
-                        {selectedAim?.drivers.map((v, i) => (v.id !== selectedDriver?.id) ? <option value={v.id}>{v.goal}</option> : '')}
+                        <option value={selectedDriver?.id}>{selectedDriver?.name}</option>
+                        {selectedAim?.drivers.map((v, i) => (v.id !== selectedDriver?.id) ? <option value={v.id}>{v.name}</option> : '')}
                     </>
                 ),
             },
@@ -52,6 +58,7 @@ export default function TeamChangeIdeas({selectedAim, selectedDriver, selectedCh
     ];
 
     const initialFormData = { // This is to control the form input
+        name: '',
         driver: selectedDriver?.id,
         idea: '',
         stage: '',
@@ -62,17 +69,7 @@ export default function TeamChangeIdeas({selectedAim, selectedDriver, selectedCh
         const newChangeIdeas = selectedDriver?.change_ideas;
         newChangeIdeas?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
         setChangeIdeas(newChangeIdeas) // Set the new drivers
-    }, [selectedDriver]);
-    // useEffect(() => {
-    //     const newDrivers = team?.aims.reduce((acc, curr) => {
-    //         acc = [...acc, ...curr.drivers];
-    //         return acc;
-    //     }, []);
-
-    //     // alert(JSON.stringify(team?.aims))
-    //     newDrivers?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
-    //     setDrivers(newDrivers)
-    // }, [team]);
+    }, [selectedDriver, update]);
 
     // This handles opening create modal
     function handleOpenModal(event) {
@@ -81,12 +78,13 @@ export default function TeamChangeIdeas({selectedAim, selectedDriver, selectedCh
 
     function handleSave(formData) {
         // Post the new aim
-        axios.post('http://127.0.0.1:8000/api/change-idea/create/', {...formData, driver: selectedDriver?.id})
+        axios.post('http://127.0.0.1:8000/api/change-idea/create/', {...formData})
             .then(response => {
                 // Adds the aim
-                changeIdeas.unshift(response.data); // Adds it to the front since it is most recently modified
-                selectedDriver.change_ideas = changeIdeas; // Makes sure the aim is up to date without hitting backend
-                setChangeIdeas([...changeIdeas]);
+                let driver = selectedAim.drivers.filter((driver) => driver.id === response.data.driver)[0]; // Set the selected aim to have the driver
+                driver.change_ideas.unshift(response.data); // update driver's change ideas
+                setSelectedDriver(driver); // select the driver
+                setUpdate(u => !u); // update
             })
             .catch(error => alert(error.message));
     }
@@ -124,7 +122,7 @@ export function TeamChangeIdeasComponent({
                         <Hover 
                             comp={(props)=><span {...props}></span>}
                             style={{width:'3rem', transition: 'width .2s ease'}}
-                            cStyle={{width:'7.5rem'}}
+                            cStyle={{width:'12rem'}}
                             className='ms-auto mb-auto mt-auto btn btn-outline-primary border-2 rounded-5 d-flex'
                             onClick={(handleOpenModal)}
                             >
@@ -140,13 +138,13 @@ export function TeamChangeIdeasComponent({
                             {/* Scrollable Container */}
                             <div className='overflow-y-auto h-100'>
                                 {
-                                    (changeIdeas?.length === 0) ? <div className='text-muted text-center'>Add a change idea first</div> :
                                     (!changeIdeas) ? <div className='text-muted text-center'>Select a driver first</div> :
+                                    (changeIdeas?.length === 0) ? <div className='text-muted text-center'>Add a change idea first</div> :
                                     changeIdeas?.map((v, i) => (
                                         <SelectCard 
                                             optionName='change-idea' 
                                             option={v} 
-                                            optionShow={v.idea}
+                                            optionShow={v.name}
                                             options={changeIdeas} 
                                             index={i} 
                                             setOptions={setChangeIdeas} 

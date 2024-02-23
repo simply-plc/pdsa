@@ -91,7 +91,7 @@ export default function ModalForm({title, show, setShow, onSave, pages, initialF
     function isValid(name, bypass=false) { 
         // eslint-disable-next-line
         if (required[name] || bypass) {
-            if (formData[name] !== '') {
+            if (formData[name] !== '' && formData[name] !== undefined) {
                 return true;
             } else {
                 if (bypass) {

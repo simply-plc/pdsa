@@ -17,6 +17,11 @@ export default function TeamAim({team, selectedAim, setSelectedAim}) {
     const pages = [
         [// Page 1
             {
+                label: 'Give your aim a name.',
+                name: 'name',
+                comp: Form.Control,
+            },
+            {
                 label: 'What do we want to accomplish?',
                 name: 'goal',
                 as: 'textarea',
@@ -24,6 +29,8 @@ export default function TeamAim({team, selectedAim, setSelectedAim}) {
                 style: {resize: 'none'},
                 comp: Form.Control,
             },
+        ],
+        [// Page 2
             {
                 label: 'Who is this aim for?',
                 name: 'population',
@@ -32,8 +39,6 @@ export default function TeamAim({team, selectedAim, setSelectedAim}) {
                 style: {resize: 'none'},
                 comp: Form.Control,
             },
-        ],
-        [// Page 2
             {
                 label: 'By how much do we want to accomplish?',
                 name: 'by_num',
@@ -52,6 +57,7 @@ export default function TeamAim({team, selectedAim, setSelectedAim}) {
         ],
     ];
     const initialFormData = { // This is to control the form input
+        name: '',
         goal: '',
         population: '',
         by_num: '',
@@ -76,7 +82,6 @@ export default function TeamAim({team, selectedAim, setSelectedAim}) {
             .then(response => {
                 // Adds the aim
                 aims.unshift(response.data);
-                team.aims = aims;
                 setAims([...aims]);
             })
             .catch(error => alert(error.message));
@@ -138,7 +143,7 @@ export function TeamAimComponent({
                                         <SelectCard 
                                             optionName='aim' 
                                             option={v} 
-                                            optionShow={v.goal}
+                                            optionShow={v.name}
                                             options={aims} 
                                             index={i} 
                                             setOptions={setAims} 

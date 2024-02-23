@@ -105,14 +105,14 @@ export function UserTeamComponent({
                     </Row>
                     {/* Drivers */}
                     <Row className='pt-2 w-100' style={{height:'50%'}}>
-                        <TeamDrivers team={team} selectedAim={selectedAim} selectedDriver={selectedDriver} setSelectedDriver={setSelectedDriver} />
+                        <TeamDrivers team={team} selectedAim={selectedAim} setSelectedAim={setSelectedAim} selectedDriver={selectedDriver} setSelectedDriver={setSelectedDriver} />
                     </Row>
                 </Col>
                 {/* Second Col */}
                 <Col className='flex-grow-1 mb-3' lg={6}>
                     {/* Change Ideas */}
                     <Row className='w-100' style={{height:'100%'}}>
-                        <TeamChangeIdeas selectedAim={selectedAim} selectedDriver={selectedDriver} selectedChangeIdea={selectedChangeIdea} setSelectedChangeIdea={setSelectedChangeIdea} />
+                        <TeamChangeIdeas selectedAim={selectedAim} selectedDriver={selectedDriver} setSelectedDriver={setSelectedDriver} selectedChangeIdea={selectedChangeIdea} setSelectedChangeIdea={setSelectedChangeIdea} />
                     </Row>
                 </Col>
             </Row>
