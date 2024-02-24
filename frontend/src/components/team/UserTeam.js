@@ -62,7 +62,7 @@ export function UserTeamComponent({
     return (
         <div className='vh-100 d-flex flex-column' style={{minHeight:'45rem'}}>
             {/* Top header nav */}
-            <Row>
+            <div> 
                 {/* Header */}
                 <Card body bg='light' className='border-0'>
                     <div className='d-flex'>
@@ -87,24 +87,24 @@ export function UserTeamComponent({
                         </Hover>
                     </div>
                 </Card>
-            </Row>
+            </div>
             {/* the rest */}
-            <Row className='ms-3  flex-grow-1'>
+            <Row className='flex-grow-1 m-0'>
                 {/* First Col */}
                 <Col className='mb-3' lg={6}>
                     {/* Aims */}
-                    <Row className='pb-2 w-100' style={{height:'50%'}}>
+                    <Row className='pb-2 w-100 m-0' style={{height:'50%'}}>
                         <TeamAims team={team} selectedAim={selectedAim} setSelectedAim={setSelectedAim} setSelectedDriver={setSelectedDriver} />
                     </Row>
                     {/* Drivers */}
-                    <Row className='pt-2 w-100' style={{height:'50%'}}>
+                    <Row className='pt-2 w-100 m-0' style={{height:'50%'}}>
                         <TeamDrivers team={team} selectedAim={selectedAim} setSelectedAim={setSelectedAim} selectedDriver={selectedDriver} setSelectedDriver={setSelectedDriver} setSelectedChangeIdea={setSelectedChangeIdea} />
                     </Row>
                 </Col>
                 {/* Second Col */}
                 <Col className='flex-grow-1 mb-3' lg={6}>
                     {/* Change Ideas */}
-                    <Row className='w-100' style={{height:'100%'}}>
+                    <Row className='w-100 m-0' style={{height:'100%'}}>
                         <TeamChangeIdeas team={team} selectedAim={selectedAim} selectedDriver={selectedDriver} setSelectedDriver={setSelectedDriver} selectedChangeIdea={selectedChangeIdea} setSelectedChangeIdea={setSelectedChangeIdea} />
                     </Row>
                 </Col>

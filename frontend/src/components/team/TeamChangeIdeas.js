@@ -73,6 +73,8 @@ export default function TeamChangeIdeas({team, selectedAim, selectedDriver, setS
         setChangeIdeas(newChangeIdeas) // Set the new drivers
     }, [selectedDriver, update]);
 
+    // This is to maintain the state of the current page before navigating to change ideas.
+    // This is will maintain state if change ideas is redirected back to this page
     function handleClick(changeIdea) {
         const optionState = { // Maintains the state of what is selected
             team: team,
@@ -91,7 +93,7 @@ export default function TeamChangeIdeas({team, selectedAim, selectedDriver, setS
         // Post the new aim
         axios.post('http://127.0.0.1:8000/api/change-idea/create/', {...formData})
             .then(response => {
-                // Adds the aim
+                // Adds the driver ( This is necessary because the selected aim might not be the aim you are adding a driver for)
                 let driver = selectedAim.drivers.filter((driver) => driver.id === response.data.driver)[0]; // Set the selected aim to have the driver
                 driver.change_ideas.unshift(response.data); // update driver's change ideas
                 setSelectedDriver(driver); // select the driver
@@ -112,6 +114,7 @@ export default function TeamChangeIdeas({team, selectedAim, selectedDriver, setS
         selectedChangeIdea={selectedChangeIdea}
         setSelectedChangeIdea={setSelectedChangeIdea}
         selectedDriver={selectedDriver}
+        setSelectedDriver={setSelectedDriver}
         handleClick={handleClick}
         />
 }
@@ -121,6 +124,7 @@ export function TeamChangeIdeasComponent({
     handleSave, handleOpenModal,
     show, setShow, initialFormData, pages, setChangeIdeas, changeIdeas,
     selectedChangeIdea, setSelectedChangeIdea, selectedDriver, handleClick,
+    setSelectedDriver,
     }) {
 
 
@@ -168,6 +172,7 @@ export function TeamChangeIdeasComponent({
                                             setSelected={setSelectedChangeIdea} 
                                             pages={pages}
                                             parent={selectedDriver}
+                                            optionKey={'change_ideas'}
                                             onClick={handleClick}
                                             />
                                         ))

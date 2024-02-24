@@ -86,7 +86,7 @@ export default function TeamDrivers({team, selectedAim, setSelectedAim, selected
         // Post the new aim
         axios.post('http://127.0.0.1:8000/api/driver/create/', {...formData})
             .then(response => {
-                // Adds the aim
+                // Adds the aim ( This is necessary because the selected aim might not be the aim you are adding a driver for)
                 let aim = team.aims.filter((aim) => aim.id === response.data.aim)[0]; // Set the selected aim to have the driver
                 aim.drivers.unshift(response.data); // update driver's change ideas
                 setSelectedAim(aim); // select the driver
@@ -108,6 +108,7 @@ export default function TeamDrivers({team, selectedAim, setSelectedAim, selected
         setSelectedDriver={setSelectedDriver}
         selectedAim={selectedAim}
         setSelectedChangeIdea={setSelectedChangeIdea}
+        setSelectedAim={setSelectedAim}
         />
 }
 
@@ -115,7 +116,7 @@ export default function TeamDrivers({team, selectedAim, setSelectedAim, selected
 export function TeamDriversComponent({
     handleSave, handleOpenModal,
     show, setShow, initialFormData, pages, setDrivers, drivers,
-    selectedDriver, setSelectedDriver, selectedAim, setSelectedChangeIdea,
+    selectedDriver, setSelectedDriver, selectedAim, setSelectedChangeIdea, setSelectedAim,
     }) {
     return (
         <>
@@ -160,6 +161,7 @@ export function TeamDriversComponent({
                                             setSelected={setSelectedDriver} 
                                             pages={pages}
                                             parent={selectedAim}
+                                            optionKey={'drivers'}
                                             setChild={setSelectedChangeIdea}
                                             />
                                         ))

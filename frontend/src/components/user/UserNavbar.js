@@ -91,7 +91,7 @@ export function UserNavbarComponent({
                 className='h-100 flex-column p-0' 
                 bg='dark' 
                 data-bs-theme='dark' 
-                style={{width: expanded ? '12.5rem':'3.5rem', position:'fixed', zIndex: 100, transition: 'width 0.1s ease'}} 
+                style={{width: expanded ? '12.5rem':'3.5rem', position:'sticky', zIndex: 100, transition: 'width 0.1s ease'}} 
                 onMouseOver={handleExpand}
                 onMouseLeave={handleCollapse}
                 >
@@ -158,8 +158,7 @@ export function UserNavbarComponent({
                 </Nav>
             </Navbar>
             {/* Children Pages (Navbar Link Pages) */}
-            <div className='flex-column' style={{width:'3.5rem'}}></div> 
-            <div className='flex-column w-100'>
+            <div className='flex-column w-100 overflow-y-scroll'>
                 <Outlet context={[decodedToken]} />
             </div>
         </div>

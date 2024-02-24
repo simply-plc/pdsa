@@ -6,7 +6,7 @@ import Hover from '../general/Hover';
 import CustomToolTip from '../general/CustomToolTip';
 
 export default function SelectCard({
-    parent, setChild, pages, optionName, option, optionShow, options, 
+    parent, optionKey, setChild, pages, optionName, option, optionShow, options, 
     index, setOptions, selected, setSelected, 
     tooltipPlacement='auto-end',
     onClick=()=>{},
@@ -24,7 +24,11 @@ export default function SelectCard({
                     setSelected(null);
                 }
                 options.splice(index, 1); // Removes it from the options list so that backend and frontend match
-                setOptions([...options]);
+                const newOptions = [...options];
+                if (parent) { // This is to keep the parent item up to date with the deletion so it matches the backend
+                    parent[optionKey] = newOptions;
+                }
+                setOptions(newOptions);
             })
             .catch(error => alert(error.message));
     }

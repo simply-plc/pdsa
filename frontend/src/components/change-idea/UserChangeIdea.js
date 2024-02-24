@@ -4,6 +4,8 @@ import axios from 'axios';
 import {Card, Button, Row, Col} from 'react-bootstrap';
 
 import Hover from '../general/Hover';
+import InfoCycles from './InfoCycles';
+import PDSA from './PDSA';
 
 export default function UserChangeIdea() {
     /*
@@ -50,7 +52,7 @@ export function UserChangeIdeaComponent({
     return (
         <div className='vh-100 d-flex flex-column' style={{minHeight:'45rem'}}>
             {/* Top header nav */}
-            <Row>
+            <div>
                 {/* Header */}
                 <Card body bg='light' className='border-0'>
                     <div className='d-flex'>
@@ -75,10 +77,19 @@ export function UserChangeIdeaComponent({
                         </Hover>
                     </div>
                 </Card>
-            </Row>
+            </div>
             {/* the rest */}
-            <Row className='ms-3  flex-grow-1'>
-               hi
+            <Row className='flex-grow-1 m-0'>
+                {/* First Col */}
+                <Col className='mb-3' lg={6}>
+                    {/* Info and Cycles */}
+                    <InfoCycles />
+                </Col>
+                {/* Second Col */}
+                <Col className='flex-grow-1 mb-3' lg={6}>
+                    {/* Cylce form */}
+                        <PDSA />
+                </Col>
             </Row>
         </div>
     );
