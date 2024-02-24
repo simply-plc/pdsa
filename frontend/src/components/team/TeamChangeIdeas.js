@@ -1,6 +1,7 @@
 import {Card, Form} from 'react-bootstrap';
 import {useState, useEffect} from 'react';
 import axios from 'axios';
+import {useNavigate} from 'react-router-dom';
 
 import Hover from '../general/Hover';
 import ModalForm from '../general/ModalForm';
@@ -8,10 +9,11 @@ import SelectCard from './SelectCard';
 
 
 
-export default function TeamChangeIdeas({selectedAim, selectedDriver, setSelectedDriver, selectedChangeIdea, setSelectedChangeIdea}) {
+export default function TeamChangeIdeas({team, selectedAim, selectedDriver, setSelectedDriver, selectedChangeIdea, setSelectedChangeIdea}) {
     /*
         TeamChangeIdeas is just the Change Ideas card on the UserTeam page
     */
+    const navigate = useNavigate();
     const [update, setUpdate] = useState(true);
     const [changeIdeas, setChangeIdeas] = useState([]); // Sets the drivers
     const [show, setShow] = useState(); // show or close modal
@@ -71,6 +73,15 @@ export default function TeamChangeIdeas({selectedAim, selectedDriver, setSelecte
         setChangeIdeas(newChangeIdeas) // Set the new drivers
     }, [selectedDriver, update]);
 
+    function handleClick(changeIdea) {
+        const optionState = { // Maintains the state of what is selected
+            team: team,
+            aim: selectedAim,
+            driver: selectedDriver,
+        };
+        navigate(`../change-ideas/${changeIdea.id}`, {state: optionState}); // Navigate to change-idea page
+    }
+
     // This handles opening create modal
     function handleOpenModal(event) {
         setShow(true);
@@ -101,6 +112,7 @@ export default function TeamChangeIdeas({selectedAim, selectedDriver, setSelecte
         selectedChangeIdea={selectedChangeIdea}
         setSelectedChangeIdea={setSelectedChangeIdea}
         selectedDriver={selectedDriver}
+        handleClick={handleClick}
         />
 }
 
@@ -108,7 +120,7 @@ export default function TeamChangeIdeas({selectedAim, selectedDriver, setSelecte
 export function TeamChangeIdeasComponent({
     handleSave, handleOpenModal,
     show, setShow, initialFormData, pages, setChangeIdeas, changeIdeas,
-    selectedChangeIdea, setSelectedChangeIdea, selectedDriver,
+    selectedChangeIdea, setSelectedChangeIdea, selectedDriver, handleClick,
     }) {
 
 
@@ -156,6 +168,7 @@ export function TeamChangeIdeasComponent({
                                             setSelected={setSelectedChangeIdea} 
                                             pages={pages}
                                             parent={selectedDriver}
+                                            onClick={handleClick}
                                             />
                                         ))
                                 }

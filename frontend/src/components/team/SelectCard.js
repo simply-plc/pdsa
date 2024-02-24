@@ -6,9 +6,10 @@ import Hover from '../general/Hover';
 import CustomToolTip from '../general/CustomToolTip';
 
 export default function SelectCard({
-    parent, pages, optionName, option, optionShow, options, 
+    parent, setChild, pages, optionName, option, optionShow, options, 
     index, setOptions, selected, setSelected, 
-    tooltipPlacement='auto-end'
+    tooltipPlacement='auto-end',
+    onClick=()=>{},
     }) {
     /* 
         This is just a generalization of the selectable aim, driver, or change ideas
@@ -30,9 +31,12 @@ export default function SelectCard({
 
     // Handles whether the item is selected or not
     function handleSelected() {
+        onClick(option);
         if (selected?.id === option.id) { // If the item clicked is the same as the current selected, then remove selected item
+            setChild && setChild(null);
             setSelected(null);
         } else {
+            setChild && setChild(null);
             setSelected(option);
         }
     }
@@ -80,7 +84,10 @@ export default function SelectCard({
         />;
 }
 
-export function SelectCardComponent({styleRef, option, optionShow, selected, handleDelete, handleSelected, tooltipHeader, tooltipBody, placement, handleToggle}) {
+export function SelectCardComponent({styleRef, option, optionShow, selected, 
+    handleDelete, handleSelected, tooltipHeader, tooltipBody, placement, 
+    handleToggle,
+    }) {
     return (
         <>
             <Hover
@@ -93,7 +100,7 @@ export function SelectCardComponent({styleRef, option, optionShow, selected, han
                 onClick={handleSelected}
                 >
                 {/* This is the tooltip */}
-                <CustomToolTip placement={placement} header={tooltipHeader} body={tooltipBody} onToggle={handleToggle}>
+                <CustomToolTip placement={placement} header={tooltipHeader} body={tooltipBody} onToggle={handleToggle}> 
                     {/* Card */}
                     <Card.Body className='d-flex p-0 ps-3 pe-3'>
                         {/* Title */}
@@ -106,7 +113,7 @@ export function SelectCardComponent({styleRef, option, optionShow, selected, han
                         {/* Menu */}
                         <div className='ms-auto mt-auto mb-auto text-center d-inline-block' style={{width:'3rem'}}>
                             {/* Menu dropdown */}
-                            <Dropdown onClick={(e)=>e.stopPropagation()}>
+                            <Dropdown onClick={(e)=>e.stopPropagation()}>{/* stops the item selection to change */}
                                 {/* Toggle Button */}
                                 <Dropdown.Toggle 
                                     className='p-0'

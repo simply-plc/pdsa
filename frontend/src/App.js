@@ -8,15 +8,16 @@ import HomePage from './components/home/HomePage';
 import Login from './components/home/Login';
 import CreateAccount from './components/home/CreateAccount';
 
-// User imports
+// User team
 import UserNavbar from './components/user/UserNavbar';
 import TeamsPage from './components/user/TeamsPage';
 import OverviewPage from './components/user/OverviewPage';
 import ChangeIdeasPage from './components/user/ChangeIdeasPage';
 import SettingsPage from './components/user/SettingsPage';
-
-// Team imports
 import UserTeam from './components/team/UserTeam';
+
+// User change idea
+import UserChangeIdea from './components/change-idea/UserChangeIdea'
 
 
 const router = createBrowserRouter([
@@ -76,6 +77,10 @@ const router = createBrowserRouter([
             {
                 path: 'change-ideas',
                 element: <ChangeIdeasPage />,
+            },
+            {
+                path: 'change-ideas/:changeIdeaId',
+                element: <UserChangeIdea />,
             },
             // /user/teams
             {

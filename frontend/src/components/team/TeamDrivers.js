@@ -8,7 +8,7 @@ import SelectCard from './SelectCard';
 
 
 
-export default function TeamDrivers({team, selectedAim, setSelectedAim, selectedDriver, setSelectedDriver}) {
+export default function TeamDrivers({team, selectedAim, setSelectedAim, selectedDriver, setSelectedDriver, setSelectedChangeIdea}) {
     /*
         TeamDrivers is just the Drivers card on the UserTeam page
     */
@@ -107,6 +107,7 @@ export default function TeamDrivers({team, selectedAim, setSelectedAim, selected
         selectedDriver={selectedDriver}
         setSelectedDriver={setSelectedDriver}
         selectedAim={selectedAim}
+        setSelectedChangeIdea={setSelectedChangeIdea}
         />
 }
 
@@ -114,7 +115,7 @@ export default function TeamDrivers({team, selectedAim, setSelectedAim, selected
 export function TeamDriversComponent({
     handleSave, handleOpenModal,
     show, setShow, initialFormData, pages, setDrivers, drivers,
-    selectedDriver, setSelectedDriver, selectedAim,
+    selectedDriver, setSelectedDriver, selectedAim, setSelectedChangeIdea,
     }) {
     return (
         <>
@@ -159,6 +160,7 @@ export function TeamDriversComponent({
                                             setSelected={setSelectedDriver} 
                                             pages={pages}
                                             parent={selectedAim}
+                                            setChild={setSelectedChangeIdea}
                                             />
                                         ))
                                 }

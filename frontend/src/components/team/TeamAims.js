@@ -8,7 +8,7 @@ import ModalForm from '../general/ModalForm';
 
 
 
-export default function TeamAim({team, selectedAim, setSelectedAim}) {
+export default function TeamAim({team, selectedAim, setSelectedAim, setSelectedDriver}) {
     /*
         TeamAim is just the Aim card on the UserTeam page
     */
@@ -100,6 +100,7 @@ export default function TeamAim({team, selectedAim, setSelectedAim}) {
         setAims={setAims}
         selectedAim={selectedAim} 
         setSelectedAim={setSelectedAim} 
+        setSelectedDriver={setSelectedDriver}
         />
 }
 
@@ -107,7 +108,7 @@ export default function TeamAim({team, selectedAim, setSelectedAim}) {
 export function TeamAimComponent({
     handleSave, handleOpenModal,
     show, setShow, initialFormData,
-    pages, aims, setAims, selectedAim, setSelectedAim,
+    pages, aims, setAims, selectedAim, setSelectedAim, setSelectedDriver,
     }) {
     return (
         <>
@@ -150,6 +151,7 @@ export function TeamAimComponent({
                                             setOptions={setAims} 
                                             selected={selectedAim} 
                                             setSelected={setSelectedAim} 
+                                            setChild={setSelectedDriver}
                                             />
                                         ))
                                 }

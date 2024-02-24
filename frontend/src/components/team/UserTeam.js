@@ -1,4 +1,4 @@
-import {useParams, useNavigate} from 'react-router-dom';
+import {useParams, useNavigate, useLocation} from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Card, Button, Row, Col} from 'react-bootstrap';
@@ -12,13 +12,14 @@ export default function UserTeam() {
     /*
         User team is the team page that shows the aims, drivers, and change idea lists
     */
+    const location = useLocation();
     const navigate = useNavigate();
     const params = useParams(); // Get params
     const [team, setTeam] = useState(); // Current team info
-    const [selectedAim, setSelectedAim] = useState(); // This determines which aim is selected
-    const [selectedDriver, setSelectedDriver] = useState();
+    const [selectedAim, setSelectedAim] = useState(location.state?.aim); // This determines which aim is selected
+    const [selectedDriver, setSelectedDriver] = useState(location.state?.driver);
     const [selectedChangeIdea, setSelectedChangeIdea] = useState();
-
+    // alert(JSON.stringify(location.state))
 
     // Get team info on load
     useEffect(() => {
@@ -33,14 +34,6 @@ export default function UserTeam() {
                 // alert(error.message + ' UserTeam');
             });
     } ,[params.teamId]);
-
-    useEffect(() => {
-        setSelectedDriver(null);
-    }, [selectedAim]);
-
-    useEffect(() => {
-        setSelectedChangeIdea(null);
-    }, [selectedDriver]);
 
     // Back button
     function handleBackButton() {
@@ -101,18 +94,18 @@ export function UserTeamComponent({
                 <Col className='mb-3' lg={6}>
                     {/* Aims */}
                     <Row className='pb-2 w-100' style={{height:'50%'}}>
-                        <TeamAims team={team} selectedAim={selectedAim} setSelectedAim={setSelectedAim} />
+                        <TeamAims team={team} selectedAim={selectedAim} setSelectedAim={setSelectedAim} setSelectedDriver={setSelectedDriver} />
                     </Row>
                     {/* Drivers */}
                     <Row className='pt-2 w-100' style={{height:'50%'}}>
-                        <TeamDrivers team={team} selectedAim={selectedAim} setSelectedAim={setSelectedAim} selectedDriver={selectedDriver} setSelectedDriver={setSelectedDriver} />
+                        <TeamDrivers team={team} selectedAim={selectedAim} setSelectedAim={setSelectedAim} selectedDriver={selectedDriver} setSelectedDriver={setSelectedDriver} setSelectedChangeIdea={setSelectedChangeIdea} />
                     </Row>
                 </Col>
                 {/* Second Col */}
                 <Col className='flex-grow-1 mb-3' lg={6}>
                     {/* Change Ideas */}
                     <Row className='w-100' style={{height:'100%'}}>
-                        <TeamChangeIdeas selectedAim={selectedAim} selectedDriver={selectedDriver} setSelectedDriver={setSelectedDriver} selectedChangeIdea={selectedChangeIdea} setSelectedChangeIdea={setSelectedChangeIdea} />
+                        <TeamChangeIdeas team={team} selectedAim={selectedAim} selectedDriver={selectedDriver} setSelectedDriver={setSelectedDriver} selectedChangeIdea={selectedChangeIdea} setSelectedChangeIdea={setSelectedChangeIdea} />
                     </Row>
                 </Col>
             </Row>
