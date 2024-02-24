@@ -57,6 +57,7 @@ export default function SelectCard({
     const tooltipBody = (
         <div>
             {pages?.flat().map((v, i) => (
+                v.name !== 'name' &&
                 <>
                     <div className='fw-bold'>{v.label}</div>
                     <div className='ps-2 mb-2 text-muted'>{(!['driver', 'aim'].includes(v.name)) ? option[v.name] : parent?.name}</div>

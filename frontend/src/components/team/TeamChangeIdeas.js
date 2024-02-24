@@ -23,7 +23,7 @@ export default function TeamChangeIdeas({selectedAim, selectedDriver, setSelecte
                 comp: Form.Control,
             },
             {
-                label: 'What driver does the change idea for?',
+                label: 'What driver is the change idea for?',
                 name: 'driver',
                 comp: Form.Select,
                 children: (
