@@ -136,11 +136,12 @@ export function TeamAimComponent({
                     <Card className='border-0 bg-light mt-2 rounded-4 flex-grow-1' style={{minHeight:'0'}}>
                         <Card.Body className='h-100'>
                             {/* Scrollable Container */}
-                            <div className='overflow-y-auto h-100'>
+                            <div className='overflow-y-auto h-100 p-1'>
                                 {
                                     (aims?.length === 0) ? <div className='text-muted text-center'>Add an aim first</div> :
                                     aims?.map((v, i) => (
                                         <SelectCard 
+                                            pages={pages}
                                             optionName='aim' 
                                             option={v} 
                                             optionShow={v.name}

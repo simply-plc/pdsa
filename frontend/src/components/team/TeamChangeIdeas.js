@@ -100,6 +100,7 @@ export default function TeamChangeIdeas({selectedAim, selectedDriver, setSelecte
         changeIdeas={changeIdeas}
         selectedChangeIdea={selectedChangeIdea}
         setSelectedChangeIdea={setSelectedChangeIdea}
+        selectedDriver={selectedDriver}
         />
 }
 
@@ -107,8 +108,11 @@ export default function TeamChangeIdeas({selectedAim, selectedDriver, setSelecte
 export function TeamChangeIdeasComponent({
     handleSave, handleOpenModal,
     show, setShow, initialFormData, pages, setChangeIdeas, changeIdeas,
-    selectedChangeIdea, setSelectedChangeIdea,
+    selectedChangeIdea, setSelectedChangeIdea, selectedDriver,
     }) {
+
+
+
     return (
         <>
             {/* Card */}
@@ -136,7 +140,7 @@ export function TeamChangeIdeasComponent({
                     <Card className='border-0 bg-light mt-2 rounded-4 flex-grow-1' style={{minHeight:'0'}}>
                         <Card.Body className='h-100'>
                             {/* Scrollable Container */}
-                            <div className='overflow-y-auto h-100'>
+                            <div className='overflow-y-auto h-100 p-1'>
                                 {
                                     (!changeIdeas) ? <div className='text-muted text-center'>Select a driver first</div> :
                                     (changeIdeas?.length === 0) ? <div className='text-muted text-center'>Add a change idea first</div> :
@@ -150,6 +154,8 @@ export function TeamChangeIdeasComponent({
                                             setOptions={setChangeIdeas} 
                                             selected={selectedChangeIdea} 
                                             setSelected={setSelectedChangeIdea} 
+                                            pages={pages}
+                                            parent={selectedDriver}
                                             />
                                         ))
                                 }

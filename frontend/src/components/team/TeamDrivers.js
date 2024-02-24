@@ -106,6 +106,7 @@ export default function TeamDrivers({team, selectedAim, setSelectedAim, selected
         drivers={drivers}
         selectedDriver={selectedDriver}
         setSelectedDriver={setSelectedDriver}
+        selectedAim={selectedAim}
         />
 }
 
@@ -113,7 +114,7 @@ export default function TeamDrivers({team, selectedAim, setSelectedAim, selected
 export function TeamDriversComponent({
     handleSave, handleOpenModal,
     show, setShow, initialFormData, pages, setDrivers, drivers,
-    selectedDriver, setSelectedDriver,
+    selectedDriver, setSelectedDriver, selectedAim,
     }) {
     return (
         <>
@@ -142,7 +143,7 @@ export function TeamDriversComponent({
                     <Card className='border-0 bg-light mt-2 rounded-4 flex-grow-1' style={{minHeight:'0'}}>
                         <Card.Body className='h-100'>
                             {/* Scrollable Container */}
-                            <div className='overflow-y-auto h-100'>
+                            <div className='overflow-y-auto h-100 p-1'>
                                 {
                                     (!drivers) ? <div className='text-muted text-center'>Select an aim first</div> :
                                     (drivers?.length === 0) ? <div className='text-muted text-center'>Add a driver first</div> :
@@ -156,6 +157,8 @@ export function TeamDriversComponent({
                                             setOptions={setDrivers} 
                                             selected={selectedDriver} 
                                             setSelected={setSelectedDriver} 
+                                            pages={pages}
+                                            parent={selectedAim}
                                             />
                                         ))
                                 }
