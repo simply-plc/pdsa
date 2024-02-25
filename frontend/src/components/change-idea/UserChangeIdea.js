@@ -41,12 +41,13 @@ export default function UserChangeIdea() {
 
     return <UserChangeIdeaComponent 
         changeIdea={changeIdea} 
+        location={location}
         handleBackButton={handleBackButton}
         />;
 }
 
 export function UserChangeIdeaComponent({
-    changeIdea, 
+    changeIdea, location,
     handleBackButton, 
     }) {
     return (
@@ -83,7 +84,7 @@ export function UserChangeIdeaComponent({
                 {/* First Col */}
                 <Col className='mb-3' lg={6}>
                     {/* Info and Cycles */}
-                    <InfoCycles />
+                    <InfoCycles changeIdea={changeIdea} aim={location.state.aim} driver={location.state.driver} />
                 </Col>
                 {/* Second Col */}
                 <Col className='flex-grow-1 mb-3' lg={6}>

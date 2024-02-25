@@ -6,7 +6,7 @@ import Info from './Info';
 import Cycles from './Cycles';
 
 
-export default function InfoCycles() {
+export default function InfoCycles({changeIdea, aim, driver}) {
     const [view, setView] = useState('Cycles');
 
     function handleSelectView({target}) {
@@ -16,12 +16,15 @@ export default function InfoCycles() {
     return <InfoCyclesComponent 
         handleSelectView={handleSelectView}
         view={view}
+        changeIdea={changeIdea}
+        aim={aim}
+        driver={driver}
         />;
 }
 
 
 export function InfoCyclesComponent({
-    handleSelectView, view,
+    handleSelectView, view, changeIdea, aim, driver,
     }) {
     return (
         <>
@@ -55,13 +58,13 @@ export function InfoCyclesComponent({
                     {/* Info */}
                     <div 
                         className='w-100 h-100'
-                        style={{position:'absolute', transition:'opacity .2s ease', opacity:view==='Info' ? 1 : 0}}>
-                        <Info />
+                        style={{position:'absolute', transition:'opacity .2s ease', opacity:view==='Info' ? 1 : 0, zIndex: view==='Info' ? 1 : 0}}>
+                        <Info aim={aim} driver={driver} />
                     </div>
                     {/* Cycles */}
                     <div 
                         className='w-100 h-100'
-                        style={{position:'absolute', transition:'opacity .2s ease', opacity:view==='Cycles' ? 1 : 0}}>
+                        style={{position:'absolute', transition:'opacity .2s ease', opacity:view==='Cycles' ? 1 : 0, zIndex: view==='Cycles' ? 1 : 0}}>
                         <Cycles />
                     </div>
                 </div>
