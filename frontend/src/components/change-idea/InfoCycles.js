@@ -1,4 +1,4 @@
-import {Card, Button} from 'react-bootstrap';
+import {Button} from 'react-bootstrap';
 import {useState} from 'react';
 
 import Hover from '../general/Hover';
@@ -6,9 +6,10 @@ import Info from './Info';
 import Cycles from './Cycles';
 
 
-export default function InfoCycles({changeIdea, aim, driver}) {
+export default function InfoCycles({changeIdea, aim, driver, selectedCycle, setSelectedCycle}) {
     const [view, setView] = useState('Cycles');
 
+    // select which card to view: info or cycles
     function handleSelectView({target}) {
         setView(target.textContent);
     }
@@ -19,12 +20,14 @@ export default function InfoCycles({changeIdea, aim, driver}) {
         changeIdea={changeIdea}
         aim={aim}
         driver={driver}
+        selectedCycle={selectedCycle}
+        setSelectedCycle={setSelectedCycle}
         />;
 }
 
 
 export function InfoCyclesComponent({
-    handleSelectView, view, changeIdea, aim, driver,
+    handleSelectView, view, changeIdea, aim, driver, selectedCycle, setSelectedCycle,
     }) {
     return (
         <>
@@ -65,7 +68,7 @@ export function InfoCyclesComponent({
                     <div 
                         className='w-100 h-100'
                         style={{position:'absolute', transition:'opacity .2s ease', opacity:view==='Cycles' ? 1 : 0, zIndex: view==='Cycles' ? 1 : 0}}>
-                        <Cycles />
+                        <Cycles changeIdea={changeIdea} selectedCycle={selectedCycle} setSelectedCycle={setSelectedCycle} />
                     </div>
                 </div>
             </div>

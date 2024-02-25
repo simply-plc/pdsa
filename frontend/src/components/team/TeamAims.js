@@ -76,7 +76,7 @@ export default function TeamAim({team, selectedAim, setSelectedAim, setSelectedD
         setShow(true);
     }
 
-    async function handleSave(formData) {
+    function handleSave(formData) {
         // Post the new aim
         axios.post('http://127.0.0.1:8000/api/aim/create/', {...formData, team: team.id})
             .then(response => {
@@ -139,7 +139,7 @@ export function TeamAimComponent({
                             {/* Scrollable Container */}
                             <div className='overflow-y-auto h-100 p-1'>
                                 {
-                                    (aims?.length === 0) ? <div className='text-muted text-center'>Add an aim first</div> :
+                                    (aims?.length === 0) ? <div className='text-muted text-center'>Add an aim</div> :
                                     aims?.map((v, i) => (
                                         <SelectCard 
                                             pages={pages}

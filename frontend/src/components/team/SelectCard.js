@@ -85,13 +85,20 @@ export default function SelectCard({
         tooltipBody={tooltipBody} 
         placement={tooltipPlacement}
         handleToggle={handleToggle}
+        optionName={optionName}
         />;
 }
 
 export function SelectCardComponent({styleRef, option, optionShow, selected, 
     handleDelete, handleSelected, tooltipHeader, tooltipBody, placement, 
-    handleToggle,
+    handleToggle, optionName,
     }) {
+    const stageColor ={
+        Testing: 'danger',
+        Implementing: 'warning',
+        Spreading: 'success',
+    };
+
     return (
         <>
             <Hover
@@ -109,10 +116,17 @@ export function SelectCardComponent({styleRef, option, optionShow, selected,
                     <Card.Body className='d-flex p-0 ps-3 pe-3'>
                         {/* Title */}
                         <div 
-                            className='overflow-hidden mt-auto mb-auto w-100' 
+                            className='overflow-hidden mt-auto mb-auto w-100 d-flex' 
                             style={{height:'1.5rem'}}
                             >
-                            {optionShow}
+                            <span>{optionShow}</span>
+                            {(optionName === 'change-idea') && 
+                                <span className='ms-auto'>
+                                    <div className={`badge text-white rounded-4 text-white bg-${stageColor[option.stage]}`}>
+                                        {option.stage}
+                                    </div>
+                                </span>
+                            }
                         </div>
                         {/* Menu */}
                         <div className='ms-auto mt-auto mb-auto text-center d-inline-block' style={{width:'3rem'}}>

@@ -45,7 +45,7 @@ export default function TeamsPage() {
 
     // This just returns back
     function handleBackButton() {
-        navigate(-1);
+        navigate('../');
     }
 
     // This handles opening create modal

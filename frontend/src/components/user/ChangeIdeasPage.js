@@ -14,7 +14,7 @@ export default function ChangeIdeasPage() {
 
     // This just returns back
     function handleBackButton() {
-        navigate(-1);
+        navigate('../');
     }
 
     return <ChangeIdeasPageComponent 

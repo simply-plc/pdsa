@@ -148,7 +148,7 @@ export function TeamDriversComponent({
                             <div className='overflow-y-auto h-100 p-1'>
                                 {
                                     (!drivers) ? <div className='text-muted text-center'>Select an aim first</div> :
-                                    (drivers?.length === 0) ? <div className='text-muted text-center'>Add a driver first</div> :
+                                    (drivers?.length === 0) ? <div className='text-muted text-center'>Add a driver</div> :
                                     drivers?.map((v, i) => (
                                         <SelectCard 
                                             optionName='driver' 

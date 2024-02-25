@@ -37,7 +37,7 @@ export default function UserTeam() {
 
     // Back button
     function handleBackButton() {
-        navigate(-1);
+        navigate('../teams');
     }
 
     return <UserTeamComponent 

@@ -159,7 +159,7 @@ export function TeamChangeIdeasComponent({
                             <div className='overflow-y-auto h-100 p-1'>
                                 {
                                     (!changeIdeas) ? <div className='text-muted text-center'>Select a driver first</div> :
-                                    (changeIdeas?.length === 0) ? <div className='text-muted text-center'>Add a change idea first</div> :
+                                    (changeIdeas?.length === 0) ? <div className='text-muted text-center'>Add a change idea</div> :
                                     changeIdeas?.map((v, i) => (
                                         <SelectCard 
                                             optionName='change-idea' 

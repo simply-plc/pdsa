@@ -15,7 +15,9 @@ export default function UserChangeIdea() {
     const navigate = useNavigate();
     const params = useParams(); // Get params
     const [changeIdea, setChangeIdea] = useState(); // Current change idea info
+    const [selectedCycle, setSelectedCycle] = useState(); // Currently selected Cycle
 
+    // Initialize the change idea info
     useEffect(() => {
         axios.get(`http://127.0.0.1:8000/api/change-idea/${params.changeIdeaId}/`, {
                     headers: {'Content-Type': 'application/json'},
@@ -43,12 +45,14 @@ export default function UserChangeIdea() {
         changeIdea={changeIdea} 
         location={location}
         handleBackButton={handleBackButton}
+        selectedCycle={selectedCycle}
+        setSelectedCycle={setSelectedCycle}
         />;
 }
 
 export function UserChangeIdeaComponent({
     changeIdea, location,
-    handleBackButton, 
+    handleBackButton, selectedCycle, setSelectedCycle,
     }) {
     return (
         <div className='vh-100 d-flex flex-column' style={{minHeight:'45rem'}}>
@@ -84,7 +88,13 @@ export function UserChangeIdeaComponent({
                 {/* First Col */}
                 <Col className='mb-3' lg={6}>
                     {/* Info and Cycles */}
-                    <InfoCycles changeIdea={changeIdea} aim={location.state.aim} driver={location.state.driver} />
+                    <InfoCycles 
+                        changeIdea={changeIdea} 
+                        aim={location.state.aim} 
+                        driver={location.state.driver} 
+                        selectedCycle={selectedCycle} 
+                        setSelectedCycle={setSelectedCycle}
+                        />
                 </Col>
                 {/* Second Col */}
                 <Col className='flex-grow-1 mb-3' lg={6}>
