@@ -99,7 +99,7 @@ export function UserChangeIdeaComponent({
                 {/* Second Col */}
                 <Col className='flex-grow-1 mb-3' lg={6}>
                     {/* Cylce form */}
-                        <PDSA />
+                        <PDSA cycle={selectedCycle} />
                 </Col>
             </Row>
         </div>

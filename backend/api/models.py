@@ -80,12 +80,13 @@ class PDSA(models.Model):
     name = models.CharField(max_length=50)
     change_idea = models.ForeignKey(ChangeIdea, on_delete=models.CASCADE, related_name='pdsas')
     stage = models.CharField(max_length=20, choices=STAGE_CHOICES, default='Plan')
-    learning_goal = models.TextField(blank=True) # What do you want to learn about change idea?
-    steps = models.TextField(blank=True) # What steps are you going to take to test the change idea?
-    measure = models.TextField(blank=True) # What data are you going to measure for the change idea?
-    predictions = models.TextField(blank=True) # What predictions do you have about the data for the change idea?
+    learning_goal = models.TextField(blank=True) # What do you want to learn?
+    steps = models.TextField(blank=True) # What steps do you need to test?
+    measure = models.TextField(blank=True) # What data are you going to measure?
+    predictions = models.TextField(blank=True) # What predictions do you have about the data?
     by_date = models.DateField(default=date.today) # When are you going to test the change idea?
-    learning = models.TextField(blank=True) # What did you learn from the data you collected from testing the change idea?
+    data = models.TextField(blank=True) # What is the data you collected?
+    learning = models.TextField(blank=True) # What did you learn from the data you collected?
     next_step = models.CharField(max_length=20, choices=NEXT_STEP_CHOICES, blank=True) # Are you going to implement, expand, or abandon the change idea?
     next_step_rationale = models.TextField(blank=True) # What is your rationale for the choice?
     modified_date = models.DateTimeField(default=timezone.now)

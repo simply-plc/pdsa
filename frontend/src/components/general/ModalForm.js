@@ -106,7 +106,7 @@ export default function ModalForm({title, show, setShow, onSave, pages, initialF
         return true;
     }
 
-    return <TeamAimComponent 
+    return <ModalFormComponent 
         title={title}
         show={show}
         formId={formId}
@@ -123,7 +123,7 @@ export default function ModalForm({title, show, setShow, onSave, pages, initialF
 }
 
 
-export function TeamAimComponent({
+export function ModalFormComponent({
     handleCloseModal, handleChange, handleSaveModal, handleNext, handlePrev,
     show, formId, formData, title,
     isValid, page, pages,
@@ -132,6 +132,7 @@ export function TeamAimComponent({
     let currPage = pages[page-1]; // Current page
     let currFormPage = []; // Current form page
 
+    // Putting in groups
     for (let j = 0; j < currPage.length; j++) { // Iterate through the form groups
         let currGroup = currPage[j]; // Current group on page
         let CurrInput = currGroup.comp;
@@ -151,6 +152,7 @@ export function TeamAimComponent({
         ); 
     }
 
+    // Buttons
     let currButtonGroup; // One page only
     if (pages.length === 1) {
         currButtonGroup = (
