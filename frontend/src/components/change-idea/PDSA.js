@@ -39,6 +39,13 @@ export function PDSAComponent({view, handleSelectView, cycle, changeIdea, setCha
         Complete: '#212529',
     };
 
+    const stageIndices = { // for the disabled button
+        'Plan':0,
+        'Do':1,
+        'Study':2,
+        'Act':3,
+    }
+
     return (
         <>
             {/* Card */}
@@ -54,6 +61,7 @@ export function PDSAComponent({view, handleSelectView, cycle, changeIdea, setCha
                                 <Hover 
                                     comp={Button}
                                     className={`rounded-5 me-3 fw-bold`}
+                                    disabled={i > stageIndices[cycle?.stage]} // if the button is greater than the current cycle then disable the button
                                     style={{
                                         color:view===stage ? '#ffffff' : stageColors[stage],
                                         width:'5rem', 
