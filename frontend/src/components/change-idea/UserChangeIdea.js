@@ -47,12 +47,13 @@ export default function UserChangeIdea() {
         handleBackButton={handleBackButton}
         selectedCycle={selectedCycle}
         setSelectedCycle={setSelectedCycle}
+        setChangeIdea={setChangeIdea}
         />;
 }
 
 export function UserChangeIdeaComponent({
     changeIdea, location,
-    handleBackButton, selectedCycle, setSelectedCycle,
+    handleBackButton, selectedCycle, setSelectedCycle, setChangeIdea,
     }) {
     return (
         <div className='vh-100 d-flex flex-column' style={{minHeight:'45rem'}}>
@@ -99,7 +100,7 @@ export function UserChangeIdeaComponent({
                 {/* Second Col */}
                 <Col className='flex-grow-1 mb-3' lg={6}>
                     {/* Cylce form */}
-                        <PDSA cycle={selectedCycle} />
+                        <PDSA cycle={selectedCycle} changeIdea={changeIdea} setChangeIdea={setChangeIdea} />
                 </Col>
             </Row>
         </div>

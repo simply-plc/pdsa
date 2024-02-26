@@ -4,15 +4,17 @@ import axios from 'axios';
 
 
 
-export default function Plan({cycle, stageColor, show}) {
-    const [formData, setFormData] = useState(cycle);
-    const [loading, setLoading] = useState(false);
+export default function Plan({cycle, changeIdea, setChangeIdea, stageColor, show}) {
+    const [formData, setFormData] = useState(cycle); // Form data
+    const [loading, setLoading] = useState(false); // For showing loading or saved when saving
 
+    // Initialize data
     useEffect(() => {
         setFormData(cycle);
         setLoading(false);
     }, [cycle]);
 
+    // If another stage is selected, reset loading
     useEffect(() => {
         setLoading(false);
     }, [show]);
@@ -25,7 +27,7 @@ export default function Plan({cycle, stageColor, show}) {
             [target.name]: target.value,
         });
 
-        setLoading(false);
+        setLoading(false); // Reset loading 
     }
 
     // Saving the form
@@ -34,8 +36,48 @@ export default function Plan({cycle, stageColor, show}) {
         // Update
         axios.put(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {...formData})
             .then(response => {
-                // Adds the aim
-                setFormData(response.data); /////////////////// THE SAVING DOESN"T KEEP IT UP TO DATE WHEN SWITCHED
+                // uodates the cycle
+                for (let key in response.data) {
+                    cycle[key] = response.data[key];
+                }
+
+                setFormData(response.data); // set new form
+                setLoading('saved'); // Show that it is saved
+            })
+            .catch(error => alert(error.message)); // Implement a failed to save
+    }
+
+    // Save and move on to next stage
+    function handleComplete() {
+        setLoading('loading');
+        // Update
+        axios.put(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {...formData, stage: 'Do'})
+            .then(response => {
+                // updates the cycle
+                for (let key in response.data) {
+                    cycle[key] = response.data[key];
+                }
+
+                setChangeIdea({...changeIdea}) // Resets the whole page
+                setFormData(response.data);
+                setLoading('saved');
+            })
+            .catch(error => alert(error.message)); // Implement a failed to save
+    }
+
+    // Save and revert to current stage
+    function handleRevert() {
+        setLoading('loading');
+        // Update
+        axios.put(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {...formData, stage: 'Plan'})
+            .then(response => {
+                // updates the cycle
+                for (let key in response.data) {
+                    cycle[key] = response.data[key];
+                }
+
+                setChangeIdea({...changeIdea})
+                setFormData(response.data);
                 setLoading('saved');
             })
             .catch(error => alert(error.message));
@@ -47,13 +89,16 @@ export default function Plan({cycle, stageColor, show}) {
         stageColor={stageColor} 
         formData={formData}
         handleSave={handleSave}
+        handleComplete={handleComplete}
+        handleRevert={handleRevert}
         loading={loading}
+        cycle={cycle}
         />;
 }
 
 export function PlanComponent({
     formData, handleChange, show, stageColor,
-    handleSave, loading,
+    handleSave, loading, handleComplete, handleRevert, cycle,
     }) {
     return (
         <>
@@ -189,17 +234,28 @@ export function PlanComponent({
                     <Card.Body className='p-1 d-flex'>
                         <Button 
                             variant='outline-secondary' 
-                            className='rounded-4 me-2 fw-bold shadow-sm pe-2 ps-2 pt-0 pb-0'
+                            className={`rounded-4 me-2 fw-bold shadow-sm pe-2 ps-2 pt-0 pb-0`}
                             onClick={handleSave}
                             >
                             Save
                         </Button>
-                        <Button 
-                            variant='outline-primary' 
-                            className='rounded-4 fw-bold shadow-sm pe-2 ps-2 pt-0 pb-0'
-                            >
-                            Complete
-                        </Button>
+                        {
+                            cycle?.stage==='Plan' ?
+                            <Button 
+                                variant='outline-primary' 
+                                className='rounded-4 fw-bold shadow-sm pe-2 ps-2 pt-0 pb-0'
+                                onClick={handleComplete}
+                                >
+                                Complete
+                            </Button> :
+                            <Button 
+                                variant='outline-danger' 
+                                className='rounded-4 fw-bold shadow-sm pe-2 ps-2 pt-0 pb-0'
+                                onClick={handleRevert}
+                                >
+                                Revert
+                            </Button>
+                        }
                     </Card.Body>
                 </Card>
             </div>

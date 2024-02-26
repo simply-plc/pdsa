@@ -7,7 +7,7 @@ import Do from './Do';
 import Study from './Study';
 import Act from './Act';
 
-export default function PDSA({cycle}) {
+export default function PDSA({cycle, changeIdea, setChangeIdea}) {
     const [view, setView] = useState(cycle?.stage); // Replace with the stage the cycle is in
 
     useEffect(() => {
@@ -24,11 +24,13 @@ export default function PDSA({cycle}) {
         view={view} 
         handleSelectView={handleSelectView}
         cycle={cycle}
+        changeIdea={changeIdea}
+        setChangeIdea={setChangeIdea}
         />;
 }
 
 
-export function PDSAComponent({view, handleSelectView, cycle}) {
+export function PDSAComponent({view, handleSelectView, cycle, changeIdea, setChangeIdea}) {
     const stageColors = {
         Plan: '#117da6',
         Do: '#f38620',
@@ -82,25 +84,25 @@ export function PDSAComponent({view, handleSelectView, cycle}) {
                                 <div 
                                     className='w-100 h-100 overflow-hidden d-flex flex-column'
                                     style={{position:'absolute', opacity:view==='Plan' ? 1 : 0, zIndex: view==='Plan' ? 1 : 0}}>
-                                    <Plan cycle={cycle} show={view==='Plan'} stageColor={stageColors[view]} />
+                                    <Plan cycle={cycle} changeIdea={changeIdea} setChangeIdea={setChangeIdea} show={view==='Plan'} stageColor={stageColors[view]} />
                                 </div>
                                 {/* Do */}
                                 <div 
                                     className='w-100 h-100 overflow-hidden d-flex flex-column'
                                     style={{position:'absolute', opacity:view==='Do' ? 1 : 0, zIndex: view==='Do' ? 1 : 0}}>
-                                    <Do cycle={cycle} show={view==='Do'} stageColor={stageColors[view]} />
+                                    <Do cycle={cycle} changeIdea={changeIdea} setChangeIdea={setChangeIdea} show={view==='Do'} stageColor={stageColors[view]} />
                                 </div>
                                 {/* Study */}
                                 <div 
                                     className='w-100 h-100 overflow-hidden d-flex flex-column'
                                     style={{position:'absolute', opacity:view==='Study' ? 1 : 0, zIndex: view==='Study' ? 1 : 0}}>
-                                    <Study cycle={cycle} show={view==='Study'} stageColor={stageColors[view]} />
+                                    <Study cycle={cycle} changeIdea={changeIdea} setChangeIdea={setChangeIdea} show={view==='Study'} stageColor={stageColors[view]} />
                                 </div>
                                 {/* Act */}
                                 <div 
                                     className='w-100 h-100 overflow-hidden d-flex flex-column'
                                     style={{position:'absolute', opacity:view==='Act' ? 1 : 0, zIndex: view==='Act' ? 1 : 0}}>
-                                    <Act cycle={cycle} show={view==='Act'} stageColor={stageColors[view]} />
+                                    <Act cycle={cycle} changeIdea={changeIdea} setChangeIdea={setChangeIdea} show={view==='Act'} stageColor={stageColors[view]} />
                                 </div>
                             </div>
                         </Card.Body>
