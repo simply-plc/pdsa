@@ -10,7 +10,12 @@ export default function Plan({cycle, stageColor, show}) {
 
     useEffect(() => {
         setFormData(cycle);
+        setLoading(false);
     }, [cycle]);
+
+    useEffect(() => {
+        setLoading(false);
+    }, [show]);
 
     // handles controlling the input
     function handleChange({target}) {
@@ -19,17 +24,19 @@ export default function Plan({cycle, stageColor, show}) {
             ...formData,
             [target.name]: target.value,
         });
+
+        setLoading(false);
     }
 
     // Saving the form
     function handleSave() {
-        setLoading(true);
+        setLoading('loading');
         // Update
         axios.put(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {...formData})
             .then(response => {
                 // Adds the aim
-                setFormData(response.data);
-                setLoading(false);
+                setFormData(response.data); /////////////////// THE SAVING DOESN"T KEEP IT UP TO DATE WHEN SWITCHED
+                setLoading('saved');
             })
             .catch(error => alert(error.message));
     }
@@ -174,9 +181,9 @@ export function PlanComponent({
             </Form>
             {/* Buttons */}
             <div className='ms-auto d-flex align-items-center'>
-                {loading ? 
-                    <Spinner size='sm' variant='primary' animation='grow' className='me-2' /> :
-                    <span>Saved!</span>
+                {
+                    loading==='loading' ? <Spinner size='sm' variant='primary' animation='grow' className='me-2' /> :
+                    loading==='saved' ? <span className='text-light me-2'>Saved!</span> : ''
                 }
                 <Card className='rounded-4 d-inline-block'>
                     <Card.Body className='p-1 d-flex'>
