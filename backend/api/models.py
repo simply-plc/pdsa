@@ -48,6 +48,7 @@ class Driver(models.Model):
 
 class ChangeIdea(models.Model):
     STAGE_CHOICES = [
+        ('Abandoned', 'Abandoned'),
         ('Testing', 'Testing'), 
         ('Implementing', 'Implementing'), 
         ('Spreading', 'Spreading')
@@ -64,8 +65,8 @@ class ChangeIdea(models.Model):
 
 class PDSA(models.Model):
     NEXT_STEP_CHOICES = [
-        ('Implement', 'Implement'), 
-        ('Expand', 'Expand'), 
+        ('Adopt', 'Adopt'), 
+        ('Adapt', 'Adapt'), 
         ('Abandon', 'Abandon')
     ]
 

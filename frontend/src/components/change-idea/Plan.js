@@ -1,10 +1,12 @@
-import {Form, Card, Button} from 'react-bootstrap';
+import {Form, Card, Button, Spinner} from 'react-bootstrap';
 import {useState, useEffect} from 'react';
+import axios from 'axios';
 
 
 
 export default function Plan({cycle, stageColor, show}) {
     const [formData, setFormData] = useState(cycle);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         setFormData(cycle);
@@ -19,10 +21,33 @@ export default function Plan({cycle, stageColor, show}) {
         });
     }
 
-    return <PlanComponent handleChange={handleChange} show={show} stageColor={stageColor} />;
+    // Saving the form
+    function handleSave() {
+        setLoading(true);
+        // Update
+        axios.put(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {...formData})
+            .then(response => {
+                // Adds the aim
+                setFormData(response.data);
+                setLoading(false);
+            })
+            .catch(error => alert(error.message));
+    }
+
+    return <PlanComponent 
+        handleChange={handleChange} 
+        show={show} 
+        stageColor={stageColor} 
+        formData={formData}
+        handleSave={handleSave}
+        loading={loading}
+        />;
 }
 
-export function PlanComponent({handleChange, show, stageColor,}) { ///////// FINISH CONTROLLING THE FORM. you need to put in values
+export function PlanComponent({
+    formData, handleChange, show, stageColor,
+    handleSave, loading,
+    }) {
     return (
         <>
             {/* Form */}
@@ -41,11 +66,14 @@ export function PlanComponent({handleChange, show, stageColor,}) { ///////// FIN
                     }}
                     >
                     <Form.Label>What do you want to learn?</Form.Label>
+                    {/* input */}
                     <Form.Control 
                         as='textarea' 
                         rows={4} 
                         style={{resize:'none'}} 
                         name='learning_goal'
+                        value={formData?.learning_goal}
+                        onChange={handleChange}
                         />
                 </Form.Group>
                 {/* Steps */}
@@ -62,7 +90,15 @@ export function PlanComponent({handleChange, show, stageColor,}) { ///////// FIN
                     }}
                     >
                     <Form.Label>What steps do you need to test?</Form.Label>
-                    <Form.Control as='textarea' rows={4} style={{resize:'none'}} name='steps' />
+                    {/* input */}
+                    <Form.Control 
+                        as='textarea' 
+                        rows={4} 
+                        style={{resize:'none'}} 
+                        name='steps'
+                        value={formData?.steps}
+                        onChange={handleChange}
+                        />
                 </Form.Group>
                 {/* Measure */}
                 <Form.Group 
@@ -78,7 +114,15 @@ export function PlanComponent({handleChange, show, stageColor,}) { ///////// FIN
                     }}
                     >
                     <Form.Label>What data are you going to measure?</Form.Label>
-                    <Form.Control as='textarea' rows={4} style={{resize:'none'}} name='measure' />
+                    {/* input */}
+                    <Form.Control 
+                        as='textarea' 
+                        rows={4} 
+                        style={{resize:'none'}} 
+                        name='measure'
+                        value={formData?.measure}
+                        onChange={handleChange}
+                        />
                 </Form.Group>
                 {/* Predictions */}
                 <Form.Group 
@@ -94,7 +138,15 @@ export function PlanComponent({handleChange, show, stageColor,}) { ///////// FIN
                     }}
                     >
                     <Form.Label>What predictions do you have about the data?</Form.Label>
-                    <Form.Control as='textarea' rows={4} style={{resize:'none'}} name='predictions' />
+                    {/* input */}
+                    <Form.Control 
+                        as='textarea' 
+                        rows={4} 
+                        style={{resize:'none'}} 
+                        name='predictions'
+                        value={formData?.predictions}
+                        onChange={handleChange}
+                        />
                 </Form.Group>
                 {/* By date */}
                 <Form.Group 
@@ -110,26 +162,40 @@ export function PlanComponent({handleChange, show, stageColor,}) { ///////// FIN
                     }}
                     >
                     <Form.Label>When are you going to test the change idea?</Form.Label>
-                    <Form.Control as='input' type='date' name='by_date' />
+                    {/* Input */}
+                    <Form.Control 
+                        as='input' 
+                        type='date' 
+                        name='by_date' 
+                        value={formData?.by_date}
+                        onChange={handleChange}
+                        />
                 </Form.Group>
             </Form>
-            {/* Button */}
-            <Card className='rounded-4 ms-auto'>
-                <Card.Body className='p-1 d-flex'>
-                    <Button 
-                        variant='outline-secondary' 
-                        className='rounded-4 me-2 fw-bold shadow-sm pe-2 ps-2 pt-0 pb-0'
-                        >
-                        Save
-                    </Button>
-                    <Button 
-                        variant='outline-primary' 
-                        className='rounded-4 fw-bold shadow-sm pe-2 ps-2 pt-0 pb-0'
-                        >
-                        Complete
-                    </Button>
-                </Card.Body>
-            </Card>
+            {/* Buttons */}
+            <div className='ms-auto d-flex align-items-center'>
+                {loading ? 
+                    <Spinner size='sm' variant='primary' animation='grow' className='me-2' /> :
+                    <span>Saved!</span>
+                }
+                <Card className='rounded-4 d-inline-block'>
+                    <Card.Body className='p-1 d-flex'>
+                        <Button 
+                            variant='outline-secondary' 
+                            className='rounded-4 me-2 fw-bold shadow-sm pe-2 ps-2 pt-0 pb-0'
+                            onClick={handleSave}
+                            >
+                            Save
+                        </Button>
+                        <Button 
+                            variant='outline-primary' 
+                            className='rounded-4 fw-bold shadow-sm pe-2 ps-2 pt-0 pb-0'
+                            >
+                            Complete
+                        </Button>
+                    </Card.Body>
+                </Card>
+            </div>
         </>
     );
 }
