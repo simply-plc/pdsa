@@ -62,7 +62,7 @@ export function InfoCyclesComponent({
                     <div 
                         className='w-100 h-100'
                         style={{position:'absolute', transition:'opacity .2s ease', opacity:view==='Info' ? 1 : 0, zIndex: view==='Info' ? 1 : 0}}>
-                        <Info aim={aim} driver={driver} />
+                        <Info aim={aim} driver={driver} changeIdea={changeIdea} />
                     </div>
                     {/* Cycles */}
                     <div 

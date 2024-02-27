@@ -1,7 +1,7 @@
 import {Modal, Form, Button, ProgressBar} from 'react-bootstrap';
 import {useState, useEffect, useId} from 'react';
 
-export default function ModalForm({title, show, setShow, onSave, pages, initialFormData}) {
+export default function ModalForm({title, show, setShow, onSave, pages, initialFormData, update=false}) {
     const formId = useId(); // Sets form id so button can access without being in the form
     const [page, setPage] = useState(1); // Sets the current page; Required for each object in a page name and comp
     const initialRequired = Object.keys(initialFormData).reduce((acc, curr) => { // Set the reset initial value for required
@@ -119,6 +119,7 @@ export default function ModalForm({title, show, setShow, onSave, pages, initialF
         isValid={isValid}
         page={page}
         pages={pages}
+        update={update}
         />
 }
 
@@ -126,7 +127,7 @@ export default function ModalForm({title, show, setShow, onSave, pages, initialF
 export function ModalFormComponent({
     handleCloseModal, handleChange, handleSaveModal, handleNext, handlePrev,
     show, formId, formData, title,
-    isValid, page, pages,
+    isValid, page, pages, update,
     }) {
 
     let currPage = pages[page-1]; // Current page
@@ -163,7 +164,7 @@ export function ModalFormComponent({
                 </Button>
                 {/* Create */}
                 <Button form={formId} type='submit' variant="primary">
-                    Create
+                    {update ? 'Update' : 'Create'}
                 </Button>
             </>
         );
@@ -189,7 +190,7 @@ export function ModalFormComponent({
                 </Button>
                 {/* Create */}
                 <Button form={formId} type='submit' variant="primary">
-                    Create
+                    {update ? 'Update' : 'Create'}
                 </Button>
             </>
         );

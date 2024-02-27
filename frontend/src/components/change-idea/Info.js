@@ -2,12 +2,12 @@ import {Card, Row, Col, Badge} from 'react-bootstrap';
 
 
 
-export default function Info({aim, driver}) {
+export default function Info({aim, driver, changeIdea}) {
 
-    return <InfoComponent aim={aim} driver={driver} />;
+    return <InfoComponent aim={aim} driver={driver} changeIdea={changeIdea} />;
 }
 
-export function InfoComponent({aim, driver}) {
+export function InfoComponent({aim, driver, changeIdea}) {
     return (
         <>
             <div className='pb-2 h-50'>
@@ -60,7 +60,7 @@ export function InfoComponent({aim, driver}) {
                 </Card>
             </div>
             {/* Driver */}
-            <div className='pt-2 h-50'>
+            <div className='pt-2 mb-2 h-50'>
                 <Card className='border-0 rounded-4 bg-white h-100 shadow-sm'>
                     <Card.Body className='d-flex flex-column overflow-hidden'>
                         {/* Title Badge */}
