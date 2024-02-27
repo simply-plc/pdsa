@@ -116,6 +116,8 @@ export default function TeamChangeIdeas({team, selectedAim, selectedDriver, setS
         selectedDriver={selectedDriver}
         setSelectedDriver={setSelectedDriver}
         handleClick={handleClick}
+        selectedAim={selectedAim}
+        setUpdate={setUpdate}
         />
 }
 
@@ -124,7 +126,7 @@ export function TeamChangeIdeasComponent({
     handleSave, handleOpenModal,
     show, setShow, initialFormData, pages, setChangeIdeas, changeIdeas,
     selectedChangeIdea, setSelectedChangeIdea, selectedDriver, handleClick,
-    setSelectedDriver,
+    setSelectedDriver, selectedAim, setUpdate,
     }) {
 
 
@@ -172,8 +174,14 @@ export function TeamChangeIdeasComponent({
                                             setSelected={setSelectedChangeIdea} 
                                             pages={pages}
                                             parent={selectedDriver}
+                                            setParent={setSelectedDriver}
+                                            gparent={selectedAim}
+                                            parentKey={'drivers'}
+                                            singleParentKey={'driver'}
                                             optionKey={'change_ideas'}
                                             onClick={handleClick}
+                                            title={'Change Idea'}
+                                            setUpdate={setUpdate}
                                             />
                                         ))
                                 }

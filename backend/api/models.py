@@ -6,7 +6,7 @@ from datetime import date
 class Team(models.Model):
     name = models.CharField(max_length=255)
     members = models.ManyToManyField('user.User', through='TeamMembership', related_name='teams')
-    created_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -30,7 +30,8 @@ class Aim(models.Model):
     population = models.TextField() # Who is this aim for?
     by_num = models.TextField() # By how much do we want to accomplish?
     by_date = models.DateField() # By when will we have accomplished this aim?
-    modified_date = models.DateTimeField(default=timezone.now)
+    modified_date = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -41,7 +42,8 @@ class Driver(models.Model):
     goal = models.TextField() # What needs to be improved?
     description = models.TextField() # How does it relate with the aim?
     measure = models.TextField() # What data do we measure?
-    modified_date = models.DateTimeField(default=timezone.now)
+    modified_date = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -58,7 +60,9 @@ class ChangeIdea(models.Model):
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE, related_name='change_ideas')
     idea = models.TextField() # What is the action idea you want to implement?
     stage = models.CharField(max_length=20, choices=STAGE_CHOICES) # Are we testing, implementing, or spreading?
-    modified_date = models.DateTimeField(default=timezone.now)
+    modified_date = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
 
     def __str__(self):
         return self.name
@@ -91,8 +95,8 @@ class PDSA(models.Model):
     learning = models.TextField(blank=True) # What did you learn from the data you collected?
     next_step = models.CharField(max_length=20, choices=NEXT_STEP_CHOICES, blank=True) # Are you going to implement, expand, or abandon the change idea?
     next_step_rationale = models.TextField(blank=True) # What is your rationale for the choice?
-    modified_date = models.DateTimeField(default=timezone.now)
-    created_at = models.DateTimeField(default=timezone.now)
+    modified_date = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name

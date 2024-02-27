@@ -19,7 +19,6 @@ export default function UserTeam() {
     const [selectedAim, setSelectedAim] = useState(location.state?.aim); // This determines which aim is selected
     const [selectedDriver, setSelectedDriver] = useState(location.state?.driver);
     const [selectedChangeIdea, setSelectedChangeIdea] = useState();
-    // alert(JSON.stringify(location.state))
 
     // Get team info on load
     useEffect(() => {

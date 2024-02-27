@@ -1,21 +1,60 @@
 import {Card, Dropdown} from 'react-bootstrap';
 import axios from 'axios';
-import {useRef} from 'react';
+import {useRef, useState} from 'react';
 
 import Hover from '../general/Hover';
 import CustomToolTip from '../general/CustomToolTip';
+import ModalForm from '../general/ModalForm';
 
 export default function SelectCard({
-    parent, optionKey, setChild, pages, optionName, option, optionShow, options, 
+    parent, setParent, optionKey, setChild, pages, optionName, option, optionShow, options, 
     index, setOptions, selected, setSelected, 
     tooltipPlacement='auto-end',
     onClick=()=>{},
+    title, gparent, parentKey, setUpdate, singleParentKey,
     }) {
     /* 
         This is just a generalization of the selectable aim, driver, or change ideas
     */
 
     const styleRef = useRef(); // Ref for the hover component
+    const [show, setShow] = useState(false); // show stuff /
+
+    // open modal /
+    function handleOpenModal() {
+        setShow(true);
+    }
+
+    // handle update /
+    function handleSave(formData) {
+        axios.put(`http://127.0.0.1:8000/api/${optionName}/${option.id}/`, {...formData})
+            .then(response => {
+                // Updates the change idea on the front end
+                // old driver
+                if (parent) {
+                    let index;
+                    parent[optionKey].filter((ci, i) => {
+                        if (ci.id === option.id) {
+                            index = i;
+                        }
+                    }); // set the index of the change idea in the old driver                    
+                    parent[optionKey].splice(index, 1); // remove change idea from old driver                    
+                    // new driver
+                    let newParent = gparent[parentKey].filter((c) => c.id === response.data[singleParentKey])[0]; // Get new driver
+                    newParent[optionKey].unshift(response.data); // add change idea to new driver
+                    setParent(newParent); // set parent as selected
+                } else {
+                    for (let key in formData) {
+                        option[key] = response.data[key];
+                    }
+
+                }
+                // update
+                setSelected(response.data); // set this as selected
+                setUpdate(u => !u); // update
+            })
+            .catch(error => alert(error.message));
+    }
 
     function handleDelete() {
         axios.delete(`http://127.0.0.1:8000/api/${optionName}/${option.id}/`)
@@ -86,12 +125,20 @@ export default function SelectCard({
         placement={tooltipPlacement}
         handleToggle={handleToggle}
         optionName={optionName}
+        title={title}
+        show={show}
+        setShow={setShow}
+        handleOpenModal={handleOpenModal}
+        pages={pages}
+        handleSave={handleSave}
+        handleOpenModal={handleOpenModal}
         />;
 }
 
 export function SelectCardComponent({styleRef, option, optionShow, selected, 
     handleDelete, handleSelected, tooltipHeader, tooltipBody, placement, 
     handleToggle, optionName,
+    title, show, setShow, handleOpenModal, pages, handleSave,
     }) {
     const stageColor ={
         Testing: 'danger',
@@ -148,7 +195,7 @@ export function SelectCardComponent({styleRef, option, optionShow, selected,
                                 {/* Menu */}
                                 <Dropdown.Menu variant="dark">
                                     {/* Edit */}
-                                    <Dropdown.Item>Edit</Dropdown.Item>
+                                    <Dropdown.Item onClick={handleOpenModal}>Edit</Dropdown.Item>
                                     {/* Delete */}
                                     <Dropdown.Item className='text-danger' onClick={handleDelete}>Delete</Dropdown.Item>
                                 </Dropdown.Menu>
@@ -157,6 +204,8 @@ export function SelectCardComponent({styleRef, option, optionShow, selected,
                     </Card.Body>
                 </CustomToolTip>
             </Hover>
+            {/* Modal */}
+            <ModalForm title={`Update ${title}`} show={show} setShow={setShow} onSave={handleSave} pages={pages} initialFormData={{...option}} update={true} />
         </>
     );  
 }

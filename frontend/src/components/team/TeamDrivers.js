@@ -109,6 +109,8 @@ export default function TeamDrivers({team, selectedAim, setSelectedAim, selected
         selectedAim={selectedAim}
         setSelectedChangeIdea={setSelectedChangeIdea}
         setSelectedAim={setSelectedAim}
+        team={team}
+        setUpdate={setUpdate}
         />
 }
 
@@ -116,7 +118,7 @@ export default function TeamDrivers({team, selectedAim, setSelectedAim, selected
 export function TeamDriversComponent({
     handleSave, handleOpenModal,
     show, setShow, initialFormData, pages, setDrivers, drivers,
-    selectedDriver, setSelectedDriver, selectedAim, setSelectedChangeIdea, setSelectedAim,
+    selectedDriver, setSelectedDriver, selectedAim, setSelectedChangeIdea, setSelectedAim, team, setUpdate,
     }) {
     return (
         <>
@@ -161,8 +163,14 @@ export function TeamDriversComponent({
                                             setSelected={setSelectedDriver} 
                                             pages={pages}
                                             parent={selectedAim}
+                                            setParent={setSelectedAim}
+                                            parentKey={'aims'}
+                                            singleParentKey={'aim'}
+                                            gparent={team}
                                             optionKey={'drivers'}
                                             setChild={setSelectedChangeIdea}
+                                            title={'Driver'}
+                                            setUpdate={setUpdate}
                                             />
                                         ))
                                 }

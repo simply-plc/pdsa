@@ -18,8 +18,9 @@ export default function UserChangeIdea() {
     const [changeIdea, setChangeIdea] = useState(); // Current change idea info
     const [selectedCycle, setSelectedCycle] = useState(); // Currently selected Cycle
     // Everything here is for the modal ////////////////////////
-    const [show, setShow] = useState(false);
-    const pages = [
+    const [update, setUpdate] = useState(false); // update the whole page
+    const [show, setShow] = useState(false); // show modal?
+    const pages = [ // Pages of modal
         [// Page 1
             {
                 label: 'Update change idea name.',
@@ -73,7 +74,7 @@ export default function UserChangeIdea() {
             .catch(error => {
                 // alert(error.message + ' UserTeam');
             });
-    } ,[params.changeIdeaId]);
+    } ,[params.changeIdeaId, update]);
 
     // Back button NOTE: this is back to the teams page. When navigating 
     function handleBackButton() {
@@ -86,8 +87,22 @@ export default function UserChangeIdea() {
     }
 
     // update change idea /////////////// For modal
-    function handleSave(formDate) {
-        alert('save');
+    function handleSave(formData) {
+        axios.put(`http://127.0.0.1:8000/api/change-idea/${changeIdea.id}/`, {...formData})
+            .then(response => {
+                // Updates the change idea on the front end
+                // old driver
+                let index;
+                location.state.driver.change_ideas.filter((ci, i) => {index = i}); // set the index of the change idea in the old driver /// this might have error cuz index is being set without condition
+                location.state.driver.change_ideas.splice(index, 1); // remove change idea from old driver
+                // new driver
+                let driver = location.state.aim.drivers.filter((driver) => driver.id === response.data.driver)[0]; // Get new driver
+                driver.change_ideas.unshift(response.data); // add change idea to new driver
+                location.state.driver = driver; // set new driver as current driver
+                // update
+                setUpdate(u => !u); // update
+            })
+            .catch(error => alert(error.message));
     }
 
     // This handles opening create modal /////////////////// for modal

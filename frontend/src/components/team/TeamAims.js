@@ -14,6 +14,7 @@ export default function TeamAim({team, selectedAim, setSelectedAim, setSelectedD
     */
     const [aims, setAims] = useState(); // Sets the aim
     const [show, setShow] = useState(); // show or close modal
+    const [update, setUpdate] = useState(false);
     const pages = [
         [// Page 1
             {
@@ -69,7 +70,7 @@ export default function TeamAim({team, selectedAim, setSelectedAim, setSelectedD
         const newAims = team?.aims;
         newAims?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
         setAims(newAims)
-    }, [team]);
+    }, [team, update]);
 
     // This handles opening create modal
     function handleOpenModal(event) {
@@ -101,6 +102,7 @@ export default function TeamAim({team, selectedAim, setSelectedAim, setSelectedD
         selectedAim={selectedAim} 
         setSelectedAim={setSelectedAim} 
         setSelectedDriver={setSelectedDriver}
+        setUpdate={setUpdate}
         />
 }
 
@@ -108,7 +110,7 @@ export default function TeamAim({team, selectedAim, setSelectedAim, setSelectedD
 export function TeamAimComponent({
     handleSave, handleOpenModal,
     show, setShow, initialFormData,
-    pages, aims, setAims, selectedAim, setSelectedAim, setSelectedDriver,
+    pages, aims, setAims, selectedAim, setSelectedAim, setSelectedDriver, setUpdate,
     }) {
     return (
         <>
@@ -152,6 +154,8 @@ export function TeamAimComponent({
                                             selected={selectedAim} 
                                             setSelected={setSelectedAim} 
                                             setChild={setSelectedDriver}
+                                            title={'Aim'}
+                                            setUpdate={setUpdate}
                                             />
                                         ))
                                 }
