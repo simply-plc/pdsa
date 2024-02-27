@@ -117,11 +117,35 @@ export function StudyComponent({
                         top: show ? '0rem' : '1rem',
                     }}
                     >
+                    <Form.Label>What is your data?</Form.Label>
+                    {/* input */}
+                    <Form.Control 
+                        as='textarea' 
+                        rows={4} 
+                        style={{resize:'none'}} 
+                        name='data'
+                        value={formData?.data}
+                        onChange={handleChange}
+                        />
+                </Form.Group>
+                {/* Learning */}
+                <Form.Group 
+                    as={Card} 
+                    body 
+                    className='mb-3 rounded-4 border-0 shadow-sm fw-bold' 
+                    style={{
+                        color:stageColor,
+                        opacity:show ? 1 : 0, 
+                        zIndex: show ? 1 : 0,
+                        transition: 'all .5s ease-out',
+                        top: show ? '0rem' : '1rem',
+                    }}
+                    >
                     <Form.Label>What did you learn from the data you collected?</Form.Label>
                     {/* input */}
                     <Form.Control 
                         as='textarea' 
-                        rows={16} 
+                        rows={11} 
                         style={{resize:'none'}} 
                         name='learning'
                         value={formData?.learning}

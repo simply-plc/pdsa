@@ -112,8 +112,10 @@ export function TeamsPageCardComponent({
                     Members:
                 </div>
                 {/* This is the list of members */}
-                <div className='d-flex overflow-auto' style={{fontSize:'1rem'}}>
-                    {team.team_get_members}
+                <div className='ms-1 overflow-auto' style={{fontSize:'1rem'}}>
+                    {team.team_get_members.split('\n').map((v, i) => (
+                        <div>{v}</div>
+                    ))}
                 </div>
             </Hover>
         </Col>

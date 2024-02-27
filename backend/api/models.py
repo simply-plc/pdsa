@@ -87,7 +87,7 @@ class PDSA(models.Model):
     predictions = models.TextField(blank=True) # What predictions do you have about the data?
     by_date = models.DateField(default=date.today) # When are you going to test the change idea?
     do_notes = models.TextField(blank=True) # Notes:
-    data = models.TextField(blank=True) # What is the data you collected?
+    data = models.TextField(blank=True) # What is your data?
     learning = models.TextField(blank=True) # What did you learn from the data you collected?
     next_step = models.CharField(max_length=20, choices=NEXT_STEP_CHOICES, blank=True) # Are you going to implement, expand, or abandon the change idea?
     next_step_rationale = models.TextField(blank=True) # What is your rationale for the choice?

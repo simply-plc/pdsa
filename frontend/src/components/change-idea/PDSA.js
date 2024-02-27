@@ -6,6 +6,7 @@ import Plan from './Plan';
 import Do from './Do';
 import Study from './Study';
 import Act from './Act';
+import Complete from './Complete';
 
 export default function PDSA({cycle, changeIdea, setChangeIdea}) {
     const [view, setView] = useState(cycle?.stage); // Replace with the stage the cycle is in
@@ -111,6 +112,12 @@ export function PDSAComponent({view, handleSelectView, cycle, changeIdea, setCha
                                     className='w-100 h-100 overflow-hidden d-flex flex-column'
                                     style={{position:'absolute', opacity:view==='Act' ? 1 : 0, zIndex: view==='Act' ? 1 : 0}}>
                                     <Act cycle={cycle} changeIdea={changeIdea} setChangeIdea={setChangeIdea} show={view==='Act'} stageColor={stageColors[view]} />
+                                </div>
+                                {/* Complete */}
+                                <div 
+                                    className='w-100 h-100 overflow-hidden d-flex flex-column'
+                                    style={{position:'absolute', opacity:view==='Complete' ? 1 : 0, zIndex: view==='Complete' ? 1 : 0}}>
+                                    <Complete cycle={cycle} />
                                 </div>
                             </div>
                         </Card.Body>
