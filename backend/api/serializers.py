@@ -46,38 +46,78 @@ class TeamSerializer(serializers.ModelSerializer):
         
         return instance
 
-class PDSASerializer(serializers.ModelSerializer):
+class TempPDSASerializer(serializers.ModelSerializer):
     class Meta:
         model = PDSA
         fields = '__all__'
 
-class ChangeIdeaSerializer(serializers.ModelSerializer):
-    pdsas = PDSASerializer(read_only=True, many=True)
+class TempChangeIdeaSerializer(serializers.ModelSerializer): # This extra one is to allow change idea to use driverserializer
+    pdsas = TempPDSASerializer(read_only=True, many=True)
 
     class Meta:
         model = ChangeIdea
         fields = '__all__'
 
-class DriverSerializer(serializers.ModelSerializer):
-    change_ideas = ChangeIdeaSerializer(read_only=True, many=True)
+class TempDriverSerializer(serializers.ModelSerializer):
+    change_ideas = TempChangeIdeaSerializer(read_only=True, many=True)
 
     class Meta:
         model = Driver
         fields = '__all__'
 
-class AimSerializer(serializers.ModelSerializer):
-    drivers = DriverSerializer(read_only=True, many=True)
+class TempAimSerializer(serializers.ModelSerializer):
+    drivers = TempDriverSerializer(read_only=True, many=True)
 
     class Meta:
         model = Aim
         fields = '__all__'
 
 class UserTeamSerializer(serializers.ModelSerializer):
-    aims = AimSerializer(read_only=True, many=True)
+    aims = TempAimSerializer(read_only=True, many=True)
 
     class Meta:
         model = Team
         fields = '__all__'
+
+class AimSerializer(serializers.ModelSerializer):
+    drivers = TempDriverSerializer(read_only=True, many=True)
+    team = UserTeamSerializer(read_only=True)
+
+    class Meta:
+        model = Aim
+        fields = '__all__'
+
+class DriverSerializer(serializers.ModelSerializer):
+    change_ideas = TempChangeIdeaSerializer(read_only=True, many=True)
+    aim = AimSerializer(read_only=True)
+
+    class Meta:
+        model = Driver
+        fields = '__all__'
+
+class ChangeIdeaSerializer(serializers.ModelSerializer): # This extra one is to allow change idea to use driverserializer
+    pdsas = TempPDSASerializer(read_only=True, many=True)
+    driver = DriverSerializer(read_only=True)
+
+    class Meta:
+        model = ChangeIdea
+        fields = '__all__'
+
+class PDSASerializer(serializers.ModelSerializer):
+    change_idea = ChangeIdeaSerializer(read_only=True)
+
+    class Meta:
+        model = PDSA
+        fields = '__all__'
+
+
+
+
+
+
+
+
+
 
 
 
