@@ -31,10 +31,26 @@ export default function TeamsPageCard({team, teams, setTeams, index}) {
             .catch(error => alert(error.message));
     }
 
+    function numAims() {
+        return team?.aims?.length;
+    }
+
+    function numDrivers() {
+        let driverTotal = 0;
+
+        for (let i = 0; i < team?.aims?.length; i++) {
+            driverTotal += team?.aims[i]?.drivers?.length;
+        }
+
+        return driverTotal;
+    }
+
     return <TeamsPageCardComponent 
         handleSelectTeam={handleSelectTeam}
         handleDelete={handleDelete}
         team={team}
+        numAims={numAims}
+        numDrivers={numDrivers}
         />
 }
 
@@ -45,7 +61,7 @@ export default function TeamsPageCard({team, teams, setTeams, index}) {
 
 export function TeamsPageCardComponent({
     handleSelectTeam, handleDelete,
-    team,
+    team, numAims, numDrivers,
     }) {
     return (
         <Col md='3' className='mb-4' style={{height:'11rem'}}>
@@ -95,11 +111,11 @@ export function TeamsPageCardComponent({
                     <span className='m-auto me-0 mt-0'>
                         {/* Aims */}
                         <div className='text-nowrap text-right'>
-                            Aims: 0
+                            Aims: {numAims()}
                         </div>
                         {/* Drivers */}
                         <div className='text-nowrap text-right'>
-                            Drivers: 0
+                            Drivers: {numDrivers()}
                         </div>
                         {/* Tasks */}
                         <div className='text-nowrap text-right'>
