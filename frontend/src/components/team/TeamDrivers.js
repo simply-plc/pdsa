@@ -72,9 +72,10 @@ export default function TeamDrivers({team, selectedAim, setSelectedAim, selected
 
     // set the drivers for the team
     useEffect(() => {
-        const newDrivers = selectedAim?.drivers;
-        newDrivers?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
-        setDrivers(newDrivers) // Set the new drivers
+        selectedAim?.drivers.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date));
+        // const newDrivers = selectedAim?.drivers;
+        // newDrivers?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
+        setDrivers(selectedAim?.drivers) // Set the new drivers
     }, [selectedAim, update]);
 
     // This handles opening create modal
@@ -83,14 +84,19 @@ export default function TeamDrivers({team, selectedAim, setSelectedAim, selected
     }
 
     function handleSave(formData) {
-        // Post the new aim
+        // Post the new driver
         axios.post('http://127.0.0.1:8000/api/driver/create/', {...formData})
             .then(response => {
-                // Adds the aim ( This is necessary because the selected aim might not be the aim you are adding a driver for)
-                let aim = team.aims.filter((aim) => aim.id === response.data.aim)[0]; // Set the selected aim to have the driver
-                aim.drivers.unshift(response.data); // update driver's change ideas
-                setSelectedAim(aim); // select the driver
-                setUpdate(u => !u); // update
+                // Adds the driver ( This is necessary because the selected aim might not be the aim you are adding a driver for)
+                // let aim = team.aims.filter((aim) => aim.id === response.data.aim)[0]; // Set the selected aim to have the driver
+                // aim.drivers.unshift(response.data); // update driver's change ideas
+                // setSelectedAim(aim); // select the driver
+                // setUpdate(u => !u); // update
+                let aimIndex = team.aims.findIndex((aim) => aim.id === response.data.aim);
+                let aim = team.aims[aimIndex];
+                setSelectedAim(aim);
+                aim.drivers.unshift(response.data);
+                setUpdate(u=>!u);
             })
             .catch(error => alert(error.message)); ////////////// NExt step is to create tool tip with preview button
     }

@@ -67,9 +67,10 @@ export default function TeamAim({team, selectedAim, setSelectedAim, setSelectedD
 
     // set the aims for the team
     useEffect(() => {
-        const newAims = team?.aims;
-        newAims?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
-        setAims(newAims)
+        team?.aims.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date));
+        // const newAims = team?.aims;
+        // newAims?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
+        setAims(team?.aims);
     }, [team, update]);
 
     // This handles opening create modal
@@ -82,8 +83,8 @@ export default function TeamAim({team, selectedAim, setSelectedAim, setSelectedD
         axios.post('http://127.0.0.1:8000/api/aim/create/', {...formData, team: team.id})
             .then(response => {
                 // Adds the aim
-                aims.unshift(response.data);
-                setAims([...aims]);
+                aims.unshift(response.data)
+                setUpdate(u=>!u);
             })
             .catch(error => alert(error.message));
     }

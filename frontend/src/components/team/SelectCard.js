@@ -30,27 +30,27 @@ export default function SelectCard({
         axios.put(`http://127.0.0.1:8000/api/${optionName}/${option.id}/`, {...formData})
             .then(response => {
                 // Updates the change idea on the front end
-                // old driver
                 if (parent) {
-                    let index;
-                    parent[optionKey].filter((ci, i) => {
-                        if (ci.id === option.id) {
-                            index = i;
-                        }
-                    }); // set the index of the change idea in the old driver                    
-                    parent[optionKey].splice(index, 1); // remove change idea from old driver                    
-                    // new driver
+                    // move option out of parent
+                    let index = parent[optionKey].findIndex((ci) => ci.id === option.id); // set the index of the option in the parent
+                    let updateOption = parent[optionKey].splice(index, 1)[0]; // remove option from the parent                  
+                    // move option into new parent
                     let newParent = gparent[parentKey].filter((c) => c.id === response.data[singleParentKey])[0]; // Get new driver
-                    newParent[optionKey].unshift(response.data); // add change idea to new driver
+                    newParent[optionKey].unshift(updateOption);
+                    // update option
+                    for (let key in formData) {
+                        updateOption[key] = response.data[key];
+                    }
+
                     setParent(newParent); // set parent as selected
                 } else {
                     for (let key in formData) {
                         option[key] = response.data[key];
-                    }
+                    } // This doesn't update what the driver is pointing to?
 
                 }
                 // update
-                setSelected(response.data); // set this as selected
+                setSelected(option); // set this as selected
                 setUpdate(u => !u); // update
             })
             .catch(error => alert(error.message));
@@ -65,9 +65,9 @@ export default function SelectCard({
                 options.splice(index, 1); // Removes it from the options list so that backend and frontend match
                 const newOptions = [...options];
                 if (parent) { // This is to keep the parent item up to date with the deletion so it matches the backend
-                    parent[optionKey] = newOptions;
+                    parent[optionKey] = options;
                 }
-                setOptions(newOptions);
+                setOptions(options);
             })
             .catch(error => alert(error.message));
     }

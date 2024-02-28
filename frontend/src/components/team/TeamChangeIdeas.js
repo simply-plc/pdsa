@@ -68,9 +68,10 @@ export default function TeamChangeIdeas({team, selectedAim, selectedDriver, setS
 
     // set the drivers for the team
     useEffect(() => {
-        const newChangeIdeas = selectedDriver?.change_ideas;
-        newChangeIdeas?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
-        setChangeIdeas(newChangeIdeas) // Set the new drivers
+        selectedDriver?.change_ideas.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date));
+        // const newChangeIdeas = selectedDriver?.change_ideas;
+        // newChangeIdeas?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
+        setChangeIdeas(selectedDriver?.change_ideas); // Set the new drivers
     }, [selectedDriver, update]);
 
     // This is to maintain the state of the current page before navigating to change ideas.
@@ -94,10 +95,16 @@ export default function TeamChangeIdeas({team, selectedAim, selectedDriver, setS
         axios.post('http://127.0.0.1:8000/api/change-idea/create/', {...formData})
             .then(response => {
                 // Adds the driver ( This is necessary because the selected aim might not be the aim you are adding a driver for)
-                let driver = selectedAim.drivers.filter((driver) => driver.id === response.data.driver)[0]; // Set the selected aim to have the driver
-                driver.change_ideas.unshift(response.data); // update driver's change ideas
-                setSelectedDriver(driver); // select the driver
-                setUpdate(u => !u); // update
+                // let driver = selectedAim.drivers.filter((driver) => driver.id === response.data.driver)[0]; // Set the selected aim to have the driver
+                // driver.change_ideas.unshift(response.data); // update driver's change ideas
+                // setSelectedDriver(driver); // select the driver
+                // setUpdate(u => !u); // update
+
+                let driverIndex = selectedAim.drivers.findIndex((driver) => driver.id === response.data.driver);
+                let driver = selectedAim.drivers[driverIndex];
+                setSelectedDriver(driver);
+                driver.change_ideas.unshift(response.data);
+                setUpdate(u=>!u);
             })
             .catch(error => alert(error.message));
     }

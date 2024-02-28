@@ -81,7 +81,7 @@ class UserTeamSerializer(serializers.ModelSerializer):
 
 class AimSerializer(serializers.ModelSerializer):
     drivers = TempDriverSerializer(read_only=True, many=True)
-    team = UserTeamSerializer(read_only=True)
+    team_object = UserTeamSerializer(read_only=True, source='team')
 
     class Meta:
         model = Aim
@@ -89,7 +89,7 @@ class AimSerializer(serializers.ModelSerializer):
 
 class DriverSerializer(serializers.ModelSerializer):
     change_ideas = TempChangeIdeaSerializer(read_only=True, many=True)
-    aim = AimSerializer(read_only=True)
+    aim_object = AimSerializer(read_only=True, source='aim')
 
     class Meta:
         model = Driver
@@ -97,14 +97,14 @@ class DriverSerializer(serializers.ModelSerializer):
 
 class ChangeIdeaSerializer(serializers.ModelSerializer): # This extra one is to allow change idea to use driverserializer
     pdsas = TempPDSASerializer(read_only=True, many=True)
-    driver = DriverSerializer(read_only=True)
+    driver_object = DriverSerializer(read_only=True, source='driver')
 
     class Meta:
         model = ChangeIdea
         fields = '__all__'
 
 class PDSASerializer(serializers.ModelSerializer):
-    change_idea = ChangeIdeaSerializer(read_only=True)
+    change_idea_object = ChangeIdeaSerializer(read_only=True, source='change_idea')
 
     class Meta:
         model = PDSA
