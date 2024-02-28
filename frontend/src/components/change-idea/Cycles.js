@@ -9,6 +9,7 @@ import CycleCard from './CycleCard';
 export default function Cycles({changeIdea, selectedCycle, setSelectedCycle}) {
     const [cycles, setCycles] = useState(changeIdea?.pdsas); // Current list of cycles
     const [show, setShow] = useState(false); // show modal
+    const [update, setUpdate] = useState(false);
     const pages = [[{ // Pages for the modal
         label: 'Give your cycle a name.',
         name: 'name',
@@ -21,10 +22,11 @@ export default function Cycles({changeIdea, selectedCycle, setSelectedCycle}) {
 
     // Initialize the list of cycles
     useEffect(() => {
-        const newCycles = changeIdea?.pdsas;
-        newCycles?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); // Sort it based on modified date
-        setCycles(newCycles);
-    }, [changeIdea]);
+        changeIdea?.pdsas.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        // const newCycles = changeIdea?.pdsas;
+        // newCycles?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); // Sort it based on modified date
+        setCycles(changeIdea?.pdsas);
+    }, [changeIdea, update]);
 
     // Open modal
     function handleOpenModal() {
@@ -38,8 +40,8 @@ export default function Cycles({changeIdea, selectedCycle, setSelectedCycle}) {
             .then(response => {
                 // Adds the aim
                 cycles.unshift(response.data);
-                setCycles([...cycles]);
                 setSelectedCycle(response.data);
+                setUpdate(u=>!u);
             })
             .catch(error => alert(error.message));
     }

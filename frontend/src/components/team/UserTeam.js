@@ -15,11 +15,11 @@ export default function UserTeam() {
     const location = useLocation();
     const navigate = useNavigate();
     const params = useParams(); // Get params
-    const [team, setTeam] = useState(); // Current team info
-    const [selectedAim, setSelectedAim] = useState(location.state?.aim); // This determines which aim is selected
-    const [selectedDriver, setSelectedDriver] = useState(location.state?.driver);
+    const [team, setTeam] = useState(location.state?.team); // Current team info
+    const [selectedAim, setSelectedAim] = useState(); // This determines which aim is selected
+    const [selectedDriver, setSelectedDriver] = useState();
     const [selectedChangeIdea, setSelectedChangeIdea] = useState();
-
+    // alert(JSON.stringify([selectedAim?.id, selectedDriver?.id]))
     // Get team info on load
     useEffect(() => {
         axios.get(`http://127.0.0.1:8000/api/user-team/${params.teamId}/`, {
@@ -28,6 +28,11 @@ export default function UserTeam() {
             )
             .then(response => {
                 setTeam(response.data);
+                if (location.state) {
+                    let newSelectedAim = response.data.aims.filter((aim) => aim.id === location.state.aim.id)[0];
+                    setSelectedAim(newSelectedAim);
+                    setSelectedDriver(newSelectedAim?.drivers.filter((driver) => driver.id === location.state.driver.id)[0]);
+                }
             })
             .catch(error => {
                 // alert(error.message + ' UserTeam');

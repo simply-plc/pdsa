@@ -19,7 +19,7 @@ export default function CycleCard({cycle, setCycles, cycles, selectedCycle, setS
         ],
     ];
 
-    useEffect(() => setUpdate(u => !u), [update]) // update whole component
+    // useEffect(() => setUpdate(u => !u), [update]) // update whole component
 
     // Handles deleting a cycle
     function handleDelete() {
@@ -29,8 +29,7 @@ export default function CycleCard({cycle, setCycles, cycles, selectedCycle, setS
                     setSelectedCycle(null);
                 }
                 cycles.splice(index, 1); // Removes it from the options list so that backend and frontend match
-                const newCycles = [...cycles];
-                setCycles(newCycles);
+                setUpdate(u=>!u);
             })
             .catch(error => alert(error.message));
     }

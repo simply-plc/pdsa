@@ -79,8 +79,9 @@ export default function UserChangeIdea() {
     // Back button NOTE: this is back to the teams page. When navigating 
     function handleBackButton() {
         if (location.state?.team) {
-            const {team, ...optionState} = location.state;
-            navigate(`../teams/${team.id}`, {state: optionState});
+            // const {team, ...optionState} = location.state;
+            // navigate(`../teams/${team.id}`, {state: optionState});
+            navigate(`../teams/${location.state.team.id}`, location);
         } else {
             navigate(-1);
         }
@@ -92,13 +93,16 @@ export default function UserChangeIdea() {
             .then(response => {
                 // Updates the change idea on the front end
                 // old driver
-                let index;
-                location.state.driver.change_ideas.filter((ci, i) => {index = i}); // set the index of the change idea in the old driver /// this might have error cuz index is being set without condition
-                location.state.driver.change_ideas.splice(index, 1); // remove change idea from old driver
+                let index = location.state.driver.change_ideas.findIndex((ci) => ci.id === changeIdea.id); // set the index of the change idea in the old driver /// this might have error cuz index is being set without condition
+                let updateChangeIdea = location.state.driver.change_ideas.splice(index, 1); // remove change idea from old driver
                 // new driver
-                let driver = location.state.aim.drivers.filter((driver) => driver.id === response.data.driver)[0]; // Get new driver
-                driver.change_ideas.unshift(response.data); // add change idea to new driver
-                location.state.driver = driver; // set new driver as current driver
+                let newDriver = location.state.aim.drivers.filter((driver) => driver.id === response.data.driver)[0]; // Get new driver
+                newDriver.change_ideas.unshift(updateChangeIdea); // add change idea to new driver
+                for (let key in formData) {
+                        updateChangeIdea[key] = response.data[key];
+                }
+
+                location.state.driver = newDriver; // set new driver as current driver
                 // update
                 setUpdate(u => !u); // update
             })
