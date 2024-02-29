@@ -1,7 +1,8 @@
 import {useState, useId} from 'react';
-import axios from 'axios';
 import {useNavigate, Link} from 'react-router-dom';
 import {Card, Form, FloatingLabel, Button, Row, Container} from 'react-bootstrap';
+
+import http from '../../http';
 
 ///////////////
 // Container //
@@ -56,7 +57,7 @@ export default function CreateAccount() {
 
         // Checks to see if all requirements are satisfied to create user
         if (isValidEmail(true) && isMatching(true) && isValidPassword(true)) {
-            axios.post('http://127.0.0.1:8000/user/create/', { // Create the user and redirect to login
+            http.post('http://127.0.0.1:8000/user/create/', { // Create the user and redirect to login
                     email: target.email.value,
                     password: target.password.value,
                 })

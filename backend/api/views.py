@@ -43,11 +43,19 @@ class ChangeIdeaCreateAPIView(generics.CreateAPIView):
 class ChangeIdeaRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = ChangeIdea.objects.all()
     serializer_class = ChangeIdeaSerializer
+    permission_classes = [IsOwnerReadyOnly]
 
 class PDSACreateAPIView(generics.CreateAPIView):
     queryset = PDSA.objects.all()
     serializer_class = PDSASerializer
+    permission_classes = [IsOwnerReadyOnly]
 
 class PDSARetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = PDSA.objects.all()
     serializer_class = PDSASerializer
+    permission_classes = [IsOwnerReadyOnly]
+
+
+
+
+

@@ -1,10 +1,10 @@
 import {Outlet, NavLink, useNavigate} from 'react-router-dom';
 import {Navbar, Nav, Button} from 'react-bootstrap';
 import {useState, useEffect} from 'react';
-import axios from 'axios';
 import {jwtDecode} from 'jwt-decode';
 
 // user imports
+import http from '../../http';
 
 ///////////////
 // Container //
@@ -19,17 +19,17 @@ export default function UserNavbar() {
     useEffect(() => {
         const accessToken = localStorage.getItem("access_token"); // See if there is an access token
         const currentTime = Date.now() / 1000;
-
         if (!accessToken) { // if not, redirect
             localStorage.clear();
+            alert('You are not logged in');
             navigate('/login');
         } else { // if so, then decode the token
             const decodedToken = jwtDecode(accessToken);
             setDecodedToken(decodedToken);
 
             if (decodedToken.exp <= currentTime) { // If token is expired, then clear and redirect
-                // alert('expired token useNavbar')
                 localStorage.clear();
+                alert('You are not logged in');
                 navigate('/login');
             }
         }
@@ -48,17 +48,14 @@ export default function UserNavbar() {
     // Handlles the logout button
     async function handleLogout() {
         try {
-            await axios.post('http://localhost:8000/user/logout/', {
+            await http.post('http://localhost:8000/user/logout/', {
                                             refresh_token:localStorage.getItem('refresh_token')
-                                        },
-                                        {
-                                            headers: {'Content-Type': 'application/json'}
-                                        },  
+                                        }, 
                                     )
                                     .catch(error => console.log(error.message));
 
             localStorage.clear();
-            axios.defaults.headers.common['Authorization'] = null;
+
             navigate('/login');
         } catch (e) {
             console.log('logout not working', e)

@@ -1,7 +1,7 @@
 import {Card, Col, Dropdown} from 'react-bootstrap';
-import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 
+import http from '../../http';
 import Hover from '../general/Hover';
 import './TeamPageCard.css';
 
@@ -20,7 +20,7 @@ export default function TeamsPageCard({team, teams, setTeams, index}) {
 
     // handles deleting the teams
     function handleDelete(event) {
-        axios.delete(`http://127.0.0.1:8000/api/team/${team.team_pk}/`, {
+        http.delete(`http://127.0.0.1:8000/api/team/${team.team_pk}/`, {
                     headers: {'Content-Type': 'application/json'},
                 }
             )

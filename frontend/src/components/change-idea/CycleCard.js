@@ -1,13 +1,14 @@
 import {Card, Dropdown, Badge, Form} from 'react-bootstrap';
-import {useState, useEffect} from 'react';
-import axios from 'axios';
+import {useState} from 'react';
 
+import http from '../../http';
 import Hover from '../general/Hover';
 import ModalForm from '../general/ModalForm';
 
 export default function CycleCard({cycle, setCycles, cycles, selectedCycle, setSelectedCycle, index}) {
     const cycleNum = cycles.length - index;
     const [show, setShow] = useState(false); // show modal
+    // eslint-disable-next-line
     const [update, setUpdate] = useState(false); // update whole thing
     const pages = [ // Pages of modal
         [// Page 1
@@ -23,7 +24,7 @@ export default function CycleCard({cycle, setCycles, cycles, selectedCycle, setS
 
     // Handles deleting a cycle
     function handleDelete() {
-        axios.delete(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`)
+        http.delete(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`)
             .then(response => {
                 if (selectedCycle?.id === cycle.id) {// If the deleted is the selected, then no more selected
                     setSelectedCycle(null);
@@ -49,9 +50,9 @@ export default function CycleCard({cycle, setCycles, cycles, selectedCycle, setS
     }
 
     // handle update
-    function handleSave(formData) {
+    function handleSave(formData) { //////////////////////// THIS IS THE NEED FOR EDIT
         // update the cycle
-        axios.put(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {...formData})
+        http.put(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {...formData, created_by: cycle.created_by})
             .then(response => {
                 for (let key in formData) {
                     cycle[key] = response.data[key];

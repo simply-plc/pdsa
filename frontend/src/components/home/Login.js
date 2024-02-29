@@ -1,9 +1,11 @@
 import {useState, useEffect, useId} from 'react';
-import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode';
 import {Card, Form, FloatingLabel, Button, Row, Col, Container} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
+
+import http from '../../http';
+
 
 
 ///////////////
@@ -60,10 +62,7 @@ export default function Login() {
         setValidated(true);
 
         // Tries to login and get the tokens. Async/Await forces process to be done before moving on.
-        const promise = await axios.post('http://127.0.0.1:8000/user/token/', formData, {
-                                        headers: {'Content-Type': 'application/json'},
-                                    }
-                                )
+        const promise = await http.post('http://127.0.0.1:8000/user/token/', formData,)
                                 .catch(error => console.log(error.message));
 
         // Clear local storage
@@ -75,7 +74,7 @@ export default function Login() {
             localStorage.setItem('access_token', promise.data.access);
             localStorage.setItem('refresh_token', promise.data.refresh);
             // Store access token in the header to be sent for authorization
-            axios.defaults.headers.common['Authorization'] = `Bearer ${promise.data.access}`;
+            http.defaults.headers.common['Authorization'] = `Bearer ${promise.data.access}`;
             // redirect
             navigate('/user');
         } else { // User doesn't exist so tell user that

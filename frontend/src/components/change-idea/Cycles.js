@@ -1,7 +1,7 @@
 import {Card, Form} from 'react-bootstrap';
 import {useState, useEffect} from 'react';
-import axios from 'axios';
 
+import http from '../../http';
 import Hover from '../general/Hover';
 import ModalForm from '../general/ModalForm';
 import CycleCard from './CycleCard';
@@ -36,7 +36,7 @@ export default function Cycles({changeIdea, selectedCycle, setSelectedCycle}) {
     // Save the new cycle and set the selected value to new cycle
     function handleSave(formData) {
         // Post the new aim
-        axios.post('http://127.0.0.1:8000/api/pdsa/create/', {...formData, change_idea: changeIdea.id})
+        http.post('http://127.0.0.1:8000/api/pdsa/create/', {...formData, change_idea: changeIdea.id, created_by: changeIdea.created_by})
             .then(response => {
                 // Adds the aim
                 cycles.unshift(response.data);

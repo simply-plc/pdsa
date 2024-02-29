@@ -29,12 +29,12 @@ admin.site.register(Driver, DriverAdmin)
 
 class ChangeIdeaAdmin(admin.ModelAdmin):
     model = ChangeIdea
-    list_display = ["id", "name", 'driver', 'idea', 'stage']
+    list_display = ["id", "name", 'driver', 'idea', 'stage', 'created_by']
 
 admin.site.register(ChangeIdea, ChangeIdeaAdmin)
 
 class PDSAAdmin(admin.ModelAdmin):
     model = PDSA
-    list_display = ["id", "name", 'change_idea', 'stage', 'learning_goal', 'steps', 'measure', 'predictions', 'by_date', 'learning', 'next_step']
+    list_display = ["id", "name", 'change_idea', 'stage', 'learning_goal', 'steps', 'measure', 'predictions', 'by_date', 'learning', 'next_step', 'created_by']
 
 admin.site.register(PDSA, PDSAAdmin)

@@ -1,7 +1,7 @@
 import {Card, Form} from 'react-bootstrap';
 import {useState, useEffect} from 'react';
-import axios from 'axios';
 
+import http from '../../http';
 import Hover from '../general/Hover';
 import SelectCard from './SelectCard';
 import ModalForm from '../general/ModalForm';
@@ -80,7 +80,7 @@ export default function TeamAim({team, selectedAim, setSelectedAim, setSelectedD
 
     function handleSave(formData) {
         // Post the new aim
-        axios.post('http://127.0.0.1:8000/api/aim/create/', {...formData, team: team.id})
+        http.post('http://127.0.0.1:8000/api/aim/create/', {...formData, team: team.id})
             .then(response => {
                 // Adds the aim
                 aims.unshift(response.data)

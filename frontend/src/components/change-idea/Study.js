@@ -1,6 +1,7 @@
 import {Form, Card, Button, Spinner} from 'react-bootstrap';
 import {useState, useEffect} from 'react';
-import axios from 'axios';
+
+import http from '../../http';
 
 
 
@@ -34,7 +35,7 @@ export default function Study({cycle, changeIdea, setChangeIdea, stageColor, sho
     function handleSave() {
         setLoading('loading');
         // Update
-        axios.put(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {...formData})
+        http.put(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {...formData})
             .then(response => {
                 // uodates the cycle
                 for (let key in response.data) {
@@ -51,7 +52,7 @@ export default function Study({cycle, changeIdea, setChangeIdea, stageColor, sho
     function handleComplete() {
         setLoading('loading');
         // Update
-        axios.put(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {...formData, stage: 'Act'})
+        http.put(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {...formData, stage: 'Act'})
             .then(response => {
                 // updates the cycle
                 for (let key in response.data) {
@@ -69,7 +70,7 @@ export default function Study({cycle, changeIdea, setChangeIdea, stageColor, sho
     function handleRevert() {
         setLoading('loading');
         // Update
-        axios.put(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {...formData, stage: 'Study'})
+        http.put(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {...formData, stage: 'Study'})
             .then(response => {
                 // updates the cycle
                 for (let key in response.data) {

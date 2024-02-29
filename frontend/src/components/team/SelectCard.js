@@ -1,7 +1,7 @@
 import {Card, Dropdown} from 'react-bootstrap';
-import axios from 'axios';
 import {useRef, useState} from 'react';
 
+import http from '../../http';
 import Hover from '../general/Hover';
 import CustomToolTip from '../general/CustomToolTip';
 import ModalForm from '../general/ModalForm';
@@ -27,7 +27,7 @@ export default function SelectCard({
 
     // handle update /
     function handleSave(formData) {
-        axios.put(`http://127.0.0.1:8000/api/${optionName}/${option.id}/`, {...formData})
+        http.put(`http://127.0.0.1:8000/api/${optionName}/${option.id}/`, {...formData})
             .then(response => {
                 // Updates the change idea on the front end
                 if (parent) {
@@ -57,7 +57,7 @@ export default function SelectCard({
     }
 
     function handleDelete() {
-        axios.delete(`http://127.0.0.1:8000/api/${optionName}/${option.id}/`)
+        http.delete(`http://127.0.0.1:8000/api/${optionName}/${option.id}/`)
             .then(response => {
                 if (selected?.id === option.id) {// If the deleted is the selected, then no more selected
                     setSelected(null);
@@ -132,7 +132,6 @@ export default function SelectCard({
         handleOpenModal={handleOpenModal}
         pages={pages}
         handleSave={handleSave}
-        handleOpenModal={handleOpenModal}
         />;
 }
 

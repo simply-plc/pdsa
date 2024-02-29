@@ -1,7 +1,7 @@
 import {Modal, Button, Form, FloatingLabel, InputGroup, Row, Col, CloseButton} from 'react-bootstrap';
 import {useId, useState} from 'react';
-import axios from 'axios';
 
+import http from '../../http';
 
 ///////////////
 // Container //
@@ -102,7 +102,7 @@ export default function CreateTeamModal({
         }
 
         // Post the data
-        axios.post('http://127.0.0.1:8000/api/team/create/', data, {
+        http.post('http://127.0.0.1:8000/api/team/create/', data, {
                     headers: {'Content-Type': 'application/json'},
                 }
             )

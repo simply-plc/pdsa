@@ -1,8 +1,8 @@
 import {useParams, useNavigate, useLocation} from 'react-router-dom';
 import {useEffect, useState} from 'react';
-import axios from 'axios';
 import {Card, Button, Row, Col} from 'react-bootstrap';
 
+import http from '../../http';
 import Hover from '../general/Hover';
 import TeamAims from './TeamAims';
 import TeamDrivers from './TeamDrivers';
@@ -22,10 +22,7 @@ export default function UserTeam() {
     // alert(JSON.stringify([selectedAim?.id, selectedDriver?.id]))
     // Get team info on load
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/user-team/${params.teamId}/`, {
-                    headers: {'Content-Type': 'application/json'},
-                }
-            )
+        http.get(`http://127.0.0.1:8000/api/user-team/${params.teamId}/`)
             .then(response => {
                 setTeam(response.data);
                 if (location.state) {
@@ -35,9 +32,15 @@ export default function UserTeam() {
                 }
             })
             .catch(error => {
-                alert(JSON.stringify(error));
+                if (error.response.status === 403) {
+                    alert('You do not have permission for this team!')
+                    navigate('/');
+                } else if (error.response.status === 404) {
+                    alert('This doesn\'t exist')
+                    navigate('/');
+                }
             });
-    } ,[params.teamId]);
+    } ,[params.teamId, location.state, navigate]);
 
     // Back button
     function handleBackButton() {

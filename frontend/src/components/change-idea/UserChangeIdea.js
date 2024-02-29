@@ -1,8 +1,8 @@
 import {useParams, useNavigate, useLocation} from 'react-router-dom';
 import {useEffect, useState} from 'react';
-import axios from 'axios';
 import {Card, Button, Row, Col, Form} from 'react-bootstrap';
 
+import http from '../../http';
 import Hover from '../general/Hover';
 import InfoCycles from './InfoCycles';
 import PDSA from './PDSA';
@@ -64,10 +64,7 @@ export default function UserChangeIdea() {
 
     // Initialize the change idea info
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/change-idea/${params.changeIdeaId}/`, {
-                    headers: {'Content-Type': 'application/json'},
-                }
-            )
+        http.get(`http://127.0.0.1:8000/api/change-idea/${params.changeIdeaId}/`)
             .then(response => {
                 setChangeIdea(response.data);
             })
@@ -89,7 +86,7 @@ export default function UserChangeIdea() {
 
     // update change idea /////////////// For modal
     function handleSave(formData) {
-        axios.put(`http://127.0.0.1:8000/api/change-idea/${changeIdea.id}/`, {...formData})
+        http.put(`http://127.0.0.1:8000/api/change-idea/${changeIdea.id}/`, {...formData})
             .then(response => {
                 // Updates the change idea on the front end
                 // old driver

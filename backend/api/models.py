@@ -62,6 +62,7 @@ class ChangeIdea(models.Model):
     stage = models.CharField(max_length=20, choices=STAGE_CHOICES) # Are we testing, implementing, or spreading?
     modified_date = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey('user.User', related_name='change_ideas', on_delete=models.CASCADE)
 
 
     def __str__(self):
@@ -97,6 +98,7 @@ class PDSA(models.Model):
     next_step_rationale = models.TextField(blank=True) # What is your rationale for the choice?
     modified_date = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey('user.User', related_name='pdsas', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

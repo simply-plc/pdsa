@@ -1,8 +1,9 @@
 import {Card, Form} from 'react-bootstrap';
 import {useState, useEffect} from 'react';
-import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
+import {jwtDecode} from 'jwt-decode';
 
+import http from '../../http';
 import Hover from '../general/Hover';
 import ModalForm from '../general/ModalForm';
 import SelectCard from './SelectCard';
@@ -13,6 +14,8 @@ export default function TeamChangeIdeas({team, selectedAim, selectedDriver, setS
     /*
         TeamChangeIdeas is just the Change Ideas card on the UserTeam page
     */
+    const accessToken = localStorage.getItem("access_token"); // See if there is an access token
+    const decodedToken = accessToken && jwtDecode(accessToken);
     const navigate = useNavigate();
     const [update, setUpdate] = useState(true);
     const [changeIdeas, setChangeIdeas] = useState([]); // Sets the drivers
@@ -92,7 +95,7 @@ export default function TeamChangeIdeas({team, selectedAim, selectedDriver, setS
 
     function handleSave(formData) {
         // Post the new aim
-        axios.post('http://127.0.0.1:8000/api/change-idea/create/', {...formData})
+        http.post('http://127.0.0.1:8000/api/change-idea/create/', {...formData, created_by:decodedToken.user})
             .then(response => {
                 // Adds the driver ( This is necessary because the selected aim might not be the aim you are adding a driver for)
                 // let driver = selectedAim.drivers.filter((driver) => driver.id === response.data.driver)[0]; // Set the selected aim to have the driver

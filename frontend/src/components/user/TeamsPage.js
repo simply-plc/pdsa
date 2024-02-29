@@ -1,8 +1,8 @@
 import {Card, Button, Row} from 'react-bootstrap';
 import {useNavigate, useOutletContext} from 'react-router-dom';
 import {useEffect, useState} from 'react';
-import axios from 'axios';
 
+import http from '../../http';
 import Hover from '../general/Hover';
 import TeamPageCard from './TeamPageCard';
 import CreateTeamModal from './CreateTeamModal';
@@ -20,11 +20,7 @@ export default function TeamsPage() {
 
     // Get the teams info
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/user/${decodedToken.user}`, {
-                    headers: {'Content-Type': 'application/json'},
-                    // withCredentials: true
-                }
-            )
+        http.get(`http://127.0.0.1:8000/user/${decodedToken.user}`,)
             .then(response => { // Sets the teams info after getting it from backend
                 const team_memberships = response.data.team_memberships;
                 team_memberships.sort((a, b) => new Date(b.joined_date) - new Date(a.joined_date));
