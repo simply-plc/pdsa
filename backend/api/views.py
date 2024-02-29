@@ -4,6 +4,7 @@ from rest_framework.response import Response
 
 from .models import *
 from .serializers import *
+from .permissions import *
 
 # Create your views here.
 class TeamCreateAPIView(generics.CreateAPIView):
@@ -17,6 +18,7 @@ class TeamRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
 class UserTeamRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Team.objects.all()
     serializer_class = UserTeamSerializer
+    permission_classes = [IsTeamMember]
 
 class AimCreateAPIView(generics.CreateAPIView):
     queryset = Aim.objects.all()
