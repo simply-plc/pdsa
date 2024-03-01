@@ -50,7 +50,7 @@ class TeamSerializer(serializers.ModelSerializer):
             
             # Find the team membership by user email
             print(user_email)
-            team_membership, created = TeamMembership.objects.get_or_create(team=instance, user__email=user_email)
+            team_membership, created = TeamMembership.objects.get_or_create(team=instance, user=user_email)
             # team_membership.is_admin = is_admin
             team_membership.save()
 
@@ -66,12 +66,15 @@ class TeamSerializer(serializers.ModelSerializer):
 
 # This soley exists for the commented out stuff.
 class TempPDSASerializer(serializers.ModelSerializer):
+    created_by = serializers.SlugRelatedField(slug_field='email', queryset=User.objects.all())
+
     class Meta:
         model = PDSA
         fields = '__all__'
 
 class TempChangeIdeaSerializer(serializers.ModelSerializer): 
     pdsas = TempPDSASerializer(read_only=True, many=True)
+    created_by = serializers.SlugRelatedField(slug_field='email', queryset=User.objects.all())
 
     class Meta:
         model = ChangeIdea
@@ -118,6 +121,7 @@ class DriverSerializer(serializers.ModelSerializer):
 
 class ChangeIdeaSerializer(serializers.ModelSerializer): # This extra one is to allow change idea to use driverserializer
     pdsas = TempPDSASerializer(read_only=True, many=True)
+    created_by = serializers.SlugRelatedField(slug_field='email', queryset=User.objects.all())
     # driver_object = DriverSerializer(read_only=True, source='driver')
 
     class Meta:
@@ -126,6 +130,7 @@ class ChangeIdeaSerializer(serializers.ModelSerializer): # This extra one is to 
 
 class PDSASerializer(serializers.ModelSerializer):
     # change_idea_object = ChangeIdeaSerializer(read_only=True, source='change_idea')
+    created_by = serializers.SlugRelatedField(slug_field='email', queryset=User.objects.all())
 
     class Meta:
         model = PDSA

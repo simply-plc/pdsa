@@ -27,7 +27,7 @@ export default function SelectCard({
 
     // handle update /
     function handleSave(formData) {
-        http.put(`http://127.0.0.1:8000/api/${optionName}/${option.id}/`, {...formData})
+        http.put(`http://127.0.0.1:8000/api/${optionName}/${option.id}/`, {...formData, created_by: option.created_by})
             .then(response => {
                 // Updates the change idea on the front end
                 if (parent) {
@@ -169,6 +169,7 @@ export function SelectCardComponent({styleRef, option, optionShow, selected,
                             <span>{optionShow}</span>
                             {(optionName === 'change-idea') && 
                                 <span className='ms-auto'>
+                                    <span className='me-3 text-muted' style={{fontSize:'.8rem'}}>({option.created_by})</span>
                                     <div className={`badge text-white rounded-4 text-white bg-${stageColor[option.stage]}`}>
                                         {option.stage}
                                     </div>

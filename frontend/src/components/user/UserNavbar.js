@@ -21,16 +21,16 @@ export default function UserNavbar() {
         const currentTime = Date.now() / 1000;
         if (!accessToken) { // if not, redirect
             localStorage.clear();
-            alert('You are not logged in');
             navigate('/login');
+            alert('You are not logged in');
         } else { // if so, then decode the token
             const decodedToken = jwtDecode(accessToken);
             setDecodedToken(decodedToken);
 
             if (decodedToken.exp <= currentTime) { // If token is expired, then clear and redirect
                 localStorage.clear();
-                alert('You are not logged in');
                 navigate('/login');
+                alert('You are not logged in');
             }
         }
     }, [navigate]);
