@@ -7,6 +7,7 @@ import Hover from '../general/Hover';
 import TeamAims from './TeamAims';
 import TeamDrivers from './TeamDrivers';
 import TeamChangeIdeas from './TeamChangeIdeas';
+import UpdateTeamModal from './UpdateTeamModal';
 
 export default function UserTeam() {
     /*
@@ -19,6 +20,8 @@ export default function UserTeam() {
     const [selectedAim, setSelectedAim] = useState(); // This determines which aim is selected
     const [selectedDriver, setSelectedDriver] = useState();
     const [selectedChangeIdea, setSelectedChangeIdea] = useState();
+    const [update, setUpdate] = useState(false);
+    const [show, setShow] = useState(false);
     // alert(JSON.stringify([selectedAim?.id, selectedDriver?.id]))
     // Get team info on load
     useEffect(() => {
@@ -40,12 +43,18 @@ export default function UserTeam() {
                     navigate('/');
                 }
             });
-    } ,[params.teamId, location.state, navigate]);
+    } ,[params.teamId, location.state, navigate, update]);
 
     // Back button
     function handleBackButton() {
         navigate('../teams');
     }
+
+    function handleOpenModal() {
+        setShow(true);
+    }
+
+
 
     return <UserTeamComponent 
         team={team} 
@@ -56,6 +65,10 @@ export default function UserTeam() {
         setSelectedDriver={setSelectedDriver}
         selectedChangeIdea={selectedChangeIdea}
         setSelectedChangeIdea={setSelectedChangeIdea}
+        setUpdate={setUpdate}
+        handleOpenModal={handleOpenModal}
+        show={show}
+        setShow={setShow}
         />;
 }
 
@@ -64,7 +77,8 @@ export function UserTeamComponent({
     handleBackButton, 
     selectedAim, setSelectedAim,
     selectedDriver, setSelectedDriver,
-    selectedChangeIdea, setSelectedChangeIdea,
+    selectedChangeIdea, setSelectedChangeIdea, setUpdate,
+    handleOpenModal, show, setShow,
     }) {
     return (
         <>
@@ -86,7 +100,7 @@ export function UserTeamComponent({
                                 style={{width:'3rem', transition: 'width .2s ease'}}
                                 cStyle={{width:'10.5rem'}}
                                 className='ms-auto mb-auto mt-auto btn border-dark border-2 bg-white rounded-5 d-flex'
-                                // onClick={(handleOpenModal)}
+                                onClick={(handleOpenModal)}
                                 >
                                 {/* Hidden text; show on hover */}
                                 <span className='text-nowrap overflow-x-hidden mb-auto mt-auto fw-bold'>Team Settings</span>
@@ -119,7 +133,7 @@ export function UserTeamComponent({
                 </Row>
             </div>
             {/* Modal */}
-            {/*<ModalForm title={'Update Team'} show={show} setShow={setShow} onSave={handleSave} pages={pages} initialFormData={{...changeIdea}} update={true} />*/}
+            <UpdateTeamModal show={show} setShow={setShow} team={team} setUpdate={setUpdate} />
         </>
     );
 }

@@ -1,5 +1,6 @@
 import {Modal, Button, Form, FloatingLabel, InputGroup, Row, Col, CloseButton} from 'react-bootstrap';
-import {useId, useState} from 'react';
+import {useId, useState, useEffect} from 'react';
+import {jwtDecode} from 'jwt-decode';
 
 import http from '../../http';
 
@@ -8,19 +9,29 @@ import http from '../../http';
 ///////////////
 
 export default function CreateTeamModal({
-    show, setShow, decodedToken, teams, setTeams,
+    show, setShow, team, setUpdate,
     }) {
+    const accessToken = localStorage.getItem("access_token"); // See if there is an access token
+    const decodedToken = jwtDecode(accessToken);
     const formId = useId(); // Sets form id so button can access without being in the form
     const shareButtonId = useId(); // Sets share button id
     const [validated, setValidated] = useState(false); // Checks when to show error message for email validation
     const [required, setRequired] = useState(false); // Checks that team name is entered
     const [dne, setDne] = useState([]);
-    const [members, setMembers] = useState([]); // This is a list of members
+    const [members, setMembers] = useState(team?.team_get_members.split('\n')); // This is a list of members
     const [formData, setFormData] = useState({ // This is to control the form input
-        name: '',
+        name: team?.name,
         share: '',
     });
 
+    useEffect(() => {
+        let initialMembers = team?.team_get_members.split('\n').filter((v,i) => v !== decodedToken.email);
+        setMembers(initialMembers);
+        setFormData({ // Resets form data
+            name: team?.name,
+            share: '',
+        });
+    }, [team, decodedToken.email])
     
     //// Handlers ////
 
@@ -57,7 +68,7 @@ export default function CreateTeamModal({
     // This handles closing create modal
     function handleCloseModal() {
         setFormData({ // Resets form data
-            name: '',
+            name: team?.name,
             share: '',
         });
 
@@ -102,10 +113,9 @@ export default function CreateTeamModal({
         }
 
         // Post the data
-        http.post('http://127.0.0.1:8000/api/team/create/', data,)
+        http.put(`http://127.0.0.1:8000/api/team/${team.id}/`, data,)
             .then(response => {
-                const teamsData = response.data.team_memberships;
-                setTeams([teamsData[teamsData.length-1], ...teams]); // Add the new teams to teams page (new team is hardcoded to be always last)
+                setUpdate(u=>!u);
                 handleCloseModal();
             })
             .catch(error => {
@@ -159,7 +169,7 @@ export default function CreateTeamModal({
         return true;
     }
 
-    return <TeamsPageComponent 
+    return <CreateTeamModalComponent 
         handleCloseModal={handleCloseModal}
         handleSaveModal={handleSaveModal}
         handleChange={handleChange}
@@ -183,7 +193,7 @@ export default function CreateTeamModal({
 // Component //
 ///////////////
 
-export function TeamsPageComponent({
+export function CreateTeamModalComponent({
     handleCloseModal, handleSaveModal, handleChange, handleAddMember, handleRemoveMember, handleAddMemberEnter,
     isValidEmail, isValidName,
     show, formData, formId, shareButtonId, members, decodedToken, dne,
@@ -242,7 +252,7 @@ export function TeamsPageComponent({
                                 {/* This is for the first line */}
                                 <Row className='border-bottom' />
                                 {/* This is the rest of the list of people who will be on the team */}
-                                {members.map((v, i) => (
+                                {members?.map((v, i) => (
                                     <Row className='border-bottom p-3'>
                                         {/* Email */}
                                         <Col className='d-flex' md='10'>
@@ -274,7 +284,7 @@ export function TeamsPageComponent({
                     </Button>
                     {/* Create */}
                     <Button form={formId} type='submit' variant="primary">
-                        Create
+                        Update
                     </Button>
                 </Modal.Footer>
             </Modal>

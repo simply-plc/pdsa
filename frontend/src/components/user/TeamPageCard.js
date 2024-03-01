@@ -1,5 +1,6 @@
 import {Card, Col, Dropdown} from 'react-bootstrap';
 import {useNavigate} from 'react-router-dom';
+import {useEffect, useState} from 'react';
 
 import http from '../../http';
 import Hover from '../general/Hover';
@@ -12,6 +13,15 @@ import './TeamPageCard.css';
 
 export default function TeamsPageCard({team, teams, setTeams, index}) {
     const navigate = useNavigate(); // Get navigation
+    const [teamInfo, setTeamInfo] = useState();
+
+    useEffect(() => {
+        http.get(`http://127.0.0.1:8000/api/user-team/${team.team_pk}/`)
+            .then(response => {
+                setTeamInfo(response.data);
+            })
+            .catch(error => alert(error.message));
+    }, [team.team_pk])
 
     // This handles selecting team
     function handleSelectTeam(event) {
@@ -20,10 +30,7 @@ export default function TeamsPageCard({team, teams, setTeams, index}) {
 
     // handles deleting the teams
     function handleDelete(event) {
-        http.delete(`http://127.0.0.1:8000/api/team/${team.team_pk}/`, {
-                    headers: {'Content-Type': 'application/json'},
-                }
-            )
+        http.delete(`http://127.0.0.1:8000/api/team/${team.team_pk}/`,)
             .then(response => {
                 teams.splice(index, 1);
                 setTeams([...teams]);
@@ -32,17 +39,29 @@ export default function TeamsPageCard({team, teams, setTeams, index}) {
     }
 
     function numAims() {
-        return team?.aims?.length;
+        return teamInfo?.aims?.length;
     }
 
     function numDrivers() {
         let driverTotal = 0;
 
-        for (let i = 0; i < team?.aims?.length; i++) {
-            driverTotal += team?.aims[i]?.drivers?.length;
+        for (let i = 0; i < teamInfo?.aims.length; i++) {
+            driverTotal += teamInfo.aims[i]?.drivers?.length;
         }
 
         return driverTotal;
+    }
+
+    function numChangeIdeas() {
+        let changeIdeaTotal = 0;
+
+        for (let i = 0; i < teamInfo?.aims.length; i++) {
+            for (let j = 0; j < teamInfo?.aims[i].drivers.length; j++) {
+                changeIdeaTotal += teamInfo?.aims[i].drivers[j].change_ideas.length;
+            }
+        }
+
+        return changeIdeaTotal;
     }
 
     return <TeamsPageCardComponent 
@@ -51,6 +70,7 @@ export default function TeamsPageCard({team, teams, setTeams, index}) {
         team={team}
         numAims={numAims}
         numDrivers={numDrivers}
+        numChangeIdeas={numChangeIdeas}
         />
 }
 
@@ -61,7 +81,7 @@ export default function TeamsPageCard({team, teams, setTeams, index}) {
 
 export function TeamsPageCardComponent({
     handleSelectTeam, handleDelete,
-    team, numAims, numDrivers,
+    team, numAims, numDrivers, numChangeIdeas,
     }) {
     return (
         <Col md='3' className='mb-4' style={{height:'11rem'}}>
@@ -119,7 +139,7 @@ export function TeamsPageCardComponent({
                         </div>
                         {/* Tasks */}
                         <div className='text-nowrap text-right'>
-                            Tasks: 0
+                            Change Ideas: {numChangeIdeas()}
                         </div>
                     </span>
                 </div>

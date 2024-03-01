@@ -100,7 +100,7 @@ export function TeamsPageComponent({
                 <Card body bg='light' className='border-0'>
                     <Row>
                         {/* This creates all the individual cards for the teams */}
-                        {teams.map((v, i) => (
+                        {teams?.map((v, i) => (
                             <TeamPageCard team={v} teams={teams} setTeams={setTeams} index={i} />
                         ))}
                     </Row>

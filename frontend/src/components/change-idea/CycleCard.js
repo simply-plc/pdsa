@@ -50,7 +50,7 @@ export default function CycleCard({cycle, setCycles, cycles, selectedCycle, setS
     }
 
     // handle update
-    function handleSave(formData) { //////////////////////// THIS IS THE NEED FOR EDIT
+    function handleSave(formData) {
         // update the cycle
         http.put(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {...formData, created_by: cycle.created_by})
             .then(response => {

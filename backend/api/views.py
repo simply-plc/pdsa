@@ -18,7 +18,7 @@ class TeamRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
 class UserTeamRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Team.objects.all()
     serializer_class = UserTeamSerializer
-    permission_classes = [IsTeamMember]
+    # permission_classes = [IsTeamMember]
 
 class AimCreateAPIView(generics.CreateAPIView):
     queryset = Aim.objects.all()
