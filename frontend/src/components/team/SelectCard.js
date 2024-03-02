@@ -57,7 +57,7 @@ export default function SelectCard({
     }
 
     function handleDelete() {
-        http.delete(`http://127.0.0.1:8000/api/${optionName}/${option.id}/`)
+        http.delete(`http://127.0.0.1:8000/api/${optionName}/${option.id}/`, {data: {created_by: option.created_by}})
             .then(response => {
                 if (selected?.id === option.id) {// If the deleted is the selected, then no more selected
                     setSelected(null);

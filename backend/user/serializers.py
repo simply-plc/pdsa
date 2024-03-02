@@ -2,6 +2,12 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import get_user_model
 
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+from django.conf import settings
+
 from .models import *
 from api.serializers import TeamMembershipSerializer
 
@@ -13,7 +19,24 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(
             email=data['email'],
             password=data['password'],
+            is_active=False,
         )
+
+        # uid = urlsafe_base64_encode(force_bytes(user.pk))
+        # token = default_token_generator.make_token(user)
+
+        # # Construct verification link
+        # # verification_url = f"http://example.com/verify-email/{uid}/{token}/"
+        # verification_url = f"http://localhost:3000/login"
+
+        # # Send verification email
+        # send_mail(
+        #     'Verify Your Email',
+        #     f'Click the link to verify your email: {verification_url}',
+        #     settings.EMAIL_HOST_USER,
+        #     [user.email],
+        #     fail_silently=False,
+        # )
 
         return user
 

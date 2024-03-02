@@ -8,7 +8,7 @@ import http from '../../http';
 // Container //
 ///////////////
 
-export default function CreateTeamModal({
+export default function UpdateTeamModal({
     show, setShow, team, setUpdate,
     }) {
     const accessToken = localStorage.getItem("access_token"); // See if there is an access token
@@ -100,10 +100,9 @@ export default function CreateTeamModal({
         ));
 
 
-        // Including the user as admin
+        // Including the user
         team_memberships.push({ 
             user: decodedToken.email,
-            is_admin: true,
         });
 
         // Setup the data
@@ -169,7 +168,7 @@ export default function CreateTeamModal({
         return true;
     }
 
-    return <CreateTeamModalComponent 
+    return <UpdateTeamModalComponent 
         handleCloseModal={handleCloseModal}
         handleSaveModal={handleSaveModal}
         handleChange={handleChange}
@@ -193,7 +192,7 @@ export default function CreateTeamModal({
 // Component //
 ///////////////
 
-export function CreateTeamModalComponent({
+export function UpdateTeamModalComponent({
     handleCloseModal, handleSaveModal, handleChange, handleAddMember, handleRemoveMember, handleAddMemberEnter,
     isValidEmail, isValidName,
     show, formData, formId, shareButtonId, members, decodedToken, dne,
@@ -269,7 +268,7 @@ export function CreateTeamModalComponent({
                                 <Row className='border-bottom p-3'>
                                     <Col md='9'>{decodedToken.email}</Col>
                                     <Col className='d-flex'>
-                                        <div className='ms-auto'>(Owner)</div>
+                                        <div className='ms-auto'>(You)</div>
                                     </Col>
                                 </Row>
                             </div>

@@ -63,7 +63,7 @@ export default function Login() {
 
         // Tries to login and get the tokens. Async/Await forces process to be done before moving on.
         const promise = await http.post('http://127.0.0.1:8000/user/token/', formData,)
-                                .catch(error => console.log(error.message));
+                                .catch(error => alert(error.message));
 
         // Clear local storage
         localStorage.clear();

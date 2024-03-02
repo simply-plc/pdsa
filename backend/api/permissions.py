@@ -7,6 +7,9 @@ class IsTeamMember(permissions.BasePermission):
 class IsAdmin(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         # Check if the user is an admin of the team
+        # print(request.data['team_memberships'])
+        # return all([m['is_admin'] for m in request.data['team_memberships'] if m['user'] == request.user.email])
+
         return obj.team_memberships.filter(user=request.user, is_admin=True).exists()
 
 
