@@ -16,7 +16,7 @@ export default function TeamsPageCard({team, teams, setTeams, index}) {
     const [teamInfo, setTeamInfo] = useState();
 
     useEffect(() => {
-        http.get(`http://127.0.0.1:8000/api/user-team/${team.team_pk}/`)
+        http.get(`/api/user-team/${team.team_pk}/`)
             .then(response => {
                 setTeamInfo(response.data);
             })
@@ -30,7 +30,7 @@ export default function TeamsPageCard({team, teams, setTeams, index}) {
 
     // handles deleting the teams
     function handleDelete(event) {
-        http.delete(`http://127.0.0.1:8000/api/team/${team.team_pk}/`,)
+        http.delete(`/api/team/${team.team_pk}/`,)
             .then(response => {
                 teams.splice(index, 1);
                 setTeams([...teams]);

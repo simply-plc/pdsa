@@ -102,7 +102,7 @@ export default function CreateTeamModal({
         }
 
         // Post the data
-        http.post('http://127.0.0.1:8000/api/team/create/', data,)
+        http.post('/api/team/create/', data,)
             .then(response => {
                 const teamsData = response.data.team_memberships;
                 setTeams([teamsData[teamsData.length-1], ...teams]); // Add the new teams to teams page (new team is hardcoded to be always last)

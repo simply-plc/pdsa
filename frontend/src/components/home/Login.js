@@ -62,7 +62,7 @@ export default function Login() {
         setValidated(true);
 
         // Tries to login and get the tokens. Async/Await forces process to be done before moving on.
-        const promise = await http.post('http://127.0.0.1:8000/user/token/', formData,)
+        const promise = await http.post('/user/token/', formData,)
                                 .catch(error => alert(error.message));
 
         // Clear local storage

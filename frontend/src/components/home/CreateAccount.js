@@ -57,7 +57,7 @@ export default function CreateAccount() {
 
         // Checks to see if all requirements are satisfied to create user
         if (isValidEmail(true) && isMatching(true) && isValidPassword(true)) {
-            http.post('http://127.0.0.1:8000/user/create/', { // Create the user and redirect to login
+            http.post('/user/create/', { // Create the user and redirect to login
                     email: target.email.value,
                     password: target.password.value,
                 })

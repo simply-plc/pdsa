@@ -64,7 +64,7 @@ export default function UserChangeIdea() {
 
     // Initialize the change idea info
     useEffect(() => {
-        http.get(`http://127.0.0.1:8000/api/change-idea/${params.changeIdeaId}/`)
+        http.get(`/api/change-idea/${params.changeIdeaId}/`)
             .then(response => {
                 setChangeIdea(response.data);
             })
@@ -86,7 +86,7 @@ export default function UserChangeIdea() {
 
     // update change idea /////////////// For modal
     function handleSave(formData) {
-        http.put(`http://127.0.0.1:8000/api/change-idea/${changeIdea.id}/`, {...formData})
+        http.put(`/api/change-idea/${changeIdea.id}/`, {...formData})
             .then(response => {
                 // Updates the change idea on the front end
                 // old driver

@@ -24,7 +24,7 @@ export default function CycleCard({cycle, setCycles, cycles, selectedCycle, setS
 
     // Handles deleting a cycle
     function handleDelete() {
-        http.delete(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {data: {created_by: cycle.created_by}})
+        http.delete(`/api/pdsa/${cycle.id}/`, {data: {created_by: cycle.created_by}})
             .then(response => {
                 if (selectedCycle?.id === cycle.id) {// If the deleted is the selected, then no more selected
                     setSelectedCycle(null);
@@ -52,7 +52,7 @@ export default function CycleCard({cycle, setCycles, cycles, selectedCycle, setS
     // handle update
     function handleSave(formData) {
         // update the cycle
-        http.put(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {...formData, created_by: cycle.created_by})
+        http.put(`/api/pdsa/${cycle.id}/`, {...formData, created_by: cycle.created_by})
             .then(response => {
                 for (let key in formData) {
                     cycle[key] = response.data[key];

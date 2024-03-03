@@ -112,7 +112,7 @@ export default function UpdateTeamModal({
         }
 
         // Post the data
-        http.put(`http://127.0.0.1:8000/api/team/${team.id}/`, data,)
+        http.put(`/api/team/${team.id}/`, data,)
             .then(response => {
                 setUpdate(u=>!u);
                 handleCloseModal();

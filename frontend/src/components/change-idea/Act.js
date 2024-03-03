@@ -35,7 +35,7 @@ export default function Act({cycle, changeIdea, setChangeIdea, stageColor, show}
     function handleSave() {
         setLoading('loading');
         // Update
-        http.put(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {...formData})
+        http.put(`/api/pdsa/${cycle.id}/`, {...formData})
             .then(response => {
                 // uodates the cycle
                 for (let key in response.data) {
@@ -52,7 +52,7 @@ export default function Act({cycle, changeIdea, setChangeIdea, stageColor, show}
     function handleComplete() {
         setLoading('loading');
         // Update
-        http.put(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {...formData, stage: 'Complete'})
+        http.put(`/api/pdsa/${cycle.id}/`, {...formData, stage: 'Complete'})
             .then(response => {
                 // updates the cycle
                 for (let key in response.data) {
@@ -70,7 +70,7 @@ export default function Act({cycle, changeIdea, setChangeIdea, stageColor, show}
     function handleRevert() {
         setLoading('loading');
         // Update
-        http.put(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {...formData, stage: 'Act'})
+        http.put(`/api/pdsa/${cycle.id}/`, {...formData, stage: 'Act'})
             .then(response => {
                 // updates the cycle
                 for (let key in response.data) {

@@ -80,7 +80,7 @@ export default function TeamAim({team, selectedAim, setSelectedAim, setSelectedD
 
     function handleSave(formData) {
         // Post the new aim
-        http.post('http://127.0.0.1:8000/api/aim/create/', {...formData, team: team.id})
+        http.post('/api/aim/create/', {...formData, team: team.id})
             .then(response => {
                 // Adds the aim
                 aims.unshift(response.data)

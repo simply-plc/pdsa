@@ -27,7 +27,7 @@ export default function SelectCard({
 
     // handle update /
     function handleSave(formData) {
-        http.put(`http://127.0.0.1:8000/api/${optionName}/${option.id}/`, {...formData, created_by: option.created_by})
+        http.put(`/api/${optionName}/${option.id}/`, {...formData, created_by: option.created_by})
             .then(response => {
                 // Updates the change idea on the front end
                 if (parent) {
@@ -57,7 +57,7 @@ export default function SelectCard({
     }
 
     function handleDelete() {
-        http.delete(`http://127.0.0.1:8000/api/${optionName}/${option.id}/`, {data: {created_by: option.created_by}})
+        http.delete(`/api/${optionName}/${option.id}/`, {data: {created_by: option.created_by}})
             .then(response => {
                 if (selected?.id === option.id) {// If the deleted is the selected, then no more selected
                     setSelected(null);

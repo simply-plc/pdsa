@@ -25,7 +25,7 @@ export default function UserTeam() {
     // alert(JSON.stringify([selectedAim?.id, selectedDriver?.id]))
     // Get team info on load
     useEffect(() => {
-        http.get(`http://127.0.0.1:8000/api/user-team/${params.teamId}/`)
+        http.get(`/api/user-team/${params.teamId}/`)
             .then(response => {
                 setTeam(response.data);
                 if (location.state) {

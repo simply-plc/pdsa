@@ -48,7 +48,7 @@ export default function UserNavbar() {
     // Handlles the logout button
     async function handleLogout() {
         try {
-            await http.post('http://localhost:8000/user/logout/', {
+            await http.post('/user/logout/', {
                                             refresh_token:localStorage.getItem('refresh_token')
                                         }, 
                                     )

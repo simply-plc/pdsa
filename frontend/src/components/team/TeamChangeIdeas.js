@@ -95,7 +95,7 @@ export default function TeamChangeIdeas({team, selectedAim, selectedDriver, setS
 
     function handleSave(formData) {
         // Post the new aim
-        http.post('http://127.0.0.1:8000/api/change-idea/create/', {...formData, created_by:decodedToken.email})
+        http.post('/api/change-idea/create/', {...formData, created_by:decodedToken.email})
             .then(response => {
                 // Adds the driver ( This is necessary because the selected aim might not be the aim you are adding a driver for)
                 // let driver = selectedAim.drivers.filter((driver) => driver.id === response.data.driver)[0]; // Set the selected aim to have the driver

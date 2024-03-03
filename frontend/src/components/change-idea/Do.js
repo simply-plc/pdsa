@@ -35,7 +35,7 @@ export default function Do({cycle, changeIdea, setChangeIdea, stageColor, show})
     function handleSave() {
         setLoading('loading');
         // Update
-        http.put(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {...formData})
+        http.put(`/api/pdsa/${cycle.id}/`, {...formData})
             .then(response => {
                 // uodates the cycle
                 for (let key in response.data) {
@@ -52,7 +52,7 @@ export default function Do({cycle, changeIdea, setChangeIdea, stageColor, show})
     function handleComplete() {
         setLoading('loading');
         // Update
-        http.put(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {...formData, stage: 'Study'})
+        http.put(`/api/pdsa/${cycle.id}/`, {...formData, stage: 'Study'})
             .then(response => {
                 // updates the cycle
                 for (let key in response.data) {
@@ -70,7 +70,7 @@ export default function Do({cycle, changeIdea, setChangeIdea, stageColor, show})
     function handleRevert() {
         setLoading('loading');
         // Update
-        http.put(`http://127.0.0.1:8000/api/pdsa/${cycle.id}/`, {...formData, stage: 'Do'})
+        http.put(`/api/pdsa/${cycle.id}/`, {...formData, stage: 'Do'})
             .then(response => {
                 // updates the cycle
                 for (let key in response.data) {

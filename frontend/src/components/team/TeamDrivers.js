@@ -85,7 +85,7 @@ export default function TeamDrivers({team, selectedAim, setSelectedAim, selected
 
     function handleSave(formData) {
         // Post the new driver
-        http.post('http://127.0.0.1:8000/api/driver/create/', {...formData})
+        http.post('/api/driver/create/', {...formData})
             .then(response => {
                 // Adds the driver ( This is necessary because the selected aim might not be the aim you are adding a driver for)
                 // let aim = team.aims.filter((aim) => aim.id === response.data.aim)[0]; // Set the selected aim to have the driver
