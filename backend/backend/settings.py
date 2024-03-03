@@ -29,6 +29,7 @@ ALLOWED_HOSTS = []
 
 # User Custom Settings ###
 from datetime import timedelta
+import os
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
@@ -57,6 +58,13 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'testemailforsimplyplc@gmail.com' #sender's email-id
 EMAIL_HOST_PASSWORD = 'Edison559!' #password associated with above email-id
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+REACT_APP_DIR = os.path.join(BASE_DIR, '../frontend') 
+STATICFILES_DIRS = [
+    os.path.join(REACT_APP_DIR, 'build', 'static'),
+]
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -71,6 +79,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'user',
     'api',
+    'frontend',
 ]
 
 MIDDLEWARE = [
@@ -90,7 +99,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, '../frontend/build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
