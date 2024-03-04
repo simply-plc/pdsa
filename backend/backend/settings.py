@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-3j6afrzx&#wtaq8((rk0l_t7#v3sy%fzib8mb5qy#cl2))!jp6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False ###################### CHANGE IF YOU ARE DEVELOPING
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # User Custom Settings ###
 from datetime import timedelta
@@ -51,19 +51,21 @@ SIMPLE_JWT = {
 AUTH_USER_MODEL = "user.User"
 
  
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'testemailforsimplyplc@gmail.com' #sender's email-id
-EMAIL_HOST_PASSWORD = 'Edison559!' #password associated with above email-id
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_USE_TLS = True
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'testemailforsimplyplc@gmail.com' #sender's email-id
+# EMAIL_HOST_PASSWORD = 'Edison559!' #password associated with above email-id
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-REACT_APP_DIR = os.path.join(BASE_DIR, '../frontend') 
-STATICFILES_DIRS = [
-    os.path.join(REACT_APP_DIR, 'build', 'static'),
-]
+# REACT_APP_DIR = os.path.join(BASE_DIR, '../frontend') 
+
+# STATICFILES_DIRS = [
+#     os.path.join(REACT_APP_DIR, 'build'),
+#     os.path.join(REACT_APP_DIR, 'build', 'static'),
+# ]
 
 # Application definition
 
@@ -79,7 +81,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'user',
     'api',
-    'frontend',
 ]
 
 MIDDLEWARE = [
