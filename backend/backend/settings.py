@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-3j6afrzx&#wtaq8((rk0l_t7#v3sy%fzib8mb5qy#cl2))!jp6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False ###################### CHANGE IF YOU ARE DEVELOPING
+DEBUG = True ###################### CHANGE IF YOU ARE DEVELOPING
 
 ALLOWED_HOSTS = ["*"]
 
@@ -33,6 +33,7 @@ import os
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "https://frontend-service-rksdw44qea-wl.a.run.app",
 ]
 
 REST_FRAMEWORK = {
