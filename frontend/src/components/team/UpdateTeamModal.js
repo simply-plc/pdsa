@@ -18,14 +18,14 @@ export default function UpdateTeamModal({
     const [validated, setValidated] = useState(false); // Checks when to show error message for email validation
     const [required, setRequired] = useState(false); // Checks that team name is entered
     const [dne, setDne] = useState([]);
-    const [members, setMembers] = useState(team?.team_get_members.split('\n')); // This is a list of members
+    const [members, setMembers] = useState(team?.get_members.split('\n')); // This is a list of members
     const [formData, setFormData] = useState({ // This is to control the form input
         name: team?.name,
         share: '',
     });
 
     useEffect(() => {
-        let initialMembers = team?.team_get_members.split('\n').filter((v,i) => v !== decodedToken.email);
+        let initialMembers = team?.get_members.split('\n').filter((v,i) => v !== decodedToken.email);
         setMembers(initialMembers);
         setFormData({ // Resets form data
             name: team?.name,

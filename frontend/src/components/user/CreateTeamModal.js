@@ -104,12 +104,11 @@ export default function CreateTeamModal({
         // Post the data
         http.post('/api/team/create/', data,)
             .then(response => {
-                const teamsData = response.data.team_memberships;
-                setTeams([teamsData[teamsData.length-1], ...teams]); // Add the new teams to teams page (new team is hardcoded to be always last)
+                setTeams([response.data, ...teams]); // Add the new teams to teams page (new team is hardcoded to be always last)
                 handleCloseModal();
             })
             .catch(error => {
-                    if (error.response.status === 400) { // User doesn't exist
+                    if (error.response?.status === 400) { // User doesn't exist
                         let failedEmails = error.response.data.team_memberships.filter((v, i) => 'user' in v); // Get and filter users that got the error
                         // get the actual emails that failed
                         failedEmails = failedEmails.map((v, i) => {

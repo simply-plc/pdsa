@@ -9,11 +9,12 @@ from django.utils.http import urlsafe_base64_encode
 from django.conf import settings
 
 from .models import *
-from api.serializers import TeamMembershipSerializer
+from api.serializers import UserTeamSerializer
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True) # Hides it from getting read
-    team_memberships = TeamMembershipSerializer(many=True, read_only=True) # serialilzes the team_memberships field so that we can see the actual values of team_memberships
+    # team_memberships = TeamMembershipSerializer(many=True, read_only=True) # serialilzes the team_memberships field so that we can see the actual values of team_memberships
+    teams = UserTeamSerializer(many=True, read_only=True)
 
     def create(self, data):
         user = User.objects.create_user(
@@ -42,7 +43,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta: 
         model = get_user_model() 
-        fields = ('id', 'email', 'password', 'team_memberships', 'teams') 
+        fields = ('id', 'email', 'password', 'teams') 
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):

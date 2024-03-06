@@ -22,9 +22,13 @@ export default function TeamsPage() {
     useEffect(() => {
         http.get(`/user/${decodedToken.user}`,)
             .then(response => { // Sets the teams info after getting it from backend
-                const team_memberships = response.data.team_memberships;
-                team_memberships.sort((a, b) => new Date(b.joined_date) - new Date(a.joined_date));
-                setTeams(team_memberships);
+                const teamsData = response.data.teams;
+                teamsData.sort((a, b) => {
+                    let firstJoin = b.team_memberships.filter((v, i) => v.user === response.data.email)[0].joined_date;
+                    let secondJoin = a.team_memberships.filter((v, i) => v.user === response.data.email)[0].joined_date;
+                    return new Date(firstJoin) - new Date(secondJoin);
+                });
+                setTeams(teamsData);
             }) 
             .catch(error => {
                 if (error.response.status === 401) { // User is no longer logged in
