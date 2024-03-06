@@ -19,7 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(
             email=data['email'],
             password=data['password'],
-            is_active=False,
+            # is_active=False,
         )
 
         # uid = urlsafe_base64_encode(force_bytes(user.pk))

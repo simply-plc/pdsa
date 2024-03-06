@@ -51,6 +51,8 @@ SIMPLE_JWT = {
 
 AUTH_USER_MODEL = "user.User"
 
+CSRF_TRUSTED_ORIGINS=['https://backend-service-rksdw44qea-wl.a.run.app', '"http://localhost"']
+
  
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = 'smtp.gmail.com'

@@ -1,6 +1,7 @@
 import {useState, useId} from 'react';
 import {useNavigate, Link} from 'react-router-dom';
 import {Card, Form, FloatingLabel, Button, Row, Container} from 'react-bootstrap';
+import axios from 'axios';
 
 import http from '../../http';
 
@@ -57,7 +58,7 @@ export default function CreateAccount() {
 
         // Checks to see if all requirements are satisfied to create user
         if (isValidEmail(true) && isMatching(true) && isValidPassword(true)) {
-            http.post('/user/create/', { // Create the user and redirect to login
+            axios.post(`${http.defaults.baseURL}/user/create/`, { // Create the user and redirect to login
                     email: target.email.value,
                     password: target.password.value,
                 })
