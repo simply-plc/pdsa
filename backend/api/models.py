@@ -6,6 +6,7 @@ from datetime import date
 class Team(models.Model):
     name = models.CharField(max_length=255)
     members = models.ManyToManyField('user.User', through='TeamMembership', related_name='teams')
+    aim = models.TextField(default='')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

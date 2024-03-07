@@ -11,7 +11,7 @@ class TeamMembershipSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TeamMembership
-        fields = ['id', 'user', 'is_admin', 'joined_date'] # 'team_pk', 'team_name', 'team_get_members',
+        fields = ['id', 'user', 'is_admin', 'joined_date']
 
 
 # This soley exists for the commented out stuff.
@@ -112,7 +112,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Team
-        fields = ['id', 'name', 'members', 'created_at', 'get_members', 'team_memberships', 'joined_dates', 'aims']
+        fields = ['id', 'name', 'members', 'created_at', 'get_members', 'team_memberships', 'joined_dates', 'aims', 'aim']
 
     def create(self, validated_data):
         team_memberships = validated_data.pop('team_memberships') # Get the team memberships
