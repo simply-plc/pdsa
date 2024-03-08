@@ -37,16 +37,16 @@ class TempDriverSerializer(serializers.ModelSerializer):
         model = Driver
         fields = '__all__'
 
-class TempAimSerializer(serializers.ModelSerializer):
-    drivers = TempDriverSerializer(read_only=True, many=True)
+# class TempAimSerializer(serializers.ModelSerializer):
+#     drivers = TempDriverSerializer(read_only=True, many=True)
 
-    class Meta:
-        model = Aim
-        fields = '__all__'
+#     class Meta:
+#         model = Aim
+#         fields = '__all__'
 
 # You can delete the above if you redefine the below.
 class UserTeamSerializer(serializers.ModelSerializer):
-    aims = TempAimSerializer(read_only=True, many=True)
+    drivers = TempDriverSerializer(read_only=True, many=True)
     get_members = serializers.ReadOnlyField() # Get the read only value from the function to see whose on the team
     joined_dates = serializers.SlugRelatedField(slug_field='joined_date', read_only=True)
     team_memberships = TeamMembershipSerializer(many=True, read_only=True)
@@ -55,13 +55,13 @@ class UserTeamSerializer(serializers.ModelSerializer):
         model = Team
         fields = '__all__'
 
-class AimSerializer(serializers.ModelSerializer):
-    drivers = TempDriverSerializer(read_only=True, many=True)
-    # team_object = UserTeamSerializer(read_only=True, source='team')
+# class AimSerializer(serializers.ModelSerializer):
+#     drivers = TempDriverSerializer(read_only=True, many=True)
+#     # team_object = UserTeamSerializer(read_only=True, source='team')
 
-    class Meta:
-        model = Aim
-        fields = '__all__'
+#     class Meta:
+#         model = Aim
+#         fields = '__all__'
 
 class DriverSerializer(serializers.ModelSerializer):
     change_ideas = TempChangeIdeaSerializer(read_only=True, many=True)
@@ -105,14 +105,14 @@ class TeamSerializer(serializers.ModelSerializer):
     """
     # team_memberships = TeamMembershipSerializer(many=True) # serialilzes the team_memberships field so that we can see the actual values of team_memberships
     # members = serializers.SlugRelatedField(slug_field='email', read_only=True)
-    aims = TempAimSerializer(read_only=True, many=True)
+    drivers = TempDriverSerializer(read_only=True, many=True)
     get_members = serializers.ReadOnlyField() # Get the read only value from the function to see whose on the team
     joined_dates = serializers.SlugRelatedField(slug_field='joined_date', read_only=True)
     team_memberships = TeamMembershipSerializer(many=True)
 
     class Meta:
         model = Team
-        fields = ['id', 'name', 'members', 'created_at', 'get_members', 'team_memberships', 'joined_dates', 'aims', 'aim']
+        fields = ['id', 'name', 'members', 'created_at', 'get_members', 'team_memberships', 'joined_dates', 'drivers', 'aim']
 
     def create(self, validated_data):
         team_memberships = validated_data.pop('team_memberships') # Get the team memberships

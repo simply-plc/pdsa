@@ -28,37 +28,51 @@ export default function TeamsPageCard({team, teams, setTeams, index}) {
             .catch(error => alert(error.message));
     }
 
-    function numAims() {
-        return team?.aims?.length;
-    }
+    // function numAims() {
+    //     return team?.aims?.length;
+    // }
 
     function numDrivers() {
-        let driverTotal = 0;
-
-        for (let i = 0; i < team?.aims?.length; i++) {
-            driverTotal += team.aims[i]?.drivers?.length;
-        }
-
-        return driverTotal;
+        return team?.drivers?.length;
     }
+
+    // function numDrivers() {
+    //     let driverTotal = 0;
+
+    //     for (let i = 0; i < team?.aims?.length; i++) {
+    //         driverTotal += team.aims[i]?.drivers?.length;
+    //     }
+
+    //     return driverTotal;
+    // }
 
     function numChangeIdeas() {
-        let changeIdeaTotal = 0;
+        let changeIdeasTotal = 0;
 
-        for (let i = 0; i < team?.aims?.length; i++) {
-            for (let j = 0; j < team?.aims[i].drivers.length; j++) {
-                changeIdeaTotal += team?.aims[i].drivers[j].change_ideas.length;
-            }
+        for (let i = 0; i < team?.drivers?.length; i++) {
+            changeIdeasTotal += team.drivers[i]?.change_ideas?.length;
         }
 
-        return changeIdeaTotal;
+        return changeIdeasTotal;
     }
+
+    // function numChangeIdeas() {
+    //     let changeIdeaTotal = 0;
+
+    //     for (let i = 0; i < team?.aims?.length; i++) {
+    //         for (let j = 0; j < team?.aims[i].drivers.length; j++) {
+    //             changeIdeaTotal += team?.aims[i].drivers[j].change_ideas.length;
+    //         }
+    //     }
+
+    //     return changeIdeaTotal;
+    // }
 
     return <TeamsPageCardComponent 
         handleSelectTeam={handleSelectTeam}
         handleDelete={handleDelete}
         team={team}
-        numAims={numAims}
+        // numAims={numAims}
         numDrivers={numDrivers}
         numChangeIdeas={numChangeIdeas}
         />
@@ -120,9 +134,9 @@ export function TeamsPageCardComponent({
                     {/* This is the additional info */}
                     <span className='m-auto me-0 mt-0'>
                         {/* Aims */}
-                        <div className='text-nowrap text-right'>
+                        {/*<div className='text-nowrap text-right'>
                             Aims: {numAims()}
-                        </div>
+                        </div>*/}
                         {/* Drivers */}
                         <div className='text-nowrap text-right'>
                             Drivers: {numDrivers()}

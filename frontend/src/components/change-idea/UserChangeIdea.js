@@ -34,7 +34,8 @@ export default function UserChangeIdea() {
                 children: (
                     <>
                         <option value={location.state.driver?.id}>{location.state.driver?.name}</option>
-                        {location.state.aim?.drivers.map((v, i) => (v.id !== location.state.driver?.id) ? <option value={v.id}>{v.name}</option> : '')}
+                        {/*{location.state.aim?.drivers.map((v, i) => (v.id !== location.state.driver?.id) ? <option value={v.id}>{v.name}</option> : '')}*/}
+                        {location.state.team?.drivers.map((v, i) => (v.id !== location.state.driver?.id) ? <option value={v.id}>{v.name}</option> : '')}
                     </>
                 ),
             },
@@ -93,7 +94,8 @@ export default function UserChangeIdea() {
                 let index = location.state.driver.change_ideas.findIndex((ci) => ci.id === changeIdea.id); // set the index of the change idea in the old driver /// this might have error cuz index is being set without condition
                 let updateChangeIdea = location.state.driver.change_ideas.splice(index, 1); // remove change idea from old driver
                 // new driver
-                let newDriver = location.state.aim.drivers.filter((driver) => driver.id === response.data.driver)[0]; // Get new driver
+                // let newDriver = location.state.aim.drivers.filter((driver) => driver.id === response.data.driver)[0]; // Get new driver
+                let newDriver = location.state.team.drivers.filter((driver) => driver.id === response.data.driver)[0]; // Get new driver
                 newDriver.change_ideas.unshift(updateChangeIdea); // add change idea to new driver
                 for (let key in formData) {
                         updateChangeIdea[key] = response.data[key];
@@ -168,7 +170,7 @@ export function UserChangeIdeaComponent({
                         {/* Info and Cycles */}
                         <InfoCycles 
                             changeIdea={changeIdea} 
-                            aim={location.state.aim} 
+                            // aim={location.state.aim} 
                             driver={location.state.driver} 
                             selectedCycle={selectedCycle} 
                             setSelectedCycle={setSelectedCycle}

@@ -15,15 +15,15 @@ class TeamMembershipAdmin(admin.ModelAdmin):
 
 admin.site.register(TeamMembership, TeamMembershipAdmin)
 
-class AimAdmin(admin.ModelAdmin):
-    model = Aim
-    list_display = ["id", "name", 'team', 'goal', 'population', 'by_num', 'by_date']
+# class AimAdmin(admin.ModelAdmin):
+#     model = Aim
+#     list_display = ["id", "name", 'team', 'goal', 'population', 'by_num', 'by_date']
 
-admin.site.register(Aim, AimAdmin)
+# admin.site.register(Aim, AimAdmin)
 
 class DriverAdmin(admin.ModelAdmin):
     model = Driver
-    list_display = ["id", "name", 'aim', 'goal', 'description', 'measure']
+    list_display = ["id", "name", 'team', 'goal', 'description', 'measure']
 
 admin.site.register(Driver, DriverAdmin)
 

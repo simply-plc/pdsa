@@ -4,7 +4,7 @@ import {Card, Button, Row, Col} from 'react-bootstrap';
 
 import http from '../../http';
 import Hover from '../general/Hover';
-import TeamAims from './TeamAims';
+// import TeamAims from './TeamAims';
 import TeamDrivers from './TeamDrivers';
 import TeamChangeIdeas from './TeamChangeIdeas';
 import UpdateTeamModal from './UpdateTeamModal';
@@ -17,7 +17,7 @@ export default function UserTeam() {
     const navigate = useNavigate();
     const params = useParams(); // Get params
     const [team, setTeam] = useState(location.state?.team); // Current team info
-    const [selectedAim, setSelectedAim] = useState(); // This determines which aim is selected
+    // const [selectedAim, setSelectedAim] = useState(); // This determines which aim is selected
     const [selectedDriver, setSelectedDriver] = useState();
     const [selectedChangeIdea, setSelectedChangeIdea] = useState();
     const [update, setUpdate] = useState(false);
@@ -29,12 +29,15 @@ export default function UserTeam() {
             .then(response => {
                 setTeam(response.data);
                 if (location.state) {
-                    let newSelectedAim = response.data.aims.filter((aim) => aim.id === location.state.aim.id)[0];
-                    setSelectedAim(newSelectedAim);
-                    setSelectedDriver(newSelectedAim?.drivers.filter((driver) => driver.id === location.state.driver.id)[0]);
+                    // let newSelectedAim = response.data.aims.filter((aim) => aim.id === location.state.aim.id)[0];
+                    // setSelectedAim(newSelectedAim);
+                    // setSelectedDriver(newSelectedAim?.drivers.filter((driver) => driver.id === location.state.driver.id)[0]);
+                    let newSelectedDriver = response.data.drivers.filter((driver) => driver.id === location.state.driver.id)[0];
+                    setSelectedDriver(newSelectedDriver);
+                    setSelectedChangeIdea(newSelectedDriver?.change_ideas.filter((change_idea) => change_idea.id === location.state.change_idea.id)[0]);
                 }
             })
-            .catch(error => {
+            .catch(error => {//////////////////// ERROR RIGHT HERE I THINK
                 if (error.response.status === 403) {
                     alert('You do not have permission for this team!')
                     navigate('/');
@@ -59,8 +62,8 @@ export default function UserTeam() {
     return <UserTeamComponent 
         team={team} 
         handleBackButton={handleBackButton}
-        selectedAim={selectedAim}
-        setSelectedAim={setSelectedAim}
+        // selectedAim={selectedAim}
+        // setSelectedAim={setSelectedAim}
         selectedDriver={selectedDriver}
         setSelectedDriver={setSelectedDriver}
         selectedChangeIdea={selectedChangeIdea}
@@ -116,18 +119,32 @@ export function UserTeamComponent({
                     <Col className='mb-3' lg={6}>
                         {/* Aims */}
                         <Row className='pb-2 w-100 m-0' style={{height:'50%'}}>
-                            <TeamAims team={team} selectedAim={selectedAim} setSelectedAim={setSelectedAim} setSelectedDriver={setSelectedDriver} />
+                            {/*<TeamAims team={team} selectedAim={selectedAim} setSelectedAim={setSelectedAim} setSelectedDriver={setSelectedDriver} />*/}
                         </Row>
                         {/* Drivers */}
                         <Row className='pt-2 w-100 m-0' style={{height:'50%'}}>
-                            <TeamDrivers team={team} selectedAim={selectedAim} setSelectedAim={setSelectedAim} selectedDriver={selectedDriver} setSelectedDriver={setSelectedDriver} setSelectedChangeIdea={setSelectedChangeIdea} />
+                            <TeamDrivers 
+                                team={team} 
+                                // selectedAim={selectedAim} 
+                                // setSelectedAim={setSelectedAim} 
+                                selectedDriver={selectedDriver} 
+                                setSelectedDriver={setSelectedDriver} 
+                                setSelectedChangeIdea={setSelectedChangeIdea} 
+                                />
                         </Row>
                     </Col>
                     {/* Second Col */}
                     <Col className='flex-grow-1 mb-3' lg={6}>
                         {/* Change Ideas */}
                         <Row className='w-100 m-0' style={{height:'100%'}}>
-                            <TeamChangeIdeas team={team} selectedAim={selectedAim} selectedDriver={selectedDriver} setSelectedDriver={setSelectedDriver} selectedChangeIdea={selectedChangeIdea} setSelectedChangeIdea={setSelectedChangeIdea} />
+                            <TeamChangeIdeas 
+                                team={team} 
+                                // selectedAim={selectedAim} 
+                                selectedDriver={selectedDriver} 
+                                setSelectedDriver={setSelectedDriver} 
+                                selectedChangeIdea={selectedChangeIdea} 
+                                setSelectedChangeIdea={setSelectedChangeIdea} 
+                                />
                         </Row>
                     </Col>
                 </Row>

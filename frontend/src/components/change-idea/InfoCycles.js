@@ -6,7 +6,9 @@ import Info from './Info';
 import Cycles from './Cycles';
 
 
-export default function InfoCycles({changeIdea, aim, driver, selectedCycle, setSelectedCycle}) {
+export default function InfoCycles({changeIdea, 
+    // aim, 
+    driver, selectedCycle, setSelectedCycle}) {
     const [view, setView] = useState('Cycles');
 
     // select which card to view: info or cycles
@@ -18,7 +20,7 @@ export default function InfoCycles({changeIdea, aim, driver, selectedCycle, setS
         handleSelectView={handleSelectView}
         view={view}
         changeIdea={changeIdea}
-        aim={aim}
+        // aim={aim}
         driver={driver}
         selectedCycle={selectedCycle}
         setSelectedCycle={setSelectedCycle}
@@ -62,7 +64,9 @@ export function InfoCyclesComponent({
                     <div 
                         className='w-100 h-100'
                         style={{position:'absolute', transition:'opacity .2s ease', opacity:view==='Info' ? 1 : 0, zIndex: view==='Info' ? 1 : 0}}>
-                        <Info aim={aim} driver={driver} changeIdea={changeIdea} />
+                        <Info 
+                            // aim={aim} 
+                            driver={driver} changeIdea={changeIdea} />
                     </div>
                     {/* Cycles */}
                     <div 

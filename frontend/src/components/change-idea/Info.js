@@ -17,7 +17,7 @@ export function InfoComponent({aim, driver, changeIdea}) {
                         {/* Title Badge */}
                         <div className='h4 text-primary fw-bold'>
                             <Badge bg="primary" className='rounded-5 text-white me-3'>Aim</Badge>
-                            {aim.name}
+                            {/*{aim.name}*/}
                         </div>
                         {/* Body */}
                         <Row className='m-0 h-100 flex-grow-1 overflow-scroll'>
@@ -27,14 +27,14 @@ export function InfoComponent({aim, driver, changeIdea}) {
                                 <div className='d-flex align-items-center' style={{height:'50%'}}>
                                     <div>
                                         <div className='fw-bold'>What do we want to accomplish?</div>
-                                        <div className='ms-2 text-muted'>{aim.goal}</div>
+                                        {/*<div className='ms-2 text-muted'>{aim.goal}</div>*/}
                                     </div>
                                 </div>
                                 {/* Population */}
                                 <div className='d-flex align-items-center' style={{height:'50%'}}>
                                     <div>
                                         <div className='fw-bold'>Who is this aim for?</div>
-                                        <div className='ms-2 text-muted'>{aim.population}</div>
+                                        {/*<div className='ms-2 text-muted'>{aim.population}</div>*/}
                                     </div>
                                 </div>
                             </Col>
@@ -44,14 +44,14 @@ export function InfoComponent({aim, driver, changeIdea}) {
                                 <div className='d-flex align-items-center' style={{height:'50%'}}>
                                     <div>
                                         <div className='fw-bold'>By how much do we want to accomplish?</div>
-                                        <div className='ms-2 text-muted'>{aim.by_num}</div>
+                                        {/*<div className='ms-2 text-muted'>{aim.by_num}</div>*/}
                                     </div>
                                 </div>
                                 {/* By date */}
                                 <div className='d-flex align-items-center' style={{height:'50%'}}>
                                     <div>
                                         <div className='fw-bold'>By when will we have accomplished this aim?</div>
-                                        <div className='ms-2 text-muted'>{new Date(aim.by_date).toDateString()}</div>
+                                        {/*<div className='ms-2 text-muted'>{new Date(aim.by_date).toDateString()}</div>*/}
                                     </div>
                                 </div>
                             </Col>

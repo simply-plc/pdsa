@@ -8,7 +8,13 @@ import SelectCard from './SelectCard';
 
 
 
-export default function TeamDrivers({team, selectedAim, setSelectedAim, selectedDriver, setSelectedDriver, setSelectedChangeIdea}) {
+export default function TeamDrivers({team, 
+        // selectedAim, 
+        // setSelectedAim, 
+        selectedDriver, 
+        setSelectedDriver, 
+        setSelectedChangeIdea
+    }) {
     /*
         TeamDrivers is just the Drivers card on the UserTeam page
     */
@@ -22,17 +28,17 @@ export default function TeamDrivers({team, selectedAim, setSelectedAim, selected
                 name: 'name',
                 comp: Form.Control,
             },
-            {
-                label: 'What aim does the driver affect?',
-                name: 'aim',
-                comp: Form.Select,
-                children: (
-                    <>
-                        <option value={selectedAim?.id}>{selectedAim?.name}</option>
-                        {team?.aims.map((v, i) => (v.id !== selectedAim?.id) ? <option value={v.id}>{v.name}</option> : '')}
-                    </>
-                ),
-            },
+            // {
+            //     label: 'What aim does the driver affect?',
+            //     name: 'aim',
+            //     comp: Form.Select,
+            //     children: (
+            //         <>
+            //             <option value={selectedAim?.id}>{selectedAim?.name}</option>
+            //             {team?.aims.map((v, i) => (v.id !== selectedAim?.id) ? <option value={v.id}>{v.name}</option> : '')}
+            //         </>
+            //     ),
+            // },
             {
                 label: 'What needs to be improved?',
                 name: 'goal',
@@ -64,7 +70,7 @@ export default function TeamDrivers({team, selectedAim, setSelectedAim, selected
 
     const initialFormData = { // This is to control the form input
         name: '',
-        aim: selectedAim?.id,
+        // aim: selectedAim?.id,
         goal: '',
         description: '',
         measure: '',
@@ -72,11 +78,11 @@ export default function TeamDrivers({team, selectedAim, setSelectedAim, selected
 
     // set the drivers for the team
     useEffect(() => {
-        selectedAim?.drivers.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date));
-        // const newDrivers = selectedAim?.drivers;
-        // newDrivers?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
-        setDrivers(selectedAim?.drivers) // Set the new drivers
-    }, [selectedAim, update]);
+        // selectedAim?.drivers.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date));
+        // setDrivers(selectedAim?.drivers) // Set the new drivers
+        team?.drivers.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date));
+        setDrivers(team?.drivers);
+    }, [team, update]);
 
     // This handles opening create modal
     function handleOpenModal(event) {
@@ -85,17 +91,15 @@ export default function TeamDrivers({team, selectedAim, setSelectedAim, selected
 
     function handleSave(formData) {
         // Post the new driver
-        http.post('/api/driver/create/', {...formData})
+        http.post('/api/driver/create/', {...formData, team: team.id})
             .then(response => {
                 // Adds the driver ( This is necessary because the selected aim might not be the aim you are adding a driver for)
-                // let aim = team.aims.filter((aim) => aim.id === response.data.aim)[0]; // Set the selected aim to have the driver
-                // aim.drivers.unshift(response.data); // update driver's change ideas
-                // setSelectedAim(aim); // select the driver
-                // setUpdate(u => !u); // update
-                let aimIndex = team.aims.findIndex((aim) => aim.id === response.data.aim);
-                let aim = team.aims[aimIndex];
-                setSelectedAim(aim);
-                aim.drivers.unshift(response.data);
+                // let aimIndex = team.aims.findIndex((aim) => aim.id === response.data.aim);
+                // let aim = team.aims[aimIndex];
+                // setSelectedAim(aim);
+                // aim.drivers.unshift(response.data);
+                // setUpdate(u=>!u);
+                drivers.unshift(response.data);
                 setUpdate(u=>!u);
             })
             .catch(error => alert(error.message)); ////////////// NExt step is to create tool tip with preview button
@@ -112,9 +116,9 @@ export default function TeamDrivers({team, selectedAim, setSelectedAim, selected
         drivers={drivers}
         selectedDriver={selectedDriver}
         setSelectedDriver={setSelectedDriver}
-        selectedAim={selectedAim}
+        // selectedAim={selectedAim}
         setSelectedChangeIdea={setSelectedChangeIdea}
-        setSelectedAim={setSelectedAim}
+        // setSelectedAim={setSelectedAim}
         team={team}
         setUpdate={setUpdate}
         />
@@ -155,7 +159,7 @@ export function TeamDriversComponent({
                             {/* Scrollable Container */}
                             <div className='overflow-y-auto h-100 p-1'>
                                 {
-                                    (!drivers) ? <div className='text-muted text-center'>Select an aim first</div> :
+                                    //(!drivers) ? <div className='text-muted text-center'>Select an aim first</div> :
                                     (drivers?.length === 0) ? <div className='text-muted text-center'>Add a driver</div> :
                                     drivers?.map((v, i) => (
                                         <SelectCard 
@@ -168,12 +172,12 @@ export function TeamDriversComponent({
                                             selected={selectedDriver} 
                                             setSelected={setSelectedDriver} 
                                             pages={pages}
-                                            parent={selectedAim}
-                                            setParent={setSelectedAim}
-                                            parentKey={'aims'}
-                                            singleParentKey={'aim'}
-                                            gparent={team}
-                                            optionKey={'drivers'}
+                                            // parent={selectedAim}
+                                            // setParent={setSelectedAim}
+                                            // parentKey={'aims'}
+                                            // singleParentKey={'aim'}
+                                            // gparent={team}
+                                            // optionKey={'drivers'}
                                             setChild={setSelectedChangeIdea}
                                             title={'Driver'}
                                             setUpdate={setUpdate}

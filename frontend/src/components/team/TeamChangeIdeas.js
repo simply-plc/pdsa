@@ -10,7 +10,9 @@ import SelectCard from './SelectCard';
 
 
 
-export default function TeamChangeIdeas({team, selectedAim, selectedDriver, setSelectedDriver, selectedChangeIdea, setSelectedChangeIdea}) {
+export default function TeamChangeIdeas({team, 
+    // selectedAim, 
+    selectedDriver, setSelectedDriver, selectedChangeIdea, setSelectedChangeIdea}) {
     /*
         TeamChangeIdeas is just the Change Ideas card on the UserTeam page
     */
@@ -34,7 +36,8 @@ export default function TeamChangeIdeas({team, selectedAim, selectedDriver, setS
                 children: (
                     <>
                         <option value={selectedDriver?.id}>{selectedDriver?.name}</option>
-                        {selectedAim?.drivers.map((v, i) => (v.id !== selectedDriver?.id) ? <option value={v.id}>{v.name}</option> : '')}
+                        {/*{selectedAim?.drivers.map((v, i) => (v.id !== selectedDriver?.id) ? <option value={v.id}>{v.name}</option> : '')}*/}
+                        {team?.drivers.map((v, i) => (v.id !== selectedDriver?.id) ? <option value={v.id}>{v.name}</option> : '')}
                     </>
                 ),
             },
@@ -82,7 +85,7 @@ export default function TeamChangeIdeas({team, selectedAim, selectedDriver, setS
     function handleClick(changeIdea) {
         const optionState = { // Maintains the state of what is selected
             team: team,
-            aim: selectedAim,
+            // aim: selectedAim,
             driver: selectedDriver,
         };
         navigate(`../change-ideas/${changeIdea.id}`, {state: optionState}); // Navigate to change-idea page
@@ -98,13 +101,14 @@ export default function TeamChangeIdeas({team, selectedAim, selectedDriver, setS
         http.post('/api/change-idea/create/', {...formData, created_by:decodedToken.email})
             .then(response => {
                 // Adds the driver ( This is necessary because the selected aim might not be the aim you are adding a driver for)
-                // let driver = selectedAim.drivers.filter((driver) => driver.id === response.data.driver)[0]; // Set the selected aim to have the driver
-                // driver.change_ideas.unshift(response.data); // update driver's change ideas
-                // setSelectedDriver(driver); // select the driver
-                // setUpdate(u => !u); // update
+                // let driverIndex = selectedAim.drivers.findIndex((driver) => driver.id === response.data.driver);
+                // let driver = selectedAim.drivers[driverIndex];
+                // setSelectedDriver(driver);
+                // driver.change_ideas.unshift(response.data);
+                // setUpdate(u=>!u);
 
-                let driverIndex = selectedAim.drivers.findIndex((driver) => driver.id === response.data.driver);
-                let driver = selectedAim.drivers[driverIndex];
+                let driverIndex = team.drivers.findIndex((driver) => driver.id === response.data.driver);
+                let driver = team.drivers[driverIndex];
                 setSelectedDriver(driver);
                 driver.change_ideas.unshift(response.data);
                 setUpdate(u=>!u);
@@ -126,7 +130,7 @@ export default function TeamChangeIdeas({team, selectedAim, selectedDriver, setS
         selectedDriver={selectedDriver}
         setSelectedDriver={setSelectedDriver}
         handleClick={handleClick}
-        selectedAim={selectedAim}
+        // selectedAim={selectedAim}
         setUpdate={setUpdate}
         />
 }
@@ -136,7 +140,7 @@ export function TeamChangeIdeasComponent({
     handleSave, handleOpenModal,
     show, setShow, initialFormData, pages, setChangeIdeas, changeIdeas,
     selectedChangeIdea, setSelectedChangeIdea, selectedDriver, handleClick,
-    setSelectedDriver, selectedAim, setUpdate,
+    setSelectedDriver, selectedAim, setUpdate, team,
     }) {
 
 
@@ -185,7 +189,8 @@ export function TeamChangeIdeasComponent({
                                             pages={pages}
                                             parent={selectedDriver}
                                             setParent={setSelectedDriver}
-                                            gparent={selectedAim}
+                                            // gparent={selectedAim}
+                                            gparent={team}
                                             parentKey={'drivers'}
                                             singleParentKey={'driver'}
                                             optionKey={'change_ideas'}
