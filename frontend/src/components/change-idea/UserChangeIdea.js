@@ -1,6 +1,6 @@
 import {useParams, useNavigate, useLocation} from 'react-router-dom';
 import {useEffect, useState} from 'react';
-import {Card, Button, Row, Col, Form} from 'react-bootstrap';
+import {Card, Button, Row, Col, Form, Badge} from 'react-bootstrap';
 
 import http from '../../http';
 import Hover from '../general/Hover';
@@ -40,7 +40,7 @@ export default function UserChangeIdea() {
                 ),
             },
             {
-                label: 'What is the action idea you want to implement?',
+                label: 'What change do you want to make?',
                 name: 'idea',
                 as: 'textarea',
                 rows: 4,
@@ -94,7 +94,6 @@ export default function UserChangeIdea() {
                 let index = location.state.driver.change_ideas.findIndex((ci) => ci.id === changeIdea.id); // set the index of the change idea in the old driver /// this might have error cuz index is being set without condition
                 let updateChangeIdea = location.state.driver.change_ideas.splice(index, 1); // remove change idea from old driver
                 // new driver
-                // let newDriver = location.state.aim.drivers.filter((driver) => driver.id === response.data.driver)[0]; // Get new driver
                 let newDriver = location.state.team.drivers.filter((driver) => driver.id === response.data.driver)[0]; // Get new driver
                 newDriver.change_ideas.unshift(updateChangeIdea); // add change idea to new driver
                 for (let key in formData) {
@@ -133,6 +132,13 @@ export function UserChangeIdeaComponent({
     handleBackButton, selectedCycle, setSelectedCycle, setChangeIdea,
     show, setShow, pages, handleSave, handleOpenModal,
     }) {
+
+    const stageColor ={
+        Testing: 'danger',
+        Implementing: 'warning',
+        Spreading: 'success',
+    };
+
     return (
         <>
             <div className='vh-100 d-flex flex-column' style={{minHeight:'45rem'}}>
@@ -146,7 +152,14 @@ export function UserChangeIdeaComponent({
                                 <span className='bi-chevron-left text-dark text-center' style={{fontSize: '1.5rem'}} />
                             </Button>
                             {/* Title */}
-                            <div className='h1 fw-bold d-inline-block mb-auto mt-auto'>{changeIdea?.name}</div>
+                            <div className='h1 fw-bold d-inline-block mb-auto mt-auto align-items-center d-flex'>
+                                <span>{changeIdea?.name}</span>
+                                <div className={`ms-3 mt-1 badge text-white rounded-5 text-white bg-${stageColor[changeIdea?.stage]}`}
+                                    style={{fontSize:'1rem'}}
+                                    >
+                                    {changeIdea?.stage}
+                                </div>
+                            </div>
                             {/* Settings */}
                             <Hover 
                                 comp={(props)=><span {...props}></span>}
@@ -170,7 +183,7 @@ export function UserChangeIdeaComponent({
                         {/* Info and Cycles */}
                         <InfoCycles 
                             changeIdea={changeIdea} 
-                            // aim={location.state.aim} 
+                            aim={location.state.team.aim} 
                             driver={location.state.driver} 
                             selectedCycle={selectedCycle} 
                             setSelectedCycle={setSelectedCycle}

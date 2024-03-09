@@ -35,6 +35,6 @@ admin.site.register(ChangeIdea, ChangeIdeaAdmin)
 
 class PDSAAdmin(admin.ModelAdmin):
     model = PDSA
-    list_display = ["id", "name", 'change_idea', 'stage', 'learning_goal', 'steps', 'measure', 'predictions', 'by_date', 'learning', 'next_step', 'created_by']
+    list_display = ["id", "name", 'change_idea', 'stage', 'learning_goal', 'steps', 'predictions', 'by_date', 'p_measure', 'o_measure', 'b_measure', 'learning', 'next_step', 'created_by']
 
 admin.site.register(PDSA, PDSAAdmin)

@@ -6,7 +6,7 @@ from datetime import date
 class Team(models.Model):
     name = models.CharField(max_length=255)
     members = models.ManyToManyField('user.User', through='TeamMembership', related_name='teams')
-    aim = models.TextField(default='')
+    aim = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -42,7 +42,7 @@ class Driver(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='drivers')
     goal = models.TextField() # What needs to be improved?
     description = models.TextField() # How does it relate with the aim?
-    measure = models.TextField() # What data do we measure? # This will be like adding members. user will create a list that allows users to view data
+    measure = models.TextField() # What data is measured?
     modified_date = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -58,7 +58,7 @@ class ChangeIdea(models.Model):
     ]
 
     name = models.CharField(max_length=50)
-    driver = models.ForeignKey(Driver, on_delete=models.CASCADE, related_name='change_ideas')
+    driver = models.ForeignKey(Driver, on_delete=models.CASCADE, related_name='change_ideas') # selected driver will show the measure once selected
     idea = models.TextField() # What change do you want to make?
     stage = models.CharField(max_length=20, choices=STAGE_CHOICES) # Are we testing, implementing, or spreading?
     modified_date = models.DateTimeField(auto_now=True)
@@ -89,11 +89,11 @@ class PDSA(models.Model):
     stage = models.CharField(max_length=20, choices=STAGE_CHOICES, default='Plan')
     learning_goal = models.TextField(blank=True) # What do you want to learn from the change?
     steps = models.TextField(blank=True) # What steps do you need to test the change?
-    measure = models.TextField(blank=True) # What data are you going to measure? ##### NOTE: dropdown to select which data from driver and other drivers
     predictions = models.TextField(blank=True) # What predictions do you have about the data?
     by_date = models.DateField(default=date.today) # When are you going to test the change?
-    do_notes = models.TextField(blank=True) # Notes:
-    data = models.TextField(blank=True) # What is your data?
+    p_measure = models.TextField(blank=True) # process measure data
+    o_measure = models.TextField(blank=True) # outcome measure data
+    b_measure = models.TextField(blank=True) # balance measure data
     learning = models.TextField(blank=True) # What did you learn from the data you collected?
     next_step = models.CharField(max_length=20, choices=NEXT_STEP_CHOICES, blank=True) # Are you going to adopt, adapt, or abandon the change?
     next_step_rationale = models.TextField(blank=True) # What is your rationale for the choice?

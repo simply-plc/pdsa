@@ -10,9 +10,7 @@ import SelectCard from './SelectCard';
 
 
 
-export default function TeamChangeIdeas({team, 
-    // selectedAim, 
-    selectedDriver, setSelectedDriver, selectedChangeIdea, setSelectedChangeIdea}) {
+export default function TeamChangeIdeas({team, selectedDriver, setSelectedDriver, selectedChangeIdea, setSelectedChangeIdea}) {
     /*
         TeamChangeIdeas is just the Change Ideas card on the UserTeam page
     */
@@ -36,13 +34,12 @@ export default function TeamChangeIdeas({team,
                 children: (
                     <>
                         <option value={selectedDriver?.id}>{selectedDriver?.name}</option>
-                        {/*{selectedAim?.drivers.map((v, i) => (v.id !== selectedDriver?.id) ? <option value={v.id}>{v.name}</option> : '')}*/}
                         {team?.drivers.map((v, i) => (v.id !== selectedDriver?.id) ? <option value={v.id}>{v.name}</option> : '')}
                     </>
                 ),
             },
             {
-                label: 'What is the action idea you want to implement?',
+                label: 'What change do you want to make?',
                 name: 'idea',
                 as: 'textarea',
                 rows: 4,
@@ -75,8 +72,6 @@ export default function TeamChangeIdeas({team,
     // set the drivers for the team
     useEffect(() => {
         selectedDriver?.change_ideas.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date));
-        // const newChangeIdeas = selectedDriver?.change_ideas;
-        // newChangeIdeas?.sort((a, b) => new Date(b.modified_date) - new Date(a.modified_date)); // Sort it based on modified date
         setChangeIdeas(selectedDriver?.change_ideas); // Set the new drivers
     }, [selectedDriver, update]);
 
@@ -101,12 +96,6 @@ export default function TeamChangeIdeas({team,
         http.post('/api/change-idea/create/', {...formData, created_by:decodedToken.email})
             .then(response => {
                 // Adds the driver ( This is necessary because the selected aim might not be the aim you are adding a driver for)
-                // let driverIndex = selectedAim.drivers.findIndex((driver) => driver.id === response.data.driver);
-                // let driver = selectedAim.drivers[driverIndex];
-                // setSelectedDriver(driver);
-                // driver.change_ideas.unshift(response.data);
-                // setUpdate(u=>!u);
-
                 let driverIndex = team.drivers.findIndex((driver) => driver.id === response.data.driver);
                 let driver = team.drivers[driverIndex];
                 setSelectedDriver(driver);
@@ -130,7 +119,6 @@ export default function TeamChangeIdeas({team,
         selectedDriver={selectedDriver}
         setSelectedDriver={setSelectedDriver}
         handleClick={handleClick}
-        // selectedAim={selectedAim}
         setUpdate={setUpdate}
         />
 }
@@ -189,7 +177,6 @@ export function TeamChangeIdeasComponent({
                                             pages={pages}
                                             parent={selectedDriver}
                                             setParent={setSelectedDriver}
-                                            // gparent={selectedAim}
                                             gparent={team}
                                             parentKey={'drivers'}
                                             singleParentKey={'driver'}

@@ -118,7 +118,7 @@ export function PlanComponent({
                         top: show ? '0rem' : '1rem',
                     }}
                     >
-                    <Form.Label>What do you want to learn?</Form.Label>
+                    <Form.Label>What do you want to learn from the change?</Form.Label>
                     {/* input */}
                     <Form.Control 
                         as='textarea' 
@@ -142,7 +142,7 @@ export function PlanComponent({
                         top: show ? '0rem' : '1rem',
                     }}
                     >
-                    <Form.Label>What steps do you need to test?</Form.Label>
+                    <Form.Label>What steps do you need to test the change?</Form.Label>
                     {/* input */}
                     <Form.Control 
                         as='textarea' 
@@ -154,7 +154,7 @@ export function PlanComponent({
                         />
                 </Form.Group>
                 {/* Measure */}
-                <Form.Group 
+                {/*<Form.Group 
                     as={Card} 
                     body 
                     className='mb-3 rounded-4 border-0 shadow-sm fw-bold' 
@@ -167,7 +167,6 @@ export function PlanComponent({
                     }}
                     >
                     <Form.Label>What data are you going to measure?</Form.Label>
-                    {/* input */}
                     <Form.Control 
                         as='textarea' 
                         rows={4} 
@@ -176,7 +175,7 @@ export function PlanComponent({
                         value={formData?.measure}
                         onChange={handleChange}
                         />
-                </Form.Group>
+                </Form.Group>*/}
                 {/* Predictions */}
                 <Form.Group 
                     as={Card} 
