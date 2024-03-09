@@ -28,37 +28,25 @@ export default function TeamsPageCard({team, teams, setTeams, index}) {
             .catch(error => alert(error.message));
     }
 
-    function numAims() {
-        return team?.aims?.length;
-    }
-
     function numDrivers() {
-        let driverTotal = 0;
-
-        for (let i = 0; i < team?.aims?.length; i++) {
-            driverTotal += team.aims[i]?.drivers?.length;
-        }
-
-        return driverTotal;
+        return team?.drivers?.length;
     }
 
     function numChangeIdeas() {
-        let changeIdeaTotal = 0;
+        let changeIdeasTotal = 0;
 
-        for (let i = 0; i < team?.aims?.length; i++) {
-            for (let j = 0; j < team?.aims[i].drivers.length; j++) {
-                changeIdeaTotal += team?.aims[i].drivers[j].change_ideas.length;
-            }
+        for (let i = 0; i < team?.drivers?.length; i++) {
+            changeIdeasTotal += team.drivers[i]?.change_ideas?.length;
         }
 
-        return changeIdeaTotal;
+        return changeIdeasTotal;
     }
 
     return <TeamsPageCardComponent 
         handleSelectTeam={handleSelectTeam}
         handleDelete={handleDelete}
         team={team}
-        numAims={numAims}
+        // numAims={numAims}
         numDrivers={numDrivers}
         numChangeIdeas={numChangeIdeas}
         />
@@ -119,10 +107,6 @@ export function TeamsPageCardComponent({
                     <span className='m-auto ms-0 mt-0 me-2 h3 fw-bold overflow-auto h-100 w-100'>{team.name}</span>
                     {/* This is the additional info */}
                     <span className='m-auto me-0 mt-0'>
-                        {/* Aims */}
-                        <div className='text-nowrap text-right'>
-                            Aims: {numAims()}
-                        </div>
                         {/* Drivers */}
                         <div className='text-nowrap text-right'>
                             Drivers: {numDrivers()}

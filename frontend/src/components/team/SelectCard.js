@@ -63,7 +63,6 @@ export default function SelectCard({
                     setSelected(null);
                 }
                 options.splice(index, 1); // Removes it from the options list so that backend and frontend match
-                // const newOptions = [...options];
                 if (parent) { // This is to keep the parent item up to date with the deletion so it matches the backend
                     parent[optionKey] = options;
                 }

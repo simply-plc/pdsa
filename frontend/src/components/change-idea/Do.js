@@ -2,7 +2,7 @@ import {Form, Card, Button, Spinner} from 'react-bootstrap';
 import {useState, useEffect} from 'react';
 
 import http from '../../http';
-
+import CustomToolTip from '../general/CustomToolTip';
 
 
 export default function Do({cycle, changeIdea, setChangeIdea, stageColor, show}) {
@@ -84,6 +84,13 @@ export default function Do({cycle, changeIdea, setChangeIdea, stageColor, show})
             .catch(error => alert(error.message));
     }
 
+    // This is the tooltip body
+    const tooltipBody = (
+        <div className='text-muted'>
+            Process Data is data collected to verify that the process is implemented to fidelity.
+        </div>
+    );
+
     return <DoComponent 
         handleChange={handleChange} 
         show={show} 
@@ -94,12 +101,13 @@ export default function Do({cycle, changeIdea, setChangeIdea, stageColor, show})
         handleRevert={handleRevert}
         loading={loading}
         cycle={cycle}
+        tooltipBody={tooltipBody}
         />;
 }
 
 export function DoComponent({
     formData, handleChange, show, stageColor,
-    handleSave, loading, handleComplete, handleRevert, cycle,
+    handleSave, loading, handleComplete, handleRevert, cycle, tooltipBody
     }) {
     return (
         <>
@@ -128,7 +136,7 @@ export function DoComponent({
                         onChange={handleChange}
                         />
                 </Form.Group>
-                {/* Notes */}
+                {/* Process Measure */}
                 <Form.Group 
                     as={Card} 
                     body 
@@ -141,14 +149,21 @@ export function DoComponent({
                         top: show ? '0rem' : '1rem',
                     }}
                     >
-                    <Form.Label>Notes:</Form.Label>
+                    {/* Title */}
+                    <Form.Label>
+                        <span>Process Data</span>
+                        {/* Tool tip */}
+                        <CustomToolTip placement={'right'} body={tooltipBody}> 
+                            <span className='ms-2 bi-question-circle text-info' style={{fontSize:'.9rem'}} />
+                        </CustomToolTip>
+                    </Form.Label>
                     {/* input */}
                     <Form.Control 
                         as='textarea' 
                         rows={12} 
                         style={{resize:'none'}} 
-                        name='do_notes'
-                        value={formData?.do_notes}
+                        name='p_measure'
+                        value={formData?.p_measure}
                         onChange={handleChange}
                         />
                 </Form.Group>
