@@ -1,5 +1,5 @@
 import {Modal, Button, Form, FloatingLabel, InputGroup, Row, Col, CloseButton} from 'react-bootstrap';
-import {useId, useState} from 'react';
+import {useId, useState, useEffect} from 'react';
 
 import http from '../../http';
 
@@ -15,12 +15,13 @@ export default function CreateTeamModal({
     const [validated, setValidated] = useState(false); // Checks when to show error message for email validation
     const [required, setRequired] = useState(false); // Checks that team name is entered
     const [dne, setDne] = useState([]);
-    const [members, setMembers] = useState([]); // This is a list of members
+    const [members, setMembers] = useState([decodedToken.email]); // This is a list of members
     const [formData, setFormData] = useState({ // This is to control the form input
         name: '',
         share: '',
     });
 
+    useEffect(() => setMembers([decodedToken.email]), [decodedToken.email]);
     
     //// Handlers ////
 
@@ -62,7 +63,7 @@ export default function CreateTeamModal({
         });
 
         setDne([]); // resets users that don't exist
-        setMembers([]); // Resets memebers
+        setMembers([decodedToken.email]); // Resets memebers
         setShow(false); // Close modal
         setRequired(false);
     }
@@ -75,6 +76,9 @@ export default function CreateTeamModal({
 
         // check if name is inputted
         if (!isValidName(true)) {
+            setRequired(true);
+            return;
+        } else if (!isValidNumMembers(true)) {
             setRequired(true);
             return;
         }
@@ -137,6 +141,14 @@ export default function CreateTeamModal({
         setValidated(false);
     }
 
+    function isValidNumMembers(bypass=false) {
+        if (required || bypass) {
+            return members.length > 0;
+        }
+
+        return true;
+    }
+
     // Checks the validity of email
     function isValidEmail(bypass=false) { 
         // eslint-disable-next-line
@@ -174,6 +186,7 @@ export default function CreateTeamModal({
         members={members}
         decodedToken={decodedToken}
         dne={dne}
+        isValidNumMembers={isValidNumMembers}
         />
 }
 
@@ -184,7 +197,7 @@ export default function CreateTeamModal({
 
 export function TeamsPageComponent({
     handleCloseModal, handleSaveModal, handleChange, handleAddMember, handleRemoveMember, handleAddMemberEnter,
-    isValidEmail, isValidName,
+    isValidEmail, isValidName, isValidNumMembers,
     show, formData, formId, shareButtonId, members, decodedToken, dne,
     }) {
     return (
@@ -214,25 +227,26 @@ export function TeamsPageComponent({
                             </FloatingLabel>
                         </Form.Group>
                         {/* Sharing with people */}
-                        <InputGroup className="mb-3">
-                            <FloatingLabel controlId={useId()} label="Add Members" >
+                        <InputGroup className="mb-3" hasValidation>
                                 <Form.Control  
                                     placeholder="Add Members" 
                                     name='share' 
                                     value={formData.share}
                                     onChange={handleChange}
                                     onKeyDown={handleAddMemberEnter}
-                                    isInvalid={!isValidEmail()}
+                                    isInvalid={!isValidEmail() || !isValidNumMembers()}
                                     aria-label="Add Members" 
                                     aria-describedby={shareButtonId}
                                     />
-                                    {/* Check validity */}
-                                    <Form.Control.Feedback type='invalid'>Invalid email</Form.Control.Feedback>
-                            </FloatingLabel>
-                            {/* Add person */}
-                            <Button variant="outline-info" id={shareButtonId} onClick={handleAddMember}>
-                                <span className='bi-plus-lg fs-3' />
-                            </Button>
+                                    {/* Add person */}
+                                <Button variant="outline-info" id={shareButtonId} onClick={handleAddMember}>
+                                    <span className='bi-plus-lg fs-3' />
+                                </Button>
+                                {/* Check validity */}
+                                {
+                                    (!isValidEmail()) ? <Form.Control.Feedback type='invalid'>Invalid email</Form.Control.Feedback> :
+                                        <Form.Control.Feedback type='invalid'>Needs a minimum of one member</Form.Control.Feedback>
+                                }
                         </InputGroup>
                         {/* List of people who have access */}
                         <Form.Text >
@@ -255,12 +269,12 @@ export function TeamsPageComponent({
                                     </Row>
                                 ))}
                                 {/* This is for the user who is creating the team */} 
-                                <Row className='border-bottom p-3'>
+                                {/*<Row className='border-bottom p-3'>
                                     <Col md='9'>{decodedToken.email}</Col>
                                     <Col className='d-flex'>
                                         <div className='ms-auto'>(Owner)</div>
                                     </Col>
-                                </Row>
+                                </Row>*/}
                             </div>
                         </Form.Text>
                     </Form>

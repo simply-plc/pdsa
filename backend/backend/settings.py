@@ -34,6 +34,7 @@ import os
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://frontend-service-rksdw44qea-wl.a.run.app",
+    "https://simply-plc.com",
 ]
 
 REST_FRAMEWORK = {

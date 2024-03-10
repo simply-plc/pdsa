@@ -21,14 +21,6 @@ class UserTeamRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView
     serializer_class = UserTeamSerializer
     permission_classes = [IsTeamMember]
 
-# class AimCreateAPIView(generics.CreateAPIView):
-#     queryset = Aim.objects.all()
-#     serializer_class = AimSerializer
-
-# class AimRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Aim.objects.all()
-#     serializer_class = AimSerializer
-
 class DriverCreateAPIView(generics.CreateAPIView):
     queryset = Driver.objects.all()
     serializer_class = DriverSerializer
@@ -44,7 +36,7 @@ class ChangeIdeaCreateAPIView(generics.CreateAPIView):
 class ChangeIdeaRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = ChangeIdea.objects.all()
     serializer_class = ChangeIdeaSerializer
-    permission_classes = [IsOwnerReadyOnly]
+    permission_classes = [IsAdmin | IsOwnerReadyOnly]
 
 class PDSACreateAPIView(generics.CreateAPIView):
     queryset = PDSA.objects.all()

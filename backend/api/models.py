@@ -19,6 +19,8 @@ class TeamMembership(models.Model):
     user = models.ForeignKey('user.User', on_delete=models.CASCADE, related_name='team_memberships')
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='team_memberships')
     is_admin = models.BooleanField(default=False)
+    is_member = models.BooleanField(default=True)
+    is_viewer = models.BooleanField(default=False)
     joined_date = models.DateTimeField(default=timezone.now)
 
     class Meta:

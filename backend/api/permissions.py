@@ -9,8 +9,14 @@ class IsAdmin(permissions.BasePermission):
         # Check if the user is an admin of the team
         # print(request.data['team_memberships'])
         # return all([m['is_admin'] for m in request.data['team_memberships'] if m['user'] == request.user.email])
+        if hasattr(obj, 'driver'):
+            team = obj.driver.team
+        elif hasattr(obj, 'change_idea'):
+            team = obj.change_idea.driver.team
+        else:
+            team = obj
 
-        return obj.team_memberships.filter(user=request.user, is_admin=True).exists()
+        return team.team_memberships.filter(user=request.user, is_admin=True).exists()
 
 
 class IsOwnerReadyOnly(permissions.BasePermission):
