@@ -1,4 +1,4 @@
-import {Card, Button, Badge, Dropdown, Form} from 'react-bootstrap';
+import {Card, Badge, Dropdown, Form} from 'react-bootstrap';
 import {useState, useRef, useEffect} from 'react';
 
 import Hover from '../general/Hover';
