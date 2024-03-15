@@ -1,26 +1,52 @@
-import {Container} from 'react-bootstrap';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import {useState} from 'react';
 
+import HomeNavbar from './HomeNavbar';
+import Hero from './Hero';
+import Features from './Features';
 
-///////////////
-// Container //
-///////////////
+export default function HomePage() {    
 
-export default function HomePage() {
-    
-    return <HomePageComponent />;
-}
+    ///////////////
+    // Container //
+    ///////////////
 
-///////////////
-// Component //
-///////////////
+    const [shadow, setShadow] = useState(false);
 
-export function HomePageComponent() {
+    function handleWheel(event) {
+        setShadow(window.scrollY !== 0);
+    }
+
+    ///////////////
+    // Component //
+    ///////////////
+
+    const theme = createTheme({
+        palette: {
+            primary: {
+                main: '#20c997',
+            },
+            secondary: {
+                main: '#c92053',
+            },
+        },
+        typography: {
+            fontFamily: "'Nunito', sans-serif"
+        }
+    });
+
     return (
-        <Container className='d-flex justify-content-center align-items-center' style={{minHeight: '80vh'}}>
-            <Container>
-                <div className='text-center text-primary display-1 mb-3 fw-bold'><b>Simply PLC</b></div>
-                <div className='text-center text-secondary fw-bold'>Effective change through continuous learning and collaboration</div>
-            </Container>
-        </Container>
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            {/* Navbar */}
+            <HomeNavbar shadow={shadow} />
+            {/* Body */}
+            <Box sx={{ bgcolor: 'background.paper' }} onWheel={handleWheel}>
+                <Hero />
+                <Features />
+            </Box>
+        </ThemeProvider>
     );
 }
