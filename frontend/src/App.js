@@ -24,7 +24,7 @@ import CreateAccount from './components/landing-page/CreateAccount';
 const router = createBrowserRouter([
     // /
     {
-        path: '',
+        path: '/',
         element: <LandingPage />,
         children: [
             // // / default
@@ -62,6 +62,10 @@ const router = createBrowserRouter([
     {
         path: 'login',
         element: <Login />,
+    },
+    {
+        path: 'create-account',
+        element: <CreateAccount />,
     },
     // /user
     // {

@@ -1,226 +1,291 @@
-import {useState, useId} from 'react';
-import {useNavigate, Link} from 'react-router-dom';
-import {Card, Form, FloatingLabel, Button, Row, Container} from 'react-bootstrap';
-import axios from 'axios';
-
+import {useState, useEffect} from 'react';
+import {Link as RouterLink, useNavigate} from 'react-router-dom';
+import {jwtDecode} from 'jwt-decode';
 import http from '../../http';
 
-///////////////
-// Container //
-///////////////
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import Button from '@mui/material/Button';
+import Link from '@mui/material/Link';
+import CircularProgress from '@mui/material/CircularProgress';
+import Fade from '@mui/material/Fade';
 
-export default function CreateAccount() {
-    const navigate = useNavigate(); // Used to navigate to another webpage
-    const [validated, setValidated] = useState(false); // true if signup has been pressed to start validation
-    const [usedEmail, setUsedEmail] = useState(false);
-    // Form data to control the form
+import LandingNavbar from './LandingNavbar';
+
+
+
+export default function Login() {
+
+    ///////////////
+    // Container //
+    ///////////////
+
+    const navigate = useNavigate();
+    const [shadow, setShadow] = useState(false);
+    const [validated, setValidated] = useState(false);
+    const [incorrect, setIncorrect] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         email: '',
         password: '',
         confirm: '',
     });
-    // Checks jf password satisfies the requirements
-    const [validPassword, setValidPassword] = useState({
-        length: false,
-        uppercase: false,
-        lowercase: false,
-        number: false,
-        special: false,
-    })
 
-    // Handles user input (not radio)
+    useEffect(() => {
+        const accessToken = localStorage.getItem("access_token");
+
+        if (accessToken) {
+            try {
+                const decodedToken = jwtDecode(accessToken);
+                const currentTime = Date.now() / 1000;
+
+                // Check if token is expired. If not, redirect to user page
+                if (decodedToken.exp > currentTime) {
+                    navigate('/user');
+                } else { // if expired, then clear expired token
+                    localStorage.clear();
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }, [navigate]);
+
+    // ***HANDLERS*** //
+
+    function handleSubmit(event) {
+        // Prevent normal built in stuff
+        event.preventDefault();
+        event.stopPropagation();
+
+        // Check if error
+        if (isError()) {
+            setValidated(true);
+            return;
+        }
+
+        // Clear and provide loading
+        localStorage.clear();
+        setLoading(true);
+
+        // Login
+        http.post('/user/token/', formData,)
+            .then(response => {
+                // Store tokens in local storage
+                localStorage.setItem('access_token', response.data.access);
+                localStorage.setItem('refresh_token', response.data.refresh);
+                // Store access token in the header to be sent for authorization
+                http.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
+                // navigate to user
+                navigate('/user');
+            })
+            .catch(error => {
+                setLoading(false);
+                (error.response.status === 401) ? setIncorrect(true) : alert(error.message);
+            });
+    }
+
+    // Handles the user input 
     function handleChange({target}) {
         setFormData({
             ...formData,
             [target.name]: target.value,
         });
-        // Resets whether the email is used
-        setUsedEmail(false);
 
-        // Checks which requirements has been satisfied
-        if (target.name === 'password') {
-            setValidPassword({
-                length: target.value.length >= 8,
-                uppercase: /[A-Z]/.test(target.value),
-                lowercase: /[a-z]/.test(target.value),
-                number: /\d/.test(target.value),
-                special: /[^A-Za-z0-9]/.test(target.value),
-            })
-        }
+        // Resets the check for user existence when user starts typing
+        setValidated(false);
+        setIncorrect(false);
     }
 
-    function handleSignUp(event) {
-        // Default stuff and stop built-in behaviors
-        const target = event.target;
-        event.preventDefault();
-        event.stopPropagation();
-        setValidated(true); // Set to show that forms can start validation
+    // Set shadow on scroll
+    function handleWheel(event) {
+        setShadow(window.scrollY !== 0);
+    }
 
-        // Checks to see if all requirements are satisfied to create user
-        if (isValidEmail(true) && isMatching(true) && isValidPassword(true)) {
-            axios.post(`${http.defaults.baseURL}/user/create/`, { // Create the user and redirect to login
-                    email: target.email.value,
-                    password: target.password.value,
-                })
-                .then(response => navigate('/login')) // Direct to login after creation
-                .catch(error => setUsedEmail(true)); // Email is already used
-        }
+    // ***HELPER FUNCTIONS*** //
+
+    // Check if input is empty
+    function isEmpty(text, check=false) {
+        return (validated || check) && text === '';
     }
 
     // This function simply checks if the email is a valid email format
-    function isValidEmail(bypass=false) {
+    function isInvalidEmail(check=false) {
         // eslint-disable-next-line
         const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
-        if (validated || bypass) {
-            return emailRegex.test(formData.email);
-        }
-
-        return true;
+        return (validated || check) && !emailRegex.test(formData.email);
     }
 
-    // Checks if the password and confirmation is martching
-    function isMatching(bypass=false) {
-        if (validated || bypass) {
-            return formData.password === formData.confirm;
-        }
-
-        return true;
+    function isError() {
+        return isEmpty(formData.email, true) || isEmpty(formData.password, true) || isInvalidEmail(true);
     }
 
-    // Checks if it is a valid password
-    function isValidPassword(bypass=false) {
-        if (validated || bypass) {
-            for (let k in validPassword) {
-                if (!validPassword[k]) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        return true;
-    }
-
-    return <CreateAccountComponent 
-        handleSignUp={handleSignUp} 
-        validated={validated} 
-        formData={formData}
-        handleChange={handleChange}
-        isValidEmail={isValidEmail}
-        isMatching={isMatching}
-        validPassword={validPassword}
-        isValidPassword={isValidPassword}
-        usedEmail={usedEmail}
-        />;
-
-}
-///////////////
-// Component //
-///////////////
-
-export function CreateAccountComponent({
-    handleSignUp, handleChange,
-    validated, formData, validPassword, 
-    isValidEmail, isMatching, isValidPassword, usedEmail
-    }) {
+    ///////////////
+    // Component //
+    ///////////////
 
     return (
-        <Container className='d-flex justify-content-center align-items-center' style={{minHeight: '80vh'}}>
-            <Container> 
-                {/* Title */}
-                <Row className='text-center'>
-                    <h1 className='text-primary'><b>Simply PLC</b></h1>
-                </Row>
-                <Row className='justify-content-center'>
-                    {/* Card */}
-                    <Card className='shadow-lg border-0' style={{width: '30rem'}}>
-                        <Card.Body>
-                            <Card.Title className='text-center'>Create Account</Card.Title>
-                            {/* Form */}
-                            <Form onSubmit={handleSignUp} validated={false} noValidate>
-                                {/* Email */}
-                                <Form.Group className="mb-3" controlId={useId()}>
-                                    <FloatingLabel controlId={useId()} label="Enter Email">
-                                        <Form.Control 
-                                            required 
-                                            type="email" 
-                                            placeholder="Enter Email" 
-                                            name='email' 
+        <>
+            {/* Navbar */}
+            <LandingNavbar shadow={shadow} showNav={false} />
+            {/* Body */}
+            <Box sx={{height:'90vh', minHeight:'30rem'}}>
+                <Box 
+                    onWheel={handleWheel} 
+                    sx={{ 
+                        bgcolor:'background.paper',
+                        display:'flex',
+                        alignItems:'center',
+                        justifyContent:'center',
+                        height:'80%',
+                    }} 
+                    >
+                    <Fade in={true} easing='ease-in' timeout={.25*1000}>
+                        {/* Login */}
+                        <Stack spacing={3}>
+                            {/* Header Text */}
+                            <Stack spacing={2} sx={{maxWidth:'45rem'}}>
+                                {/* Title */}
+                                <Typography 
+                                    variant='h3' 
+                                    align='center'
+                                    sx={{
+                                        display:'flex', 
+                                        justifyContent:'center',
+                                        flexWrap:'wrap',
+                                    }}
+                                    >
+                                    Begin collaborating&nbsp;
+                                    <Typography 
+                                        variant='inherit' 
+                                        sx={{
+                                            color:'primary.main',
+                                            fontWeight:'bold'
+                                        }}
+                                        >simply
+                                    </Typography>
+                                </Typography>
+                                {/* Subtitle */}
+                                <Typography 
+                                    variant='h4'
+                                    align='center'
+                                    sx={{
+                                        color:'secondary.main'
+                                    }}
+                                    >
+                                    Sign up to get started
+                                </Typography>
+                            </Stack>
+                            {/* Login Inputs */}
+                            <form name='login' onSubmit={handleSubmit}>
+                                <Box
+                                    sx={{
+                                        display:'flex',
+                                        justifyContent:'center'
+                                    }}
+                                    >
+                                    <Stack spacing={3} sx={{width:'25rem'}}>
+                                        {/* Email */}
+                                        <TextField
+                                            label='Email'
+                                            name='email'
                                             value={formData.email}
                                             onChange={handleChange}
-                                            isInvalid={!isValidEmail() || usedEmail}
+                                            helperText={
+                                                (isEmpty(formData.email)) ? 'Email required' : 
+                                                (isInvalidEmail()) ? 'Invalid email' : ''
+                                            }
+                                            error={
+                                                isEmpty(formData.email) ||
+                                                isInvalidEmail() || 
+                                                incorrect
+                                            }
                                             />
-                                        {/* This just checks the reason for invalid email, then gives proper feedback */}
-                                        {(usedEmail) ? <Form.Control.Feedback type='invalid'>Email already used</Form.Control.Feedback> :
-                                                        <Form.Control.Feedback type='invalid'>Invalid email</Form.Control.Feedback>}
-                                    </FloatingLabel>
-                                </Form.Group>
-                                {/* Password */}
-                                <Form.Group className="mb-3" controlId={useId()}>
-                                    <FloatingLabel controlId={useId()} label="Enter Password">
-                                        <Form.Control 
-                                            required 
-                                            type="password" 
-                                            placeholder="Enter Password" 
-                                            name='password' 
+                                        {/* Password */}
+                                        <TextField
+                                            type='password'
+                                            label='Password'
+                                            name='password'
                                             value={formData.password}
                                             onChange={handleChange}
-                                            isInvalid={!isValidPassword()}
+                                            helperText={
+                                                (isEmpty(formData.password)) ? 'Password required' : 
+                                                (incorrect) ? 'Incorrect email or password' : ''
+                                            }
+                                            error={
+                                                isEmpty(formData.password) ||
+                                                incorrect
+                                            }
                                             />
-                                        <Form.Text className="text-muted">
-                                            {/* Show individual validation feedback */}
-                                            <div>Password must:</div>
-                                            <div className={validPassword.length ? 'text-success' : 'text-danger'}>
-                                                &bull; Be at least 8 characters long
-                                            </div>
-                                            <div className={validPassword.uppercase ? 'text-success' : 'text-danger'}>
-                                                &bull; Contain at least one uppercase letter
-                                            </div>
-                                            <div className={validPassword.lowercase ? 'text-success' : 'text-danger'}>
-                                                &bull; Contain at least one lowercase letter
-                                            </div>
-                                            <div className={validPassword.number ? 'text-success' : 'text-danger'}>
-                                                &bull; Contain at least one number
-                                            </div>
-                                            <div className={validPassword.special ? 'text-success' : 'text-danger'}>
-                                                &bull; Contain at least one special character
-                                            </div>
-                                        </Form.Text>
-                                    </FloatingLabel>
-                                </Form.Group>
-                                {/* Confirm Password */}
-                                <Form.Group className="mb-3" controlId={useId()}>
-                                    <FloatingLabel controlId={useId()} label="Confirm Password">
-                                        <Form.Control 
-                                            required 
-                                            type="password" 
-                                            placeholder="Confirm Password" 
-                                            name='confirm' 
+                                        {/* Confirm Password */}
+                                        <TextField
+                                            type='password'
+                                            label='Confirm Password'
+                                            name='confirm'
                                             value={formData.confirm}
                                             onChange={handleChange}
-                                            isInvalid={!isMatching()}
+                                            helperText={
+                                                (isEmpty(formData.password)) ? 'Password required' : 
+                                                (incorrect) ? 'Incorrect email or password' : ''
+                                            }
+                                            error={
+                                                isEmpty(formData.password) ||
+                                                incorrect
+                                            }
                                             />
-                                        <Form.Control.Feedback type='invalid'>Passwords do not match</Form.Control.Feedback>
-                                    </FloatingLabel>
-                                </Form.Group>
-                                {/* Buttons */}
-                                <div className='d-flex justify-content-center'>
-                                    <Button className='ms-2 me-' variant="primary" to='/login/' as={Link}>
-                                        Back
-                                    </Button>
-                                    <Button className='ms-2 me-2' variant="primary" type="submit">
-                                        Sign Up!
-                                    </Button>
-                                </div>
-                            </Form>
-                        </Card.Body>
-                    </Card>
-                </Row>
-            </Container>
-        </Container>
+                                        {/* Buttons */}
+                                        <Button 
+                                            variant='contained' 
+                                            fullWidth
+                                            type='submit'
+                                            >
+                                            {(loading) ? <CircularProgress color='inherit' size='1.55rem' /> : 'Sign up'}
+                                        </Button>
+                                        <Box
+                                            sx={{
+                                                display:'flex',
+                                                justifyContent:'space-between',
+                                            }}
+                                            >
+                                            <Link component={RouterLink} to='#' color='text.secondary'>Forgot password?</Link>
+                                            <Link component={RouterLink} to='#' color='text.secondary'>Create an account</Link>
+                                        </Box>
+                                    </Stack>
+                                </Box>
+                            </form>
+                        </Stack>
+                    </Fade>
+                </Box>
+
+                {/* Footer */}
+                <Box 
+                    sx={{
+                        bgcolor:'background.paper',
+                        display:'flex',
+                        alignItems:'end',
+                        justifyContent:'center',
+                        height:'20%',
+                    }}
+                    >
+                    <Typography variant="body2" color="text.secondary" align="center">
+                        {'Copyright © '}
+                        <Link component={RouterLink} color="inherit" to='/'>
+                            SimplyPLC
+                        </Link>{' '}
+                        {new Date().getFullYear()}
+                        {'.'}
+                    </Typography>
+                </Box>
+            </Box>
+        </>
     );
 }
+
+
+
 
 
 

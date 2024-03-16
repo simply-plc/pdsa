@@ -1,5 +1,5 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Link, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 import Box from '@mui/material/Box';
@@ -37,7 +37,7 @@ export default function LandingNavbar({shadow, showNav}) {
         <>
             {/* Menu */}
             <AppBar
-                position='fixed'
+                position='sticky'
                 color='inherit'
                 sx={{
                     boxShadow:(shadow) ? '0 2px 12px 0 rgba(36, 50, 66, 0.08)' : 0,
@@ -80,7 +80,7 @@ export default function LandingNavbar({shadow, showNav}) {
                                 spacing={2}
                                 >
                                 <Button
-                                    component={Link}
+                                    component={RouterLink}
                                     to='/login'
                                     sx={{
                                         color:'text.primary',
@@ -92,6 +92,8 @@ export default function LandingNavbar({shadow, showNav}) {
                                 <Button 
                                     variant='contained'
                                     disableElevation
+                                    component={RouterLink}
+                                    to='/create-account'
                                     sx={{
                                         fontWeight:'bold',
                                         borderRadius:4,
