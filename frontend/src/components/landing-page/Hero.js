@@ -40,10 +40,11 @@ export default function Hero() {
                             variant='h2' 
                             sx={{
                                 display:'flex', 
+                                justifyContent:'center'
                             }}
                             >
                             <Typography 
-                                variant='h2' 
+                                variant='inherit' 
                                 sx={{
                                     color:'primary.main',
                                     fontWeight:'bold'
@@ -73,9 +74,10 @@ export default function Hero() {
                         <Button
                             variant='contained'
                             size='large'
+                            disableElevation
                             sx={{
                                 borderRadius:4,
-                                fontWeight:'bold'
+                                fontWeight:'bold',
                             }}
                             >
                             Get Started
