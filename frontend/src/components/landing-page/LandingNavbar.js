@@ -1,5 +1,5 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
 
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 import Box from '@mui/material/Box';
@@ -23,9 +23,13 @@ export default function LandingNavbar({shadow, showNav}) {
     ///////////////
 
     const navigate = useNavigate();
+    const location = useLocation();
 
     function handleClickLogo() {
-        navigate('/', {replace:true});
+        if (location.pathname !== '/') {
+            navigate('/');
+        }
+        
         window.scrollTo(0,0);
     }
 

@@ -43,7 +43,7 @@ export default function Login() {
 
                 // Check if token is expired. If not, redirect to user page
                 if (decodedToken.exp > currentTime) {
-                    navigate('/user');
+                    navigate('/user', {replace:true});
                 } else { // if expired, then clear expired token
                     localStorage.clear();
                 }
@@ -128,139 +128,164 @@ export default function Login() {
 
     return (
         <>
-            {/* Navbar */}
-            <LandingNavbar shadow={shadow} showNav={false} />
-            {/* Body */}
-            <Box sx={{height:'90vh', minHeight:'30rem'}}>
-                <Box 
-                    onWheel={handleWheel} 
-                    sx={{ 
-                        bgcolor:'background.paper',
-                        display:'flex',
-                        alignItems:'center',
-                        justifyContent:'center',
-                        height:'80%',
-                    }} 
-                    >
-                    <Fade in={true} easing='ease-in' timeout={.25*1000}>
-                        {/* Login */}
-                        <Stack spacing={3}>
-                            {/* Header Text */}
-                            <Stack spacing={2} sx={{maxWidth:'45rem'}}>
-                                {/* Title */}
-                                <Typography 
-                                    variant='h3' 
-                                    align='center'
-                                    sx={{
-                                        display:'flex', 
-                                        justifyContent:'center',
-                                        flexWrap:'wrap'
-                                    }}
-                                    >
-                                    Welcome to&nbsp;
-                                    <Typography 
-                                        variant='inherit' 
-                                        sx={{
-                                            color:'primary.main',
-                                            fontWeight:'bold'
-                                        }}
-                                        >SimplyPLC
-                                    </Typography>
-                                </Typography>
-                                {/* Subtitle */}
-                                <Typography 
-                                    variant='h4'
-                                    align='center'
-                                    sx={{
-                                        color:'secondary.main'
-                                    }}
-                                    >
-                                    Login to get started
-                                </Typography>
-                            </Stack>
-                            {/* Login Inputs */}
-                            <form name='login' onSubmit={handleSubmit}>
-                                <Box
-                                    sx={{
-                                        display:'flex',
-                                        justifyContent:'center'
-                                    }}
-                                    >
-                                    <Stack spacing={3} sx={{width:'25rem'}}>
-                                        {/* Email */}
-                                        <TextField
-                                            label='Email'
-                                            name='email'
-                                            value={formData.email}
-                                            onChange={handleChange}
-                                            helperText={
-                                                (isEmpty(formData.email)) ? 'Email required' : 
-                                                (isInvalidEmail()) ? 'Invalid email' : ''
-                                            }
-                                            error={
-                                                isEmpty(formData.email) ||
-                                                isInvalidEmail() || 
-                                                incorrect
-                                            }
-                                            />
-                                        {/* Password */}
-                                        <TextField
-                                            type='password'
-                                            label='Password'
-                                            name='password'
-                                            value={formData.password}
-                                            onChange={handleChange}
-                                            helperText={
-                                                (isEmpty(formData.password)) ? 'Password required' : 
-                                                (incorrect) ? 'Incorrect email or password' : ''
-                                            }
-                                            error={
-                                                isEmpty(formData.password) ||
-                                                incorrect
-                                            }
-                                            />
-                                        {/* Buttons */}
-                                        <Button 
-                                            variant='contained' 
-                                            fullWidth
-                                            type='submit'
-                                            >
-                                            {(loading) ? <CircularProgress color='inherit' size='1.55rem' /> : 'Log in'}
-                                        </Button>
-                                        <Box
-                                            sx={{
-                                                display:'flex',
-                                                justifyContent:'space-between',
-                                            }}
-                                            >
-                                            <Link component={RouterLink} to='#' color='text.secondary'>Forgot password?</Link>
-                                            <Link component={RouterLink} to='/create-account' color='text.secondary'>Create an account</Link>
-                                        </Box>
-                                    </Stack>
-                                </Box>
-                            </form>
-                        </Stack>
-                    </Fade>
-                </Box>
-
-                {/* Footer */}
+            <Box
+                sx={{
+                    display:'flex',
+                    flexDirection:'column',
+                    height:'100vh',
+                }}
+                >
+                {/* Navbar */}
+                <LandingNavbar shadow={shadow} showNav={false} />
+                {/* Body */}
                 <Box 
                     sx={{
-                        bgcolor:'background.paper',
                         display:'flex',
-                        alignItems:'end',
-                        justifyContent:'center',
-                        height:'20%',
+                        flexDirection:'column',
+                        flexGrow:1
                     }}
                     >
-                    <Typography variant="body2" color="text.secondary" align="center">
-                        {'Copyright © '}
-                        <Link component={RouterLink} color="inherit" to='/'>
-                            SimplyPLC
-                        </Link>{' '}
-                        {new Date().getFullYear()}
-                        {'.'}
-                    </Typography>
+                    <Box 
+                        onWheel={handleWheel} 
+                        sx={{ 
+                            bgcolor:'background.paper',
+                            display:'flex',
+                            alignItems:'center',
+                            justifyContent:'center',
+                            flexGrow:1,
+                        }} 
+                        >
+                        <Fade in={true} easing='ease-in' timeout={.25*1000}>
+                            {/* Login */}
+                            <Stack spacing={3}>
+                                {/* Header Text */}
+                                <Stack spacing={2} sx={{maxWidth:'45rem'}}>
+                                    {/* Title */}
+                                    <Typography 
+                                        variant='h3' 
+                                        align='center'
+                                        sx={{
+                                            display:'flex', 
+                                            justifyContent:'center',
+                                            flexWrap:'wrap'
+                                        }}
+                                        >
+                                        Welcome to&nbsp;
+                                        <Typography 
+                                            variant='inherit' 
+                                            sx={{
+                                                color:'primary.main',
+                                                fontWeight:'bold'
+                                            }}
+                                            >SimplyPLC
+                                        </Typography>
+                                    </Typography>
+                                    {/* Subtitle */}
+                                    <Typography 
+                                        variant='h4'
+                                        align='center'
+                                        sx={{
+                                            color:'secondary.main'
+                                        }}
+                                        >
+                                        Login to get started
+                                    </Typography>
+                                </Stack>
+                                {/* Login Inputs */}
+                                <form name='login' onSubmit={handleSubmit}>
+                                    <Box
+                                        sx={{
+                                            display:'flex',
+                                            justifyContent:'center'
+                                        }}
+                                        >
+                                        <Stack spacing={3} sx={{width:'25rem'}}>
+                                            {/* Email */}
+                                            <TextField
+                                                label='Email'
+                                                name='email'
+                                                value={formData.email}
+                                                onChange={handleChange}
+                                                helperText={
+                                                    (isEmpty(formData.email)) ? 'Email required' : 
+                                                    (isInvalidEmail()) ? 'Invalid email' : ''
+                                                }
+                                                error={
+                                                    isEmpty(formData.email) ||
+                                                    isInvalidEmail() || 
+                                                    incorrect
+                                                }
+                                                InputProps={{sx:{borderRadius:3}}}
+                                                />
+                                            {/* Password */}
+                                            <TextField
+                                                type='password'
+                                                label='Password'
+                                                name='password'
+                                                value={formData.password}
+                                                onChange={handleChange}
+                                                helperText={
+                                                    (isEmpty(formData.password)) ? 'Password required' : 
+                                                    (incorrect) ? 'Incorrect email or password' : ''
+                                                }
+                                                error={
+                                                    isEmpty(formData.password) ||
+                                                    incorrect
+                                                }
+                                                InputProps={{sx:{borderRadius:3}}}
+                                                />
+                                            {/* Buttons */}
+                                            <Button 
+                                                variant='contained' 
+                                                fullWidth
+                                                type='submit'
+                                                disableElevation
+                                                disabled={loading}
+                                                sx={{
+                                                    borderRadius:3,
+                                                    fontWeight:'bold',
+                                                    '&:disabled': {
+                                                        backgroundColor:'primary.main',
+                                                    }
+                                                }}
+                                                >
+                                                {(loading) ? <CircularProgress color='inherit' size='1.55rem' /> : 'Log in'}
+                                            </Button>
+                                            <Box
+                                                sx={{
+                                                    display:'flex',
+                                                    justifyContent:'space-between',
+                                                }}
+                                                >
+                                                <Link component={RouterLink} to='#' color='text.secondary'>Forgot password?</Link>
+                                                <Link component={RouterLink} to='/create-account' color='text.secondary'>Create an account</Link>
+                                            </Box>
+                                        </Stack>
+                                    </Box>
+                                </form>
+                            </Stack>
+                        </Fade>
+                    </Box>
+
+                    {/* Footer */}
+                    <Box 
+                        sx={{
+                            bgcolor:'background.paper',
+                            display:'flex',
+                            alignItems:'end',
+                            justifyContent:'center',
+                            marginBottom:'1rem'
+                        }}
+                        >
+                        <Typography variant="body2" color="text.secondary" align="center">
+                            {'Copyright © '}
+                            <Link component={RouterLink} color="inherit" to='/'>
+                                SimplyPLC
+                            </Link>{' '}
+                            {new Date().getFullYear()}
+                            {'.'}
+                        </Typography>
+                    </Box>
                 </Box>
             </Box>
         </>

@@ -26,7 +26,7 @@ export default function CreateAccount() {
         lowercase: false,
         number: false,
         special: false,
-    })
+    });
 
     // Handles user input (not radio)
     function handleChange({target}) {
