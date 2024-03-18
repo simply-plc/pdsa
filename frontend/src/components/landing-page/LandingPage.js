@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 
 import Box from '@mui/material/Box';
 
@@ -27,7 +27,11 @@ export default function LandingPage() {
             {/* Navbar */}
             <LandingNavbar shadow={shadow} showNav={true} />
             {/* Body */}
-            <Box sx={{ bgcolor: 'background.paper' }} onWheel={handleWheel}>
+            <Box 
+                sx={{ 
+                    bgcolor: 'background.paper',
+                }} 
+                onWheel={handleWheel}>
                 <Hero />
                 <Features />
             </Box>

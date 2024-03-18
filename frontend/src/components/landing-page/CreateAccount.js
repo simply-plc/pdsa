@@ -17,7 +17,7 @@ import LandingNavbar from './LandingNavbar';
 
 
 
-export default function Login() {
+export default function CreateAccount() {
 
     ///////////////
     // Container //
@@ -51,7 +51,7 @@ export default function Login() {
 
                 // Check if token is expired. If not, redirect to user page
                 if (decodedToken.exp > currentTime) {
-                    navigate('/user', {replace:true});
+                    navigate('/0', {replace:true});
                 } else { // if expired, then clear expired token
                     localStorage.clear();
                 }
@@ -158,6 +158,7 @@ export default function Login() {
                     display:'flex',
                     flexDirection:'column',
                     height:'100vh',
+                    backgroundColor:'background.paper'
                 }}
                 >
                 {/* Navbar */}

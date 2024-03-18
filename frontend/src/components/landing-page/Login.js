@@ -43,7 +43,7 @@ export default function Login() {
 
                 // Check if token is expired. If not, redirect to user page
                 if (decodedToken.exp > currentTime) {
-                    navigate('/user', {replace:true});
+                    navigate('/0', {replace:true});
                 } else { // if expired, then clear expired token
                     localStorage.clear();
                 }
@@ -79,7 +79,7 @@ export default function Login() {
                 // Store access token in the header to be sent for authorization
                 http.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
                 // navigate to user
-                navigate('/user');
+                navigate('/0');
             })
             .catch(error => {
                 setLoading(false);
@@ -133,6 +133,7 @@ export default function Login() {
                     display:'flex',
                     flexDirection:'column',
                     height:'100vh',
+                    backgroundColor:'background.paper'
                 }}
                 >
                 {/* Navbar */}
