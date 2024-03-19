@@ -8,6 +8,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import LandingPage from './components/landing-page/LandingPage';
 import Login from './components/landing-page/Login';
 import CreateAccount from './components/landing-page/CreateAccount';
+import UserPage from './components/user/UserPage';
 
 // User team
 // import UserNavbar from './components/user/UserNavbar';
@@ -70,7 +71,7 @@ const router = createBrowserRouter([
     // /0
     {
         path: '0',
-        element: <div>hi</div>,
+        element: <UserPage />,
     },
 
     // /user
