@@ -1,4 +1,6 @@
 import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
+import http from '../../http';
+import {useState} from 'react';
 
 
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
@@ -9,16 +11,21 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-import MenuItem from '@mui/material/MenuItem';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
+import TextField from '@mui/material/TextField';
+import SearchIcon from '@mui/icons-material/Search';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 
 
 
-export default function UserNavbar() {
+export default function UserNavbar({handleToggleSidebar, decodedToken}) {
 
     ///////////////
     // Container //
@@ -26,13 +33,35 @@ export default function UserNavbar() {
 
     const navigate = useNavigate();
     const location = useLocation();
+    const [anchorEl, setAnchorEl] = useState();
+    const open = Boolean(anchorEl);
 
     function handleClickLogo() {
-        if (location.pathname !== '/') {
-            navigate('/');
+        if (location.pathname !== '/0') {
+            navigate('/0');
         }
 
         window.scrollTo({top: 0, left: 0, behavior: 'smooth' });
+    }
+
+    function handleLogout() {
+        http.post('/user/logout/', {
+                refresh_token:localStorage.getItem('refresh_token')
+            }, 
+        )
+        .then(response => {
+            localStorage.clear();
+            navigate('/login');
+        })
+        .catch(error => console.log(error.message));
+    }
+
+    function handleOpenMenu({currentTarget}) {
+        setAnchorEl(currentTarget);
+    }
+
+    function handleCloseMenu() {
+        setAnchorEl(null);
     }
 
     ///////////////
@@ -43,10 +72,12 @@ export default function UserNavbar() {
     return (
         <>
             <AppBar
-                position='sticky'
-                color='secondary'
+                position='fixed'
+                color='delftBlue'
                 sx={{
                     boxShadow:0,
+                    width:'100vw',
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
                 }}
                 >
                 <Container 
@@ -68,46 +99,89 @@ export default function UserNavbar() {
                             spacing={1}
                             sx={{
                                 marginLeft:1,
+                                width:'33%'
                             }}
                             >
-                            {/* Logo */}
-                            <Box
-                                onClick={handleClickLogo}
+                            {/* Start */}
+                            <Stack
+                                direction='row'
+                                spacing={1}
                                 sx={{
                                     display:'flex',
-                                    cursor:'pointer',
+                                    alignItems:'center',
                                 }}
                                 >
-                                <BarChartRoundedIcon color='primary'  />
+                                {/* Menu toggle */}
+                                <IconButton onClick={handleToggleSidebar} color='primary' >
+                                    <MenuRoundedIcon sx={{color:'delftBlue.contrastText'}} />
+                                </IconButton>
+                                {/* Logo */}
                                 <Box
+                                    onClick={handleClickLogo}
                                     sx={{
-                                        fontWeight:'bold'
+                                        display:'flex',
+                                        cursor:'pointer',
                                     }}
                                     >
-                                    SimplyPLC
+                                    <BarChartRoundedIcon color='primary'  />
+                                    <Box
+                                        sx={{
+                                            fontWeight:'bold'
+                                        }}
+                                        >
+                                        SimplyPLC
+                                    </Box>
                                 </Box>
-                            </Box>
+                            </Stack>
                         </Stack>
+                        {/* Search */}
+                        <Box>
+                            <TextField
+                                sx={{
+                                    "& fieldset": { 
+                                        border: 'none',
+                                    },
+                                }}
+                                InputProps={{
+                                    sx:{
+                                        backgroundColor:'delftBlue.light',
+                                        borderRadius:999,
+                                        height:'2rem',
+                                        width:'30rem',
+                                        color:'delftBlue.contrastText'
+                                    },
+                                    startAdornment: <SearchIcon fontSize='small' sx={{color:'background.paper'}} />
+                                }}
+                                placeholder='Search'
+                                />
+                        </Box>
                         {/* End */}
                         <Stack
                             direction='row'
                             spacing={1}
                             sx={{
                                 marginRight:1,
+                                justifyContent:'right',
+                                width:'33%',
                             }}
                             >
                             <Box>
-                                <Avatar 
-                                    sx={{
-                                        backgroundColor:'primary.main',
-                                        width:'2rem',
-                                        height:'2rem',
-                                        fontSize:'1rem',
-                                        color:'text.primary'
-                                    }}
-                                    >
-                                    de
-                                </Avatar>
+                                <IconButton color='primary' onClick={handleOpenMenu}>
+                                    <Avatar 
+                                        sx={{
+                                            backgroundColor:'primary.main',
+                                            width:'2rem',
+                                            height:'2rem',
+                                            fontSize:'1rem',
+                                            color:'text.primary'
+                                        }}
+                                        >
+                                        {decodedToken.email?.substring(0,2)}
+                                    </Avatar>
+                                </IconButton>
+                                <Menu open={open} anchorEl={anchorEl} onClose={handleCloseMenu} >
+                                    <MenuItem onClick={handleLogout} >Log out</MenuItem>
+                                </Menu>
                             </Box>
                         </Stack>
                     </Toolbar>

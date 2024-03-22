@@ -72,6 +72,27 @@ const router = createBrowserRouter([
     {
         path: '0',
         element: <UserPage />,
+        children: [
+        {
+            index: true,
+            element: <Navigate to='home' />,
+        },
+        // /0/home
+        {
+            path: 'home',
+            element: <div>home</div>,
+        },
+        // /0/tasks
+        {
+            path: 'tasks',
+            element: <div>tasks</div>,
+        },
+        // /0/inbox
+        {
+            path: 'inbox',
+            element: <div>inbox</div>,
+        },
+        ]
     },
 
     // /user
@@ -118,8 +139,13 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+    let theme = createTheme({
+        typography: {
+            fontFamily: "'Nunito', sans-serif"
+        },
+    });
 
-    const theme = createTheme({
+    theme = createTheme(theme, {
         palette: {
             primary: {
                 main: '#20c997',
@@ -127,9 +153,12 @@ function App() {
             secondary: {
                 main: '#c92053',
             },
-        },
-        typography: {
-            fontFamily: "'Nunito', sans-serif"
+            delftBlue: theme.palette.augmentColor({
+                color: {
+                    main: '#1D3354',
+                },
+                name: 'delftBlue',
+            }),
         }
     });
 
