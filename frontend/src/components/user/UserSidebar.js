@@ -15,13 +15,15 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import TaskAltRoundedIcon from '@mui/icons-material/TaskAltRounded';
-import NotificationsNoneRoundedIcon from '@mui/icons-material/NotificationsNoneRounded';
+import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
+import InsightsRoundedIcon from '@mui/icons-material/InsightsRounded';
+import ListItemText from '@mui/material/ListItemText';
+import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
+import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
+import TuneRoundedIcon from '@mui/icons-material/TuneRounded';
 
 
-
-
-
-export default function UserSidebar({open}) {
+export default function UserSidebar({open, team}) {
 
     ///////////////
     // Container //
@@ -45,13 +47,13 @@ export default function UserSidebar({open}) {
 
     const CustomListButton = useMemo(() => styled(ListItemButton)(({ theme }) => ({
         '&.Mui-selected':{
-            backgroundColor:theme.palette.delftBlue.light,
+            backgroundColor:theme.palette.custom2.light,
             '&:hover':{
-                backgroundColor:theme.palette.delftBlue.dark,
+                backgroundColor:theme.palette.custom2.dark,
             }
         },
         '&:hover':{
-            backgroundColor:theme.palette.delftBlue.dark,
+            backgroundColor:theme.palette.custom2.dark,
         }
     })), []);
 
@@ -69,7 +71,7 @@ export default function UserSidebar({open}) {
                     sx:{
                         width:open ? '15rem' : '3rem',
                         transition: 'width ease .3s',
-                        bgcolor: 'delftBlue.main',
+                        bgcolor: 'custom2.main',
                         overflow:'hidden',
                     }
                 }}
@@ -81,14 +83,17 @@ export default function UserSidebar({open}) {
                     sx={{
                         width:'15rem',
                         overflow:'hidden',
+                        flexGrow:1,
+                        display:'flex',
+                        flexDirection:'column',
                     }}
                     >
                     {/* Divider */}
-                    <Divider sx={{backgroundColor:'delftBlue.light'}} />
+                    <Divider sx={{backgroundColor:'custom2.light'}} />
                     {/* Main Nav */}
                     <List
                         sx={{
-                            color:'delftBlue.contrastText',
+                            color:'custom2.contrastText',
                             overflowX:'hidden',
                             overflowY:'auto',
                         }}
@@ -128,24 +133,152 @@ export default function UserSidebar({open}) {
                         {/* Something else */}
                         <CustomListButton
                             component={RouterLink}
-                            to='inbox'
+                            to='plans'
                             disableGutters
                             selected={selected === 2}
                             onClick={()=>setSelected(2)}
                             >
-                            <NotificationsNoneRoundedIcon 
+                            <DashboardRoundedIcon 
                                 sx={{
                                     marginLeft:'.75rem',
                                     marginRight:'.75rem',
                                 }}
                                 /> 
-                            Inbox
+                            Plans
                         </CustomListButton>
-                        {/* Divider */}
-                        <Divider sx={{backgroundColor:'delftBlue.light'}} />
+                    </List>
+                    {/* Divider */}
+                    <Divider sx={{backgroundColor:'custom2.light'}} />
+                    {/* Team Nav */}
+                    <List
+                        sx={{
+                            color:'custom2.contrastText',
+                            overflowX:'hidden',
+                            overflowY:'auto',
+                            flexGrow:1,
+                        }}
+                        >
+                        {
+                            (team) ? 
+                            <>
+                                {/* Something else */}
+                                <CustomListButton
+                                    component={RouterLink}
+                                    to={`${team.id}/insights`}
+                                    disableGutters
+                                    selected={selected === 3}
+                                    onClick={()=>setSelected(3)}
+                                    >
+                                    <InsightsRoundedIcon 
+                                        sx={{
+                                            marginLeft:'.75rem',
+                                            marginRight:'.75rem',
+                                        }}
+                                        /> 
+                                    Insights
+                                </CustomListButton>
+                            </> :
+                            <ListItemText
+                                primaryTypographyProps={{
+                                    align:'center',
+                                    sx:{
+                                        color:'custom2.light'
+                                    }
+                                }}
+                                >
+                                Select a team first.
+                            </ListItemText>
+                        }
+                    </List>
+                    {/* Team Nav Footer */}
+                    <List
+                        sx={{
+                            color:'custom2.contrastText',
+                            overflowX:'hidden',
+                            overflowY:'auto',
+                        }}
+                        >
+                        {
+                            (team) && 
+                            <>
+                                {/* Something else */}
+                                <CustomListButton
+                                    component={RouterLink}
+                                    // to='plans'
+                                    disableGutters
+                                    selected={selected === 'settings'}
+                                    onClick={()=>setSelected('settings')}
+                                    >
+                                    <TuneRoundedIcon 
+                                        sx={{
+                                            marginLeft:'.75rem',
+                                            marginRight:'.75rem',
+                                        }}
+                                        /> 
+                                    Team Settings
+                                </CustomListButton>
+                            </>
+                        }
+                    </List>
+                    {/* Divider */}
+                    <Divider sx={{backgroundColor:'custom2.light'}} />
+                    {/* Footer */}
+                    <List
+                        sx={{
+                            color:'custom2.contrastText',
+                            overflowX:'hidden',
+                            overflowY:'auto',
+                        }}
+                        >
+                        {/* Something else */}
+                        <CustomListButton
+                            component={RouterLink}
+                            to='choose-team'
+                            disableGutters
+                            selected={selected === 'team'}
+                            onClick={()=>setSelected('team')}
+                            >
+                            {
+                                (team) ?
+                                <>
+                                    <GroupsRoundedIcon 
+                                        sx={{
+                                            marginLeft:'.75rem',
+                                            marginRight:'.75rem',
+                                            color:'primary.main'
+                                        }}
+                                        /> 
+                                    {team.name}
+                                </> :
+                                <>
+                                    <GroupsRoundedIcon 
+                                        sx={{
+                                            marginLeft:'.75rem',
+                                            marginRight:'.75rem',
+                                            color:'primary.main'
+                                        }}
+                                        /> 
+                                    Choose a team
+                                </>
+                            }
+                            <KeyboardArrowRightRoundedIcon
+                                sx={{
+                                    marginLeft:'auto',
+                                    marginRight:'.75rem',
+                                }}                                        
+                                />
+                        </CustomListButton>
                     </List>
                 </Box>
             </Drawer>
         </>
     );
 }
+
+
+
+
+
+
+
+

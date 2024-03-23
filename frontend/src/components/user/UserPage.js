@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {useNavigate, Outlet} from 'react-router-dom';
+import {useNavigate, Outlet, useLocation} from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import {jwtDecode} from 'jwt-decode';
@@ -20,7 +20,9 @@ export default function UserPage() {
     const [open, setOpen] = useState(true); // for toggling sidebar
     const [decodedToken, setDecodedToken] = useState({}); // Sets decoded token
     const navigate = useNavigate();
-
+    const location = useLocation();
+    const [team, setTeam] = useState();
+    
     // Checks if the user is logged in
     useEffect(() => {
         const accessToken = localStorage.getItem("access_token"); // See if there is an access token
@@ -39,7 +41,7 @@ export default function UserPage() {
                 navigate('/login');
             }
         }
-    }, [navigate]);
+    }, [navigate, location]);
 
     // Handle toggling the sidebar
     function handleToggleSidebar() {
@@ -61,7 +63,7 @@ export default function UserPage() {
                 }}
                 >
                 {/* Sidebar */}
-                <UserSidebar open={open} />
+                <UserSidebar open={open} team={team} />
                 {/* Content */}
                 <Box
                     sx={{
@@ -71,7 +73,7 @@ export default function UserPage() {
                     {/* Spacing */}
                     <Toolbar variant='dense' />
                     {/* Content */}
-                    <Outlet />
+                    <Outlet context={[decodedToken, setTeam]} />
                 </Box>
             </Box>
         </>

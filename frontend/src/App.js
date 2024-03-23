@@ -8,15 +8,19 @@ import CssBaseline from '@mui/material/CssBaseline';
 import LandingPage from './components/landing-page/LandingPage';
 import Login from './components/landing-page/Login';
 import CreateAccount from './components/landing-page/CreateAccount';
-import UserPage from './components/user/UserPage';
 
-// User team
+// User
+import ChooseTeam from './components/user/ChooseTeam';
+import UserPage from './components/user/UserPage';
 // import UserNavbar from './components/user/UserNavbar';
 // import TeamsPage from './components/user/TeamsPage';
 // import OverviewPage from './components/user/OverviewPage';
 // import ChangeIdeasPage from './components/user/ChangeIdeasPage';
 // import SettingsPage from './components/user/SettingsPage';
 // import UserTeam from './components/team/UserTeam';
+
+// Team
+import Insights from './components/team/Insights';
 
 // User change idea
 // import UserChangeIdea from './components/change-idea/UserChangeIdea'
@@ -87,10 +91,25 @@ const router = createBrowserRouter([
             path: 'tasks',
             element: <div>tasks</div>,
         },
-        // /0/inbox
+        // /0/plans
         {
-            path: 'inbox',
-            element: <div>inbox</div>,
+            path: 'plans',
+            element: <div>plans</div>,
+        },
+        // /0/team-id
+        {
+            path: ':id',
+            children: [
+                {
+                    path:'insights',
+                    element:<Insights />,
+                },
+            ]
+        },
+        // /0/choose-team
+        {
+            path: 'choose-team',
+            element: <ChooseTeam />,
         },
         ]
     },
@@ -140,12 +159,6 @@ const router = createBrowserRouter([
 
 function App() {
     let theme = createTheme({
-        typography: {
-            fontFamily: "'Nunito', sans-serif"
-        },
-    });
-
-    theme = createTheme(theme, {
         palette: {
             primary: {
                 main: '#20c997',
@@ -153,12 +166,26 @@ function App() {
             secondary: {
                 main: '#c92053',
             },
-            delftBlue: theme.palette.augmentColor({
+        },
+        typography: {
+            fontFamily: "'Nunito', sans-serif"
+        },
+    });
+
+    theme = createTheme(theme, {
+        palette: {
+            custom1: theme.palette.augmentColor({
                 color: {
                     main: '#1D3354',
                 },
-                name: 'delftBlue',
+                name: 'delft blue',
             }),
+            custom2: theme.palette.augmentColor({
+                color:{
+                    main:'#424651'
+                },
+                name: 'carribean current',
+            })
         }
     });
 

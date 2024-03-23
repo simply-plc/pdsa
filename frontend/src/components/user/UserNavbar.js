@@ -73,7 +73,7 @@ export default function UserNavbar({handleToggleSidebar, decodedToken}) {
         <>
             <AppBar
                 position='fixed'
-                color='delftBlue'
+                color='custom2'
                 sx={{
                     boxShadow:0,
                     width:'100vw',
@@ -113,7 +113,7 @@ export default function UserNavbar({handleToggleSidebar, decodedToken}) {
                                 >
                                 {/* Menu toggle */}
                                 <IconButton onClick={handleToggleSidebar} color='primary' >
-                                    <MenuRoundedIcon sx={{color:'delftBlue.contrastText'}} />
+                                    <MenuRoundedIcon sx={{color:'custom2.contrastText'}} />
                                 </IconButton>
                                 {/* Logo */}
                                 <Box
@@ -144,11 +144,11 @@ export default function UserNavbar({handleToggleSidebar, decodedToken}) {
                                 }}
                                 InputProps={{
                                     sx:{
-                                        backgroundColor:'delftBlue.light',
+                                        backgroundColor:'custom2.light',
                                         borderRadius:999,
                                         height:'2rem',
                                         width:'30rem',
-                                        color:'delftBlue.contrastText'
+                                        color:'custom2.contrastText'
                                     },
                                     startAdornment: <SearchIcon fontSize='small' sx={{color:'background.paper'}} />
                                 }}
