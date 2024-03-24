@@ -14,6 +14,11 @@ import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import PersonAddRoundedIcon from '@mui/icons-material/PersonAddRounded';
 import Divider from '@mui/material/Divider';
+import MenuItem from '@mui/material/MenuItem';
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
+
 
 
 
@@ -25,7 +30,11 @@ export default function CreateTeamDialog({open, setOpen, decodedToken}) {
 
     const [validated, setValidated] = useState(false); // validate if submit button is clicked
     const [shareValidation, setShareValidation] = useState(false); // check for validation of adding members
-    const [members, setMembers] = useState([decodedToken.email]); // This is a list of members
+    const [members, setMembers] = useState([{ // This is a list of members
+        user:decodedToken.email,
+        is_admin:true,
+        role:'owner',
+    }]); 
     const [formData, setFormData] = useState({ // This is to control the form input
         name: '',
         share: '',
@@ -37,7 +46,11 @@ export default function CreateTeamDialog({open, setOpen, decodedToken}) {
         setOpen(false);
         // Reset everything
         setValidated(false);
-        setMembers([decodedToken.email]);
+        setMembers([{ // This is a list of members
+            user:decodedToken.email,
+            is_admin:true,
+            role:'owner',
+        }]); 
         setFormData({
             name: '',
             share: '',
@@ -62,7 +75,7 @@ export default function CreateTeamDialog({open, setOpen, decodedToken}) {
         event.stopPropagation();
 
         // Check if error
-        if (isEmpty(formData.name, true)) {
+        if (isEmpty(formData.name, true) || isNotMinimumMembers(true)) {
             setValidated(true);
             return;
         }
@@ -77,13 +90,46 @@ export default function CreateTeamDialog({open, setOpen, decodedToken}) {
         } else {
             // adds member
             setMembers(m => {
-                m.unshift(formData.share);
+                m.unshift({
+                    user:formData.share,
+                    is_admin:false,
+                    role:'member',
+                });
+
                 return m;
             });
             // resets the input
             setFormData({
                 ...formData,
                 share: '',
+            });
+        }
+    }
+
+    // Adds member on hitting enter
+    function handleAddMemberEnter(event) {
+        if (event.key === "Enter") {
+            // Stops default and propagation
+            event.preventDefault();
+            event.stopPropagation();
+            // Adds member
+            handleAddMember();
+        }
+    }
+
+    function handleChangeAccess({target}) {
+        // remove access if delete
+        if (target.value === 'delete') {
+            setMembers(m => {
+                m.splice(target.name, 1);
+                return [...m];
+            });
+        } else { // Else edit access
+            setMembers(m => {
+                const memberObj = m[target.name]
+                memberObj.is_admin = target.value === 'admin';
+                memberObj.role = target.value;
+                return [...m];
             });
         }
     }
@@ -97,7 +143,12 @@ export default function CreateTeamDialog({open, setOpen, decodedToken}) {
 
     // Check if member already exists
     function isExisting(check=false) {
-        return (shareValidation || check) && members.includes(formData.share);
+        return (shareValidation || check) && members.filter((v, i) => v.user === formData.share).length > 0;
+    }
+
+    // Checks that at least one user is on the team
+    function isNotMinimumMembers(check=false) {
+        return (validated || check) && !(members.length > 0);
     }
 
     // Submission //
@@ -158,13 +209,16 @@ export default function CreateTeamDialog({open, setOpen, decodedToken}) {
                                 name='share'
                                 value={formData.share}
                                 onChange={handleChange}
+                                onKeyDown={handleAddMemberEnter}
                                 helperText={
                                     (isInvalidEmail()) ? 'Invalid email' : 
-                                    (isExisting()) ? 'Member already added' : ''
+                                    (isExisting()) ? 'Member already added' : 
+                                    (isNotMinimumMembers()) ? 'Need a minimum of one member' : ''
                                 }
                                 error={
                                     isInvalidEmail() ||
-                                    isExisting()
+                                    isExisting() ||
+                                    isNotMinimumMembers()
                                 }
                                 InputProps={{
                                     sx:{
@@ -187,30 +241,105 @@ export default function CreateTeamDialog({open, setOpen, decodedToken}) {
                                 {/* scrollable List of members */}
                                 <Box
                                     sx={{
-                                        maxHeight:'8rem',
+                                        maxHeight:'12rem',
                                         overflow:'auto',
                                     }}
                                     >
                                     {
+                                        // members list
                                         members.map((v, i) => (
                                             <>
+                                                {/* Divider */}
                                                 <Divider sx={{
                                                     marginTop:'.5rem',
                                                     marginBottom:'.5rem',
                                                     }} 
                                                     />
+                                                {/* Content */}
                                                 <Box
                                                     sx={{
                                                         paddingLeft:'1rem',
                                                         paddingRight:'1rem',
                                                         display:'flex',
+                                                        alignItems:'center',
                                                     }}
                                                     >
-                                                    <Box>
-                                                        {v}
+                                                    {/* Email */}
+                                                    <Box
+                                                        sx={{
+                                                            flexGrow:1,
+                                                        }}>
+                                                        {v.user}
                                                     </Box>
                                                     {/* Access Menu */}
-                                                    {/*///////////////////////////////////////////////////////////////////*/}
+                                                    <Box>
+                                                        <TextField
+                                                            disabled={i === members.length-1}
+                                                            select
+                                                            name={i}
+                                                            value={v.role}
+                                                            size='small'
+                                                            variant='outlined'
+                                                            onChange={handleChangeAccess}
+                                                            SelectProps={{
+                                                                renderValue:select => select.charAt(0).toUpperCase() + select.slice(1),
+                                                                MenuProps:{
+                                                                    sx: {
+                                                                        "&& .Mui-selected": {
+                                                                            backgroundColor: "background.default"
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }}
+                                                            >
+                                                            {/* Admin */}
+                                                            <MenuItem disableGutters dense key='admin' value='admin' 
+                                                                sx={{display:'flex', alignItems:'center'}}
+                                                                >
+                                                                {/* Icon */}
+                                                                <Box
+                                                                    sx={{
+                                                                        display:'flex',
+                                                                        width:'2.5rem',
+                                                                        justifyContent:'center',
+                                                                    }}
+                                                                    >
+                                                                    {v.role==='admin' && <CheckRoundedIcon 
+                                                                        sx={{
+                                                                            color:'primary.main',
+                                                                        }} 
+                                                                        />
+                                                                    }
+                                                                </Box>
+                                                                {/* Word */}
+                                                                <Box>Admin</Box>
+                                                            </MenuItem>
+                                                            {/* Member */}
+                                                            <MenuItem disableGutters dense key='member' value='member' divider
+                                                                sx={{display:'flex', alignItems:'center'}}
+                                                                >
+                                                                {/* Icon */}
+                                                                <Box
+                                                                    sx={{
+                                                                        display:'flex',
+                                                                        width:'2.5rem',
+                                                                        justifyContent:'center',
+                                                                    }}
+                                                                    >
+                                                                    {v.role==='member' && <CheckRoundedIcon 
+                                                                        sx={{
+                                                                            color:'primary.main',
+                                                                        }} 
+                                                                        />
+                                                                    }
+                                                                </Box>
+                                                                {/* Word */}
+                                                                <Box>Member</Box>
+                                                            </MenuItem>
+                                                            {/* Remove Access */}
+                                                            <MenuItem dense key='delete' value='delete'>Remove Access</MenuItem>
+                                                        </TextField>
+                                                    </Box>
                                                 </Box>
                                             </>
                                         ))

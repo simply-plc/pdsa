@@ -168,7 +168,10 @@ function App() {
             },
         },
         typography: {
-            fontFamily: "'Nunito', sans-serif"
+            fontFamily: "'Nunito', sans-serif",
+            button: {
+                textTransform:'none',
+            },
         },
     });
 
