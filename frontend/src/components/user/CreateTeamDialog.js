@@ -1,4 +1,5 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
+import http from '../../http';
 
 
 import Button from '@mui/material/Button';
@@ -6,23 +7,21 @@ import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import PersonAddRoundedIcon from '@mui/icons-material/PersonAddRounded';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
+import Avatar from '@mui/material/Avatar';
 
 
 
 
-export default function CreateTeamDialog({open, setOpen, decodedToken}) {
+
+export default function CreateTeamDialog({open, setOpen, decodedToken, teams, setTeams}) {
 
     ///////////////
     // Conatiner //
@@ -30,6 +29,7 @@ export default function CreateTeamDialog({open, setOpen, decodedToken}) {
 
     const [validated, setValidated] = useState(false); // validate if submit button is clicked
     const [shareValidation, setShareValidation] = useState(false); // check for validation of adding members
+    const [dne, setDne] = useState([]); // Users that don't exist when creating team
     const [members, setMembers] = useState([{ // This is a list of members
         user:decodedToken.email,
         is_admin:true,
@@ -40,11 +40,19 @@ export default function CreateTeamDialog({open, setOpen, decodedToken}) {
         share: '',
     });
 
+    useEffect(() => {
+        setMembers([{ // This is a list of members
+            user:decodedToken.email,
+            is_admin:true,
+            role:'owner',
+        }]);
+    }, [decodedToken.user]);
 
     // Close dialog
     function handleClose() {
         setOpen(false);
         // Reset everything
+        setDne([]);
         setValidated(false);
         setMembers([{ // This is a list of members
             user:decodedToken.email,
@@ -80,7 +88,34 @@ export default function CreateTeamDialog({open, setOpen, decodedToken}) {
             return;
         }
 
-        handleClose();
+        const data = {
+            name: formData.name,
+            team_memberships: members,
+        }
+
+        // Post the data
+        http.post('/api/team/create/', data,)
+            .then(response => {
+                setTeams([response.data, ...teams]); // Add the new teams to teams page (new team is hardcoded to be always last)
+                handleClose();
+            })
+            .catch(error => {
+                    if (error.response?.status === 400) { // User doesn't exist
+                        let failedEmails = error.response.data.team_memberships.filter((v, i) => 'user' in v); // Get and filter users that got the error
+                        // get the actual emails that failed
+                        failedEmails = failedEmails.map((v, i) => {
+                            return v.user[0].match(/Object with email=([^\s]+) does not exist./)[1];
+                        });
+
+                        // set them up so validation can be displayed
+                        setDne(failedEmails);
+                    } else {
+                        alert(error.message); // Any other errors, alert
+                    }
+                }
+            );
+
+        
     }
 
     function handleAddMember() {
@@ -89,15 +124,15 @@ export default function CreateTeamDialog({open, setOpen, decodedToken}) {
             setShareValidation(true);
         } else {
             // adds member
-            setMembers(m => {
-                m.unshift({
+            setMembers(m => [
+                {
                     user:formData.share,
                     is_admin:false,
                     role:'member',
-                });
+                },
+                ...m
+            ]);
 
-                return m;
-            });
             // resets the input
             setFormData({
                 ...formData,
@@ -113,6 +148,7 @@ export default function CreateTeamDialog({open, setOpen, decodedToken}) {
             event.preventDefault();
             event.stopPropagation();
             // Adds member
+
             handleAddMember();
         }
     }
@@ -162,6 +198,7 @@ export default function CreateTeamDialog({open, setOpen, decodedToken}) {
     ///////////////
 
 
+
     return (
         <>
             <Dialog
@@ -188,7 +225,7 @@ export default function CreateTeamDialog({open, setOpen, decodedToken}) {
                         }}
                         >
                         {/* Inputs */}
-                        <Stack spacing={2} sx={{width:'25rem'}}>
+                        <Stack spacing={2} sx={{width:'30rem'}}>
                             {/* Team Name */}
                             <TextField
                                 label='Name'
@@ -264,13 +301,32 @@ export default function CreateTeamDialog({open, setOpen, decodedToken}) {
                                                         alignItems:'center',
                                                     }}
                                                     >
-                                                    {/* Email */}
-                                                    <Box
+                                                    {/* Avatar */}
+                                                    <Avatar
                                                         sx={{
-                                                            flexGrow:1,
-                                                        }}>
+                                                            marginRight:'1rem',
+                                                            backgroundColor: 'primary.main',
+                                                        }}
+                                                        >
+                                                        {v.user?.substring(0,2)}
+                                                    </Avatar>
+                                                    {/* Email */}
+                                                    <Box sx={{flexGrow:1, overflow:'scroll'}}>
                                                         {v.user}
                                                     </Box>
+                                                    {/* Error message */}
+                                                    {(dne.includes(v.user)) ? 
+                                                        <Box 
+                                                            sx={{
+                                                                color:'error.main',
+                                                                marginRight:'1rem',
+                                                                textAlign:'right',
+                                                                minWidth:'6.5rem'
+                                                            }}
+                                                            >
+                                                            User doesn't exist
+                                                        </Box> : ''
+                                                    }
                                                     {/* Access Menu */}
                                                     <Box>
                                                         <TextField

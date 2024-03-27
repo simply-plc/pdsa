@@ -1,19 +1,17 @@
-import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
-import {useState, useMemo} from 'react';
+import { Link as RouterLink, useLocation } from "react-router-dom";
+import {useState, useMemo, useEffect} from 'react';
 
 import { styled } from '@mui/material/styles';
 
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
+import Toolbar from '@mui/material/Toolbar';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
+import ListItem from '@mui/material/ListItem';
 import TaskAltRoundedIcon from '@mui/icons-material/TaskAltRounded';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import InsightsRoundedIcon from '@mui/icons-material/InsightsRounded';
@@ -21,6 +19,16 @@ import ListItemText from '@mui/material/ListItemText';
 import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 import TuneRoundedIcon from '@mui/icons-material/TuneRounded';
+import Typography from '@mui/material/Typography';
+import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
+import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import VerticalSplitRoundedIcon from '@mui/icons-material/VerticalSplitRounded';
+import ModelTrainingRoundedIcon from '@mui/icons-material/ModelTrainingRounded';
+import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
+import Avatar from '@mui/material/Avatar';
+import Badge from '@mui/material/Badge';
+
 
 
 export default function UserSidebar({open, team}) {
@@ -29,17 +37,13 @@ export default function UserSidebar({open, team}) {
     // Container //
     ///////////////
 
-    const navigate = useNavigate();
     const location = useLocation();
-    const [selected, setSelected] = useState(0);
+    const currentPathList = location.pathname.split('/')
+    const [selected, setSelected] = useState(currentPathList[2]);
 
-    function handleClickLogo() {
-        if (location.pathname !== '/') {
-            navigate('/');
-        }
-
-        window.scrollTo({top: 0, left: 0, behavior: 'smooth' });
-    }
+    useEffect(() => {
+        setSelected(currentPathList[2]);
+    }, [currentPathList]);
 
     ///////////////
     // Component //
@@ -96,6 +100,7 @@ export default function UserSidebar({open, team}) {
                             color:'custom2.contrastText',
                             overflowX:'hidden',
                             overflowY:'auto',
+                            paddingBottom:0,
                         }}
                         >
                         {/* Home */}
@@ -103,10 +108,9 @@ export default function UserSidebar({open, team}) {
                             component={RouterLink}
                             to='home'
                             disableGutters
-                            selected={selected === 0}
-                            onClick={()=>setSelected(0)}
+                            selected={selected === 'home'}
                             >
-                            <HomeRoundedIcon 
+                            <HomeRoundedIcon
                                 sx={{
                                     marginLeft:'.75rem',
                                     marginRight:'.75rem',
@@ -114,41 +118,49 @@ export default function UserSidebar({open, team}) {
                                 /> 
                             Home
                         </CustomListButton>
-                        {/* Something else */}
+                        {/* Inbox */}
                         <CustomListButton
                             component={RouterLink}
-                            to='tasks'
+                            to='inbox'
                             disableGutters
-                            selected={selected === 1}
-                            onClick={()=>setSelected(1)}
+                            selected={selected === 'inbox'}
                             >
-                            <TaskAltRoundedIcon 
+                            <EmailRoundedIcon 
                                 sx={{
                                     marginLeft:'.75rem',
                                     marginRight:'.75rem',
                                 }}
                                 /> 
-                            Tasks
+                            Inbox
                         </CustomListButton>
-                        {/* Something else */}
+                        {/* Library */}
                         <CustomListButton
                             component={RouterLink}
-                            to='plans'
+                            to='library'
                             disableGutters
-                            selected={selected === 2}
-                            onClick={()=>setSelected(2)}
+                            selected={selected === 'library'}
                             >
-                            <DashboardRoundedIcon 
+                            <CategoryRoundedIcon 
                                 sx={{
                                     marginLeft:'.75rem',
                                     marginRight:'.75rem',
                                 }}
                                 /> 
-                            Plans
+                            Library
                         </CustomListButton>
                     </List>
                     {/* Divider */}
-                    <Divider sx={{backgroundColor:'custom2.light'}} />
+                    <Divider 
+                        sx={{
+                            color:'custom2.light', 
+                            fontSize:'.75rem',
+                            "&::before, &::after": {
+                                borderColor: "custom2.light",
+                            },
+                        }}
+                        >
+                        Team
+                    </Divider>
                     {/* Team Nav */}
                     <List
                         sx={{
@@ -156,27 +168,140 @@ export default function UserSidebar({open, team}) {
                             overflowX:'hidden',
                             overflowY:'auto',
                             flexGrow:1,
+                            paddingTop:0,
                         }}
                         >
                         {
                             (team) ? 
                             <>
-                                {/* Something else */}
+                                {/* Dashboard */}
                                 <CustomListButton
                                     component={RouterLink}
-                                    to={`${team.id}/insights`}
+                                    to={`${team.id}/dashboard`}
                                     disableGutters
-                                    selected={selected === 3}
-                                    onClick={()=>setSelected(3)}
+                                    selected={selected === `${team.id}` && currentPathList[3] === 'dashboard'}
                                     >
-                                    <InsightsRoundedIcon 
+                                    <DashboardRoundedIcon 
                                         sx={{
                                             marginLeft:'.75rem',
                                             marginRight:'.75rem',
                                         }}
                                         /> 
-                                    Insights
+                                    Dashboard
                                 </CustomListButton>
+                                {/* Goal */}
+                                <CustomListButton
+                                    component={RouterLink}
+                                    to={`${team.id}/goals`}
+                                    disableGutters
+                                    selected={selected === `${team.id}` && currentPathList[3] === 'goals'}
+                                    >
+                                    <TaskAltRoundedIcon 
+                                        sx={{
+                                            marginLeft:'.75rem',
+                                            marginRight:'.75rem',
+                                        }}
+                                        /> 
+                                    Goals
+                                </CustomListButton>
+                                {/* Plans */}
+                                <CustomListButton
+                                    component={RouterLink}
+                                    to={`${team.id}/plans`}
+                                    disableGutters
+                                    selected={selected === `${team.id}` && currentPathList[3] === 'plans'}
+                                    >
+                                    <VerticalSplitRoundedIcon 
+                                        sx={{
+                                            marginLeft:'.75rem',
+                                            marginRight:'.75rem',
+                                        }}
+                                        /> 
+                                    Plans
+                                </CustomListButton>
+                                {/* Projects */}
+                                <CustomListButton
+                                    component={RouterLink}
+                                    to={`${team.id}/projects`}
+                                    disableGutters
+                                    selected={selected === `${team.id}` && currentPathList[3] === 'projects'}
+                                    >
+                                    <ModelTrainingRoundedIcon 
+                                        sx={{
+                                            marginLeft:'.75rem',
+                                            marginRight:'.75rem',
+                                        }}
+                                        /> 
+                                    Projects
+                                </CustomListButton>
+                                {/* Members */}
+                                {(open) &&
+                                    <>
+                                        <ListItem 
+                                            sx={{
+                                                flexDirection:'column', 
+                                                paddingTop:0, 
+                                                paddingBottom:0,
+                                            }}
+                                            >
+                                            {team.get_members.split('\n').map((v, i) => (
+                                                <Button 
+                                                    fullWidth 
+                                                    size='small'
+                                                    sx={{
+                                                        display:'flex',
+                                                        alignItems:'center',
+                                                        justifyContent:'left',
+                                                        borderRadius:4,
+                                                    }}
+                                                    >
+                                                    {/* active icon */}
+                                                    <Badge
+                                                        variant='dot'
+                                                        overlap='circular'
+                                                        badgeContent=" "
+                                                        // color='error'
+                                                        anchorOrigin={{
+                                                            vertical: 'bottom',
+                                                            horizontal:'right',
+                                                        }}
+                                                        sx={{
+                                                            marginRight:'.5rem',
+                                                            '& .MuiBadge-badge': {
+                                                                width:'.75rem',
+                                                                height:'.75rem',
+                                                                top:'.4rem',
+                                                                left:'.4rem',
+                                                                borderRadius:9999,
+                                                                border: '2px solid',
+                                                                borderColor:'custom2.main',
+                                                                backgroundColor:'grey.400' // Changes the active to busy to inactive
+                                                            }
+                                                        }}
+                                                        >
+                                                        {/* Avatar */}
+                                                        <Avatar 
+                                                            sx={{
+                                                                width:'1.25rem',
+                                                                height:'1.25rem',
+                                                                fontSize:'.75rem', 
+                                                                backgroundColor:'primary.main', // Avatar background color
+                                                                color:'primary.contrastText'
+                                                            }} 
+                                                            >
+                                                            {v.substring(0,2)}
+                                                        </Avatar>
+                                                    </Badge>
+                                                    {/* email */}
+                                                    <Typography noWrap sx={{color:'grey.400'}}>
+                                                        {v}
+                                                    }
+                                                    </Typography>
+                                                </Button>
+                                            ))}
+                                        </ListItem>
+                                    </>
+                                }
                             </> :
                             <ListItemText
                                 primaryTypographyProps={{
@@ -201,13 +326,12 @@ export default function UserSidebar({open, team}) {
                         {
                             (team) && 
                             <>
-                                {/* Something else */}
+                                {/* Settings */}
                                 <CustomListButton
                                     component={RouterLink}
-                                    // to='plans'
+                                    to={`${team.id}/settings`}
                                     disableGutters
-                                    selected={selected === 'settings'}
-                                    onClick={()=>setSelected('settings')}
+                                    selected={selected === `${team.id}` && currentPathList[3] === 'settings'}
                                     >
                                     <TuneRoundedIcon 
                                         sx={{
@@ -230,13 +354,12 @@ export default function UserSidebar({open, team}) {
                             overflowY:'auto',
                         }}
                         >
-                        {/* Something else */}
+                        {/* Create team */}
                         <CustomListButton
                             component={RouterLink}
                             to='choose-team'
                             disableGutters
-                            selected={selected === 'team'}
-                            onClick={()=>setSelected('team')}
+                            selected={selected === 'choose-team'}
                             >
                             {
                                 (team) ?
@@ -248,7 +371,9 @@ export default function UserSidebar({open, team}) {
                                             color:'primary.main'
                                         }}
                                         /> 
-                                    {team.name}
+                                    <Typography noWrap>
+                                        {team.name}
+                                    </Typography>
                                 </> :
                                 <>
                                     <GroupsRoundedIcon 

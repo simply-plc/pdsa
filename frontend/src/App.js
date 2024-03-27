@@ -20,7 +20,7 @@ import UserPage from './components/user/UserPage';
 // import UserTeam from './components/team/UserTeam';
 
 // Team
-import Insights from './components/team/Insights';
+import Dashboard from './components/team/Dashboard';
 
 // User change idea
 // import UserChangeIdea from './components/change-idea/UserChangeIdea'
@@ -77,40 +77,64 @@ const router = createBrowserRouter([
         path: '0',
         element: <UserPage />,
         children: [
-        {
-            index: true,
-            element: <Navigate to='home' />,
-        },
-        // /0/home
-        {
-            path: 'home',
-            element: <div>home</div>,
-        },
-        // /0/tasks
-        {
-            path: 'tasks',
-            element: <div>tasks</div>,
-        },
-        // /0/plans
-        {
-            path: 'plans',
-            element: <div>plans</div>,
-        },
-        // /0/team-id
-        {
-            path: ':id',
-            children: [
-                {
-                    path:'insights',
-                    element:<Insights />,
-                },
-            ]
-        },
-        // /0/choose-team
-        {
-            path: 'choose-team',
-            element: <ChooseTeam />,
-        },
+            {
+                index: true,
+                element: <Navigate to='home' />,
+            },
+            // /0/home
+            {
+                path: 'home',
+                element: <div>home</div>,
+            },
+            // /0/tasks
+            {
+                path: 'inbox',
+                element: <div>inbox</div>,
+            },
+            // /0/plans
+            {
+                path: 'library',
+                element: <div>library</div>,
+            },
+            // /0/:id
+            {
+                path: ':id',
+                children: [
+                    {
+                        index: true,
+                        element: <Navigate to='dashboard' />,
+                    },
+                    {
+                        path:'dashboard',
+                        element:<Dashboard />,
+                    },
+                    // /:id/goals
+                    {
+                        path: 'goals',
+                        element: <div>goals</div>,
+                    },
+                    // /:id/plans
+                    {
+                        path: 'plans',
+                        element: <div>plans --> we will have a list of plans. clicking a plan will leave a breadcrumb so someone could nav back</div>,
+                    },
+                    // /:id/projects
+                    {
+                        path: 'projects',
+                        element: <div>projects --> we will have a list of plans. clicking a project will leave a breadcrumb so someone could nav back</div>,
+                    },
+                    // /:id/settings
+                    {
+                        path: 'settings',
+                        element: <div>settings</div>,
+                    },
+                ]
+            },
+            // /0/choose-team
+            {
+                path: 'choose-team',
+                element: <ChooseTeam />,
+            },
         ]
     },
 

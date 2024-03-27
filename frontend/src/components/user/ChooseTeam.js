@@ -6,9 +6,10 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+
 
 
 import TeamCard from './TeamCard';
@@ -39,8 +40,6 @@ export default function ChooseTeam() {
                     return new Date(firstJoin) - new Date(secondJoin);
                 });
                 setTeams(teamsData);
-                //  TEMAMPPMPAMP @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       delete        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-                setTeam(teamsData[0]); // Temp until you create the actual team selection stuff
             }) 
             .catch(error => {
                 // alert(error.message);
@@ -96,13 +95,20 @@ export default function ChooseTeam() {
                     marginTop:'1rem',
                 }}
                 >
-                <Stack
-                    direction='row'
+                <Grid
+                    container
                     spacing={2}
+                    justifyContent='center'
+                    alignItems='center'
+                    sx={{
+                        marginBottom:'2rem'
+                    }}
                     >
                     {
                         teams?.map((v, i) => (
-                            <TeamCard team={v} index={i} teams={teams} setTeams={setTeams} />
+                            <Grid item>
+                                <TeamCard team={v} setTeam={setTeam} />
+                            </Grid>
                         )) ||
                         <Box
                             sx={{
@@ -114,10 +120,10 @@ export default function ChooseTeam() {
                             <CircularProgress />
                         </Box>
                     }
-                </Stack>
+                </Grid>
             </Container>
             {/* Dialog Create Team */}
-            <CreateTeamDialog open={open} setOpen={setOpen} decodedToken={decodedToken} />
+            <CreateTeamDialog open={open} setOpen={setOpen} decodedToken={decodedToken} teams={teams} setTeams={setTeams} />
         </>
     );
 }

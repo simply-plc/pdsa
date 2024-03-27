@@ -1,4 +1,4 @@
-import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import http from '../../http';
 import {useState} from 'react';
 
@@ -7,13 +7,8 @@ import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
-import Drawer from '@mui/material/Drawer';
-import MenuIcon from '@mui/icons-material/Menu';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
@@ -37,8 +32,8 @@ export default function UserNavbar({handleToggleSidebar, decodedToken}) {
     const open = Boolean(anchorEl);
 
     function handleClickLogo() {
-        if (location.pathname !== '/0') {
-            navigate('/0');
+        if (location.pathname !== '/0/home') {
+            navigate('/0/home');
         }
 
         window.scrollTo({top: 0, left: 0, behavior: 'smooth' });
@@ -166,6 +161,7 @@ export default function UserNavbar({handleToggleSidebar, decodedToken}) {
                             }}
                             >
                             <Box>
+                                {/* Avatar button */}
                                 <IconButton color='primary' onClick={handleOpenMenu}>
                                     <Avatar 
                                         sx={{
@@ -179,7 +175,9 @@ export default function UserNavbar({handleToggleSidebar, decodedToken}) {
                                         {decodedToken.email?.substring(0,2)}
                                     </Avatar>
                                 </IconButton>
+                                {/* menu */}
                                 <Menu open={open} anchorEl={anchorEl} onClose={handleCloseMenu} >
+                                    {/* Log out */}
                                     <MenuItem onClick={handleLogout} >Log out</MenuItem>
                                 </Menu>
                             </Box>
