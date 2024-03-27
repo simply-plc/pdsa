@@ -84,17 +84,17 @@ const router = createBrowserRouter([
             // /0/home
             {
                 path: 'home',
-                element: <div>home this is where all the tasks are</div>,
+                element: <div>home --> this is where all the tasks are</div>,
             },
             // /0/tasks
             {
                 path: 'inbox',
-                element: <div>inbox wait should the chat be something that pops up instead of having an actual inbox thing?</div>,
+                element: <div>inbox --> wait should the chat be something that pops up instead of having an actual inbox thing?</div>,
             },
             // /0/plans
             {
                 path: 'library',
-                element: <div>library</div>,
+                element: <div>library --> this should have tabs of lesson plans and projects and a discover?</div>,
             },
             // /0/:id
             {
@@ -111,7 +111,7 @@ const router = createBrowserRouter([
                     // /:id/goals
                     {
                         path: 'goals',
-                        element: <div>goals</div>,
+                        element: <div>goals --> this is where the driver diagrams and aims are defined</div>,
                     },
                     // /:id/plans
                     {
