@@ -84,12 +84,12 @@ const router = createBrowserRouter([
             // /0/home
             {
                 path: 'home',
-                element: <div>home</div>,
+                element: <div>home this is where all the tasks are</div>,
             },
             // /0/tasks
             {
                 path: 'inbox',
-                element: <div>inbox</div>,
+                element: <div>inbox wait should the chat be something that pops up instead of having an actual inbox thing?</div>,
             },
             // /0/plans
             {
