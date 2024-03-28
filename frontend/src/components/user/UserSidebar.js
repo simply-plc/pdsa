@@ -234,6 +234,18 @@ export default function UserSidebar({open, team}) {
                                         /> 
                                     Projects
                                 </CustomListButton>
+                                {/* Divider */}
+                                <Divider 
+                                    sx={{
+                                        color:'custom2.light', 
+                                        fontSize:'.75rem',
+                                        "&::before, &::after": {
+                                            borderColor: "custom2.light",
+                                        },
+                                    }}
+                                    >
+                                    Members
+                                </Divider>
                                 {/* Members */}
                                 {(open) &&
                                     <>

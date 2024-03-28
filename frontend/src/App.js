@@ -21,6 +21,7 @@ import UserPage from './components/user/UserPage';
 
 // Team
 import Dashboard from './components/team/Dashboard';
+import Goals from './components/team/Goals';
 
 // User change idea
 // import UserChangeIdea from './components/change-idea/UserChangeIdea'
@@ -111,7 +112,7 @@ const router = createBrowserRouter([
                     // /:id/goals
                     {
                         path: 'goals',
-                        element: <div>goals --> this is where the driver diagrams and aims are defined</div>,
+                        element: <Goals />,
                     },
                     // /:id/plans
                     {
@@ -121,7 +122,7 @@ const router = createBrowserRouter([
                     // /:id/projects
                     {
                         path: 'projects',
-                        element: <div>projects --> we will have a list of plans. clicking a project will leave a breadcrumb so someone could nav back</div>,
+                        element: <div>projects --> we will have a list of projects. clicking a project will leave a breadcrumb so someone could nav back</div>,
                     },
                     // /:id/settings
                     {
