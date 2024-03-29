@@ -28,6 +28,7 @@ import ModelTrainingRoundedIcon from '@mui/icons-material/ModelTrainingRounded';
 import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
+import Tooltip from '@mui/material/Tooltip';
 
 
 
@@ -110,12 +111,14 @@ export default function UserSidebar({open, team}) {
                             disableGutters
                             selected={selected === 'home'}
                             >
-                            <HomeRoundedIcon
-                                sx={{
-                                    marginLeft:'.75rem',
-                                    marginRight:'.75rem',
-                                }}
-                                /> 
+                            <Tooltip title='Home' arrow placement='right' disableInteractive>
+                                <HomeRoundedIcon
+                                    sx={{
+                                        marginLeft:'.75rem',
+                                        marginRight:'.75rem',
+                                    }}
+                                    /> 
+                            </Tooltip>
                             Home
                         </CustomListButton>
                         {/* Inbox */}
@@ -125,12 +128,14 @@ export default function UserSidebar({open, team}) {
                             disableGutters
                             selected={selected === 'inbox'}
                             >
-                            <EmailRoundedIcon 
-                                sx={{
-                                    marginLeft:'.75rem',
-                                    marginRight:'.75rem',
-                                }}
-                                /> 
+                            <Tooltip title='Inbox' arrow placement='right' disableInteractive>
+                                <EmailRoundedIcon 
+                                    sx={{
+                                        marginLeft:'.75rem',
+                                        marginRight:'.75rem',
+                                    }}
+                                    /> 
+                            </Tooltip>
                             Inbox
                         </CustomListButton>
                         {/* Library */}
@@ -140,12 +145,14 @@ export default function UserSidebar({open, team}) {
                             disableGutters
                             selected={selected === 'library'}
                             >
-                            <CategoryRoundedIcon 
-                                sx={{
-                                    marginLeft:'.75rem',
-                                    marginRight:'.75rem',
-                                }}
-                                /> 
+                            <Tooltip title='Library' arrow placement='right' disableInteractive>
+                                <CategoryRoundedIcon 
+                                    sx={{
+                                        marginLeft:'.75rem',
+                                        marginRight:'.75rem',
+                                    }}
+                                    /> 
+                            </Tooltip>
                             Library
                         </CustomListButton>
                     </List>
@@ -181,12 +188,14 @@ export default function UserSidebar({open, team}) {
                                     disableGutters
                                     selected={selected === `${team.id}` && currentPathList[3] === 'dashboard'}
                                     >
-                                    <DashboardRoundedIcon 
-                                        sx={{
-                                            marginLeft:'.75rem',
-                                            marginRight:'.75rem',
-                                        }}
-                                        /> 
+                                    <Tooltip title='Dashboard' arrow placement='right' disableInteractive>
+                                        <DashboardRoundedIcon 
+                                            sx={{
+                                                marginLeft:'.75rem',
+                                                marginRight:'.75rem',
+                                            }}
+                                            /> 
+                                    </Tooltip>
                                     Dashboard
                                 </CustomListButton>
                                 {/* Goal */}
@@ -196,12 +205,14 @@ export default function UserSidebar({open, team}) {
                                     disableGutters
                                     selected={selected === `${team.id}` && currentPathList[3] === 'goals'}
                                     >
-                                    <TaskAltRoundedIcon 
-                                        sx={{
-                                            marginLeft:'.75rem',
-                                            marginRight:'.75rem',
-                                        }}
-                                        /> 
+                                    <Tooltip title='Goals' arrow placement='right' disableInteractive>
+                                        <TaskAltRoundedIcon 
+                                            sx={{
+                                                marginLeft:'.75rem',
+                                                marginRight:'.75rem',
+                                            }}
+                                            /> 
+                                    </Tooltip>
                                     Goals
                                 </CustomListButton>
                                 {/* Plans */}
@@ -211,12 +222,14 @@ export default function UserSidebar({open, team}) {
                                     disableGutters
                                     selected={selected === `${team.id}` && currentPathList[3] === 'plans'}
                                     >
-                                    <VerticalSplitRoundedIcon 
-                                        sx={{
-                                            marginLeft:'.75rem',
-                                            marginRight:'.75rem',
-                                        }}
-                                        /> 
+                                    <Tooltip title='Plans' arrow placement='right' disableInteractive>
+                                        <VerticalSplitRoundedIcon 
+                                            sx={{
+                                                marginLeft:'.75rem',
+                                                marginRight:'.75rem',
+                                            }}
+                                            /> 
+                                    </Tooltip>
                                     Plans
                                 </CustomListButton>
                                 {/* Projects */}
@@ -226,12 +239,14 @@ export default function UserSidebar({open, team}) {
                                     disableGutters
                                     selected={selected === `${team.id}` && currentPathList[3] === 'projects'}
                                     >
-                                    <ModelTrainingRoundedIcon 
-                                        sx={{
-                                            marginLeft:'.75rem',
-                                            marginRight:'.75rem',
-                                        }}
-                                        /> 
+                                    <Tooltip title='Projects' arrow placement='right' disableInteractive>
+                                        <ModelTrainingRoundedIcon 
+                                            sx={{
+                                                marginLeft:'.75rem',
+                                                marginRight:'.75rem',
+                                            }}
+                                            /> 
+                                    </Tooltip>
                                     Projects
                                 </CustomListButton>
                                 {/* Divider */}
@@ -247,73 +262,68 @@ export default function UserSidebar({open, team}) {
                                     Members
                                 </Divider>
                                 {/* Members */}
-                                {(open) &&
-                                    <>
-                                        <ListItem 
+                                <List 
+                                    sx={{
+                                        flexDirection:'column', 
+                                        paddingTop:0, 
+                                        paddingBottom:0,
+                                    }}
+                                    >
+                                    {team.get_members.split('\n').map((v, i) => (
+                                        <CustomListButton 
+                                            disableGutters
                                             sx={{
-                                                flexDirection:'column', 
-                                                paddingTop:0, 
-                                                paddingBottom:0,
+                                                paddingTop:'.25rem',
+                                                paddingBottom:'.25rem'
                                             }}
                                             >
-                                            {team.get_members.split('\n').map((v, i) => (
-                                                <Button 
-                                                    fullWidth 
-                                                    size='small'
-                                                    sx={{
-                                                        display:'flex',
-                                                        alignItems:'center',
-                                                        justifyContent:'left',
-                                                        borderRadius:4,
-                                                    }}
-                                                    >
-                                                    {/* active icon */}
-                                                    <Badge
-                                                        variant='dot'
-                                                        overlap='circular'
-                                                        badgeContent=" "
-                                                        // color='error'
-                                                        anchorOrigin={{
-                                                            vertical: 'bottom',
-                                                            horizontal:'right',
-                                                        }}
-                                                        sx={{
-                                                            marginRight:'.5rem',
-                                                            '& .MuiBadge-badge': {
-                                                                width:'.75rem',
-                                                                height:'.75rem',
-                                                                top:'.4rem',
-                                                                left:'.4rem',
-                                                                borderRadius:9999,
-                                                                border: '2px solid',
-                                                                borderColor:'custom2.main',
-                                                                backgroundColor:'grey.400' // Changes the active to busy to inactive
-                                                            }
-                                                        }}
-                                                        >
-                                                        {/* Avatar */}
-                                                        <Avatar 
-                                                            sx={{
-                                                                width:'1.25rem',
-                                                                height:'1.25rem',
-                                                                fontSize:'.75rem', 
-                                                                backgroundColor:'primary.main', // Avatar background color
-                                                                color:'primary.contrastText'
-                                                            }} 
-                                                            >
-                                                            {v.substring(0,2)}
-                                                        </Avatar>
-                                                    </Badge>
-                                                    {/* email */}
-                                                    <Typography noWrap sx={{color:'grey.400'}}>
-                                                        {v}
+                                            {/* active icon */}
+                                            <Badge
+                                                variant='dot'
+                                                overlap='circular'
+                                                badgeContent=" "
+                                                // color='error'
+                                                anchorOrigin={{
+                                                    vertical: 'bottom',
+                                                    horizontal:'right',
+                                                }}
+                                                sx={{
+                                                    marginRight:'.75rem',
+                                                    marginLeft:'1rem',
+                                                    '& .MuiBadge-badge': {
+                                                        width:'.75rem',
+                                                        height:'.75rem',
+                                                        top:'.4rem',
+                                                        left:'.4rem',
+                                                        borderRadius:9999,
+                                                        border: '2px solid',
+                                                        borderColor:'custom2.main',
+                                                        backgroundColor:'grey.400' // Changes the active to busy to inactive
                                                     }
-                                                    </Typography>
-                                                </Button>
-                                            ))}
-                                        </ListItem>
-                                    </>
-                                }
+                                                }}
+                                                >
+                                                {/* Avatar */}
+                                                <Tooltip title={v} arrow placement='right' disableInteractive>
+                                                    <Avatar 
+                                                        sx={{
+                                                            width:'1.25rem',
+                                                            height:'1.25rem',
+                                                            fontSize:'.75rem',
+                                                            backgroundColor:'primary.main', // Avatar background color
+                                                            color:'primary.contrastText'
+                                                        }} 
+                                                        >
+                                                        {v.substring(0,2)}
+                                                    </Avatar>
+                                                </Tooltip>
+                                            </Badge>
+                                            {/* email */}
+                                            <Typography noWrap sx={{color:'grey.400', lineHeight:'100%'}}>
+                                                {v}
+                                            </Typography>
+                                        </CustomListButton>
+                                    ))}
+                                </List>
                             </> :
                             <ListItemText
                                 primaryTypographyProps={{
@@ -345,12 +355,14 @@ export default function UserSidebar({open, team}) {
                                     disableGutters
                                     selected={selected === `${team.id}` && currentPathList[3] === 'settings'}
                                     >
-                                    <TuneRoundedIcon 
-                                        sx={{
-                                            marginLeft:'.75rem',
-                                            marginRight:'.75rem',
-                                        }}
-                                        /> 
+                                    <Tooltip title='Settings' arrow placement='right' disableInteractive>
+                                        <TuneRoundedIcon 
+                                            sx={{
+                                                marginLeft:'.75rem',
+                                                marginRight:'.75rem',
+                                            }}
+                                            /> 
+                                    </Tooltip>
                                     Team Settings
                                 </CustomListButton>
                             </>
@@ -376,25 +388,29 @@ export default function UserSidebar({open, team}) {
                             {
                                 (team) ?
                                 <>
-                                    <GroupsRoundedIcon 
-                                        sx={{
-                                            marginLeft:'.75rem',
-                                            marginRight:'.75rem',
-                                            color:'primary.main'
-                                        }}
-                                        /> 
+                                    <Tooltip title='Choose a team' arrow placement='right' disableInteractive>
+                                        <GroupsRoundedIcon 
+                                            sx={{
+                                                marginLeft:'.75rem',
+                                                marginRight:'.75rem',
+                                                color:'primary.main'
+                                            }}
+                                            /> 
+                                    </Tooltip>
                                     <Typography noWrap>
                                         {team.name}
                                     </Typography>
                                 </> :
                                 <>
-                                    <GroupsRoundedIcon 
-                                        sx={{
-                                            marginLeft:'.75rem',
-                                            marginRight:'.75rem',
-                                            color:'primary.main'
-                                        }}
-                                        /> 
+                                    <Tooltip title='Choose a team' arrow placement='right' disableInteractive>
+                                        <GroupsRoundedIcon 
+                                            sx={{
+                                                marginLeft:'.75rem',
+                                                marginRight:'.75rem',
+                                                color:'primary.main'
+                                            }}
+                                            /> 
+                                    </Tooltip>
                                     Choose a team
                                 </>
                             }
